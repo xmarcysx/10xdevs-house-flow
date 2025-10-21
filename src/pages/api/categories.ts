@@ -17,13 +17,12 @@ export const POST: APIRoute = async (context) => {
     let requestBody: unknown;
     try {
       requestBody = await context.request.json();
-    } catch (error) {
+    } catch {
       return new Response(JSON.stringify({ message: "Nieprawidłowe dane JSON w żądaniu" } as MessageDTO), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
-
     // Walidacja danych wejściowych
     const validation = validateCreateCategoryCommand(requestBody);
     if (!validation.isValid) {
