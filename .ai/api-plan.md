@@ -42,13 +42,6 @@
   - Kody powodzenia: 200 OK.
   - Kody błędów: 400 Bad Request (nazwa zajęta), 401 Unauthorized, 404 Not Found, 422 Unprocessable Entity.
 
-- **DELETE /api/categories/{id}**
-  - Opis: Usuń kategorię (tylko własne, nie domyślne).
-  - Parametry zapytania: Brak.
-  - Ładunek żądania: Brak.
-  - Ładunek odpowiedzi: `{ "message": "Category deleted" }`.
-  - Kody powodzenia: 200 OK.
-  - Kody błędów: 400 Bad Request (domyślna kategoria), 401 Unauthorized, 404 Not Found.
 
 ### Incomes
 
