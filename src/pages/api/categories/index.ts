@@ -1,13 +1,13 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../db/supabase.client";
+import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeCreateCategoryCommand,
   sanitizeGetCategoriesQuery,
   validateCreateCategoryCommand,
   validateGetCategoriesQuery,
-} from "../../lib/validation/categories.validation";
-import { CategoriesService } from "../../services/categories.service";
-import type { MessageDTO } from "../../types";
+} from "../../../lib/validation/categories.validation";
+import { CategoriesService } from "../../../services/categories.service";
+import type { MessageDTO } from "../../../types";
 
 /**
  * GET /api/categories
