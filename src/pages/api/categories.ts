@@ -1,11 +1,60 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID, supabaseClient } from "../../db/supabase.client";
+import { DEFAULT_USER_ID } from "../../db/supabase.client";
 import {
   sanitizeCreateCategoryCommand,
+  sanitizeGetCategoriesQuery,
   validateCreateCategoryCommand,
+  validateGetCategoriesQuery,
 } from "../../lib/validation/categories.validation";
 import { CategoriesService } from "../../services/categories.service";
 import type { MessageDTO } from "../../types";
+
+/**
+ * GET /api/categories
+ * Pobiera paginowaną listę kategorii dla uwierzytelnionego użytkownika
+ */
+export const GET: APIRoute = async (context) => {
+  try {
+    // Pobierz parametry query z URL
+    const url = new URL(context.request.url);
+    const queryParams = url.searchParams;
+
+    // Walidacja parametrów query
+    const validation = validateGetCategoriesQuery(queryParams);
+    if (!validation.isValid) {
+      return new Response(JSON.stringify({ message: validation.errors.join(", ") } as MessageDTO), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Sanityzacja parametrów
+    const query = sanitizeGetCategoriesQuery(queryParams);
+
+    // Utwórz instancję CategoriesService
+    const categoriesService = new CategoriesService(context.locals.supabase);
+
+    // Pobierz kategorie używając domyślnego ID użytkownika
+    const result = await categoriesService.getCategories(DEFAULT_USER_ID, query);
+
+    // Zwróć kategorie z informacjami o paginacji
+    return new Response(JSON.stringify(result), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Błąd podczas pobierania kategorii:", error);
+
+    // Ogólny błąd serwera
+    return new Response(
+      JSON.stringify({ message: "Wystąpił błąd serwera podczas pobierania kategorii" } as MessageDTO),
+      {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+  }
+};
 
 /**
  * POST /api/categories
@@ -42,7 +91,7 @@ export const POST: APIRoute = async (context) => {
     }
 
     // Utwórz instancję CategoriesService
-    const categoriesService = new CategoriesService(supabaseClient);
+    const categoriesService = new CategoriesService(context.locals.supabase);
 
     // Utwórz kategorię używając domyślnego ID użytkownika
     const category = await categoriesService.create(command, DEFAULT_USER_ID);

@@ -4,6 +4,7 @@ import type { Tables, TablesInsert } from "./db/database.types";
 export type CategoryDTO = Pick<Tables<"categories">, "id" | "name" | "is_default" | "created_at">;
 export type CreateCategoryCommand = Pick<TablesInsert<"categories">, "name">;
 export type UpdateCategoryCommand = Partial<Pick<TablesInsert<"categories">, "name">>;
+export type UpdateCategoryDTO = Pick<Tables<"categories">, "id" | "name" | "is_default" | "updated_at">;
 
 // Incomes
 export type IncomeDTO = Pick<Tables<"incomes">, "id" | "amount" | "date" | "description" | "source" | "created_at">;
