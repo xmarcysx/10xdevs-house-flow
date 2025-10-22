@@ -188,4 +188,45 @@ export class CategoriesService {
 
     return updatedCategory;
   }
+
+  /**
+   * Usuwa istniejącą kategorię dla uwierzytelnionego użytkownika
+   * @param categoryId ID kategorii do usunięcia
+   * @param userId ID użytkownika
+   * @throws Error gdy kategoria nie istnieje, nie należy do użytkownika lub jest domyślna
+   */
+  async delete(categoryId: string, userId: string): Promise<void> {
+    // Sprawdź czy kategoria istnieje i należy do użytkownika
+    const belongsToUser = await this.belongsToUser(categoryId, userId);
+    if (!belongsToUser) {
+      throw new Error("Kategoria nie istnieje lub nie należy do użytkownika");
+    }
+
+    // Sprawdź czy kategoria nie jest domyślna
+    const { data: category, error: checkError } = await this.supabase
+      .from("categories")
+      .select("is_default")
+      .eq("id", categoryId)
+      .eq("user_id", userId)
+      .single();
+
+    if (checkError) {
+      throw new Error(`Błąd podczas sprawdzania typu kategorii: ${checkError.message}`);
+    }
+
+    if (category?.is_default) {
+      throw new Error("Nie można usunąć domyślnej kategorii");
+    }
+
+    // Usuń kategorię
+    const { error: deleteError } = await this.supabase
+      .from("categories")
+      .delete()
+      .eq("id", categoryId)
+      .eq("user_id", userId);
+
+    if (deleteError) {
+      throw new Error(`Błąd podczas usuwania kategorii: ${deleteError.message}`);
+    }
+  }
 }

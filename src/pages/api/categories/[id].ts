@@ -104,3 +104,68 @@ export const PUT: APIRoute = async (context) => {
     );
   }
 };
+
+/**
+ * DELETE /api/categories/{id}
+ * Usuwa istniejącą kategorię dla uwierzytelnionego użytkownika
+ */
+export const DELETE: APIRoute = async (context) => {
+  try {
+    // Pobierz ID kategorii z parametrów ścieżki
+    const { id } = context.params;
+
+    // Sprawdź czy ID kategorii zostało podane
+    if (!id) {
+      return new Response(JSON.stringify({ message: "ID kategorii jest wymagane" } as MessageDTO), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Walidacja ID kategorii
+    const idValidation = validateCategoryId(id);
+    if (!idValidation.isValid) {
+      return new Response(JSON.stringify({ message: idValidation.errors.join(", ") } as MessageDTO), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Utwórz instancję CategoriesService
+    const categoriesService = new CategoriesService(context.locals.supabase);
+
+    // Usuń kategorię używając domyślnego ID użytkownika
+    await categoriesService.delete(id, DEFAULT_USER_ID);
+
+    // Zwróć komunikat potwierdzający usunięcie z kodem 200
+    return new Response(JSON.stringify({ message: "Kategoria została usunięta" } as MessageDTO), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Błąd podczas usuwania kategorii:", error);
+
+    // Obsługa specyficznych błędów biznesowych
+    if (error instanceof Error) {
+      if (error.message.includes("nie istnieje lub nie należy do użytkownika")) {
+        return new Response(JSON.stringify({ message: "Kategoria nie została znaleziona" } as MessageDTO), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+
+      if (error.message.includes("Nie można usunąć domyślnej kategorii")) {
+        return new Response(JSON.stringify({ message: error.message } as MessageDTO), {
+          status: 400,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    // Ogólny błąd serwera
+    return new Response(JSON.stringify({ message: "Wystąpił błąd serwera podczas usuwania kategorii" } as MessageDTO), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+};

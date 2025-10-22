@@ -30,7 +30,7 @@ Endpoint `DELETE /api/categories/{id}` umożliwia usunięcie istniejącej katego
 - **Response Body (200 OK):**
   ```json
   {
-    "message": "Category deleted"
+    "message": "Kategoria została usunięta"
   }
   ```
 - **Response Body (błędy):** `{ "message": "string" }`
