@@ -22,7 +22,7 @@ Endpoint DELETE /api/incomes/{id} umożliwia usunięcie istniejącego wpływu fi
 
 ```json
 {
-  "message": "Income deleted"
+  "message": "Wydatek usunięty"
 }
 ```
 

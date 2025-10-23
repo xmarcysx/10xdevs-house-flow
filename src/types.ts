@@ -91,6 +91,14 @@ export interface GetExpensesQuery {
   sort: string;
 }
 
+// Incomes Query
+export interface GetIncomesQuery {
+  page: number;
+  limit: number;
+  month?: string;
+  sort: string;
+}
+
 // Common
 export interface MessageDTO {
   message: string;
