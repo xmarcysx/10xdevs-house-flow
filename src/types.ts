@@ -82,6 +82,15 @@ export interface GoalReportItemDTO {
   predicted_completion_date?: string;
 }
 
+// Expenses Query
+export interface GetExpensesQuery {
+  page: number;
+  limit: number;
+  month?: string;
+  category_id?: string;
+  sort: string;
+}
+
 // Common
 export interface MessageDTO {
   message: string;
