@@ -87,7 +87,7 @@ Endpoint GET /api/budget/monthly umożliwia użytkownikowi pobranie miesięczneg
 
 ## 9. Etapy wdrożenia
 
-1. **Przygotowanie struktury:** Utworzyć katalog `.ai/endpoints-plan/budget/` jeśli nie istnieje.
+1. **Przygotowanie struktury:** Utworzyć katalog `.ai/backend-plan/budget/` jeśli nie istnieje.
 2. **Stworzenie walidacji:** Rozszerzyć lub stworzyć `src/lib/validation/budget.validation.ts` dla walidacji parametru `month`.
 3. **Implementacja service:** Utworzyć `src/services/budget.service.ts` z funkcją `getMonthlyBudget(userId: string, month: string): Promise<MonthlyBudgetDTO>`, wykorzystującą Supabase klienta do zapytań agregacyjnych.
 4. **Implementacja endpointa:** Utworzyć plik `src/pages/api/budget/monthly.ts` jako Astro API route, obsługujący GET, walidujący parametry i wywołujący service.
