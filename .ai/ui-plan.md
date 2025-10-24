@@ -4,119 +4,121 @@
 
 Architektura interfejsu użytkownika dla HouseFlow została zaprojektowana w oparciu o wymagania produktu (PRD), plan API oraz notatki z sesji planowania. Główny nacisk położono na prostotę, responsywność i mobilność, z wykorzystaniem komponentów Shadcn/ui, Tailwind 4 oraz integracją z Supabase Auth. Struktura obejmuje dashboard główny jako centrum nawigacji, dedykowane widoki dla zarządzania wpływami, wydatkami, kategoriami i celami oszczędnościowymi, a także raporty. Wszystkie widoki są chronione przez middleware JWT, z obsługą błędów poprzez toast notifications i strony błędów. Architektura zapewnia płynne podróże użytkownika między widokami, z priorytetem na szybkie formularze, filtry i wizualizacje danych, rozwiązując punkty bólu związane z ręcznym śledzeniem budżetu poprzez intuicyjne narzędzia.
 
-## 2. Lista widoków
+## 2. Lista Widoków
 
-- **Nazwa widoku**: Rejestracja użytkownika  
-  **Ścieżka widoku**: /register  
-  **Główny cel**: Pozwolić nowym użytkownikom na utworzenie konta z walidacją danych.  
-  **Kluczowe informacje do wyświetlenia**: Formularz z polami email, hasło i potwierdzenie hasła; komunikaty błędów walidacji.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui z przyciskiem rejestracji, link do logowania.  
-  **UX, dostępność i względy bezpieczeństwa**: Prosty formularz z natychmiastową walidacją; dostępny dla czytników ekranowych; bezpieczeństwo przez wymuszanie silnych haseł i sprawdzenie unikalności email w API.
+### 1. Rejestracja użytkownika
 
-- **Nazwa widoku**: Logowanie użytkownika  
-  **Ścieżka widoku**: /login  
-  **Główny cel**: Uwierzytelnienie istniejących użytkowników i przekierowanie do dashboardu.  
-  **Kluczowe informacje do wyświetlenia**: Formularz z polami email i hasło; opcja przypomnienia hasła.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui z przyciskiem logowania, link do rejestracji.  
-  **UX, dostępność i względy bezpieczeństwa**: Szybkie logowanie z opcjami; touch-friendly na mobile; JWT token przechowywany bezpiecznie w localStorage z obsługą wygaśnięcia.
+- **URL**: /register
+- **Co tam się robi**: Pozwolić nowym użytkownikom na utworzenie konta z walidacją danych (email unikalny, hasło 8+ znaków z wielką i małą literą). Po rejestracji automatyczne logowanie i przekierowanie do dashboardu.
+- **Co ma się znaleźć**: Formularz z polami email, hasło i potwierdzenie hasła; komunikaty błędów walidacji (np. "Hasło zbyt słabe"); przycisk rejestracji; link do logowania. Komponenty: Form Shadcn/ui z walidacją po stronie klienta, toast dla błędów/sukcesu.
+- **Z jakich endpointów skorzystamy**: Brak bezpośrednich endpointów API (rejestracja przez Supabase Auth SDK, ale jeśli trzeba, można użyć POST /api/users jeśli zaimplementowane; w planie API to głównie przez Auth).
 
-- **Nazwa widoku**: Dashboard główny  
-  **Ścieżka widoku**: /  
-  **Główny cel**: Zapewnić przegląd ogólny budżetu miesięcznego i szybki dostęp do kluczowych sekcji.  
-  **Kluczowe informacje do wyświetlenia**: Karta podsumowania z wpływami, wydatkami, pozostałą kwotą; wykres kołowy procentowego podziału kategorii; szybkie linki do wydatków, wpływów i celów.  
-  **Kluczowe komponenty widoku**: Karty Shadcn/ui dla podsumowania, wykres kołowy (lazy-loaded), przyciski nawigacyjne.  
-  **UX, dostępność i względy bezpieczeństwa**: Responsywny layout z dużymi liczbami na mobile; animacje Tailwind dla płynności; chroniony przez middleware JWT.
+### 2. Logowanie użytkownika
 
-- **Nazwa widoku**: Lista wydatków  
-  **Ścieżka widoku**: /expenses  
-  **Główny cel**: Wyświetlić listę wydatków z opcjami filtrowania i zarządzania.  
-  **Kluczowe informacje do wyświetlenia**: Tabela wydatków z kolumnami data, kwota, kategoria, opis; filtry po miesiącu i kategorii; przyciski dodaj/edytuj/usuń.  
-  **Kluczowe komponenty widoku**: Tabela Shadcn/ui z paginacją, przycisk eksportu do CSV, modalne formularze dla akcji.  
-  **UX, dostępność i względy bezpieczeństwa**: Filtry dla szybkiego przeszukiwania; touch-friendly przyciski; synchronizacja z API przez hooks, z toastami dla błędów.
+- **URL**: /login
+- **Co tam się robi**: Uwierzytelnienie istniejących użytkowników i przekierowanie do dashboardu. Obsługa przypomnienia hasła (opcjonalne).
+- **Co ma się znaleźć**: Formularz z polami email i hasło; opcja przypomnienia hasła (link do resetu); przycisk logowania; link do rejestracji. Komponenty: Form Shadcn/ui, toast dla błędów (np. "Nieprawidłowe dane").
+- **Z jakich endpointów skorzystamy**: Brak bezpośrednich endpointów API (logowanie przez Supabase Auth SDK; opcjonalnie POST /api/metrics/login dla metryk, jeśli włączone).
 
-- **Nazwa widoku**: Dodaj/Edytuj wydatek  
-  **Ścieżka widoku**: Modal w /expenses lub strona /expenses/add/edit  
-  **Główny cel**: Umożliwić dodanie lub edycję wydatku z walidacją.  
-  **Kluczowe informacje do wyświetlenia**: Formularz z polami kwota, data, kategoria (select z API), opis; przyciski zapisz/anuluj.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui z date picker i select, toast dla sukcesu/błędu.  
-  **UX, dostępność i względy bezpieczeństwa**: Szybka walidacja po stronie klienta; potwierdzenie usunięcia bez dodatkowych kroków; bezpieczna wysyłka przez hooks.
+### 3. Dashboard główny
 
-- **Nazwa widoku**: Lista wpływów  
-  **Ścieżka widoku**: /incomes  
-  **Główny cel**: Wyświetlić listę wpływów z opcjami filtrowania i zarządzania.  
-  **Kluczowe informacje do wyświetlenia**: Tabela wpływów z kolumnami data, kwota, opis, źródło; filtry po miesiącu; przyciski dodaj/edytuj/usuń.  
-  **Kluczowe komponenty widoku**: Tabela Shadcn/ui z paginacją, przycisk eksportu do CSV, modalne formularze.  
-  **UX, dostępność i względy bezpieczeństwa**: Podobne do listy wydatków; filtry i toasty dla błędów.
+- **URL**: /
+- **Co tam się robi**: Zapewnić centrum dowodzenia z kompleksowym przeglądem budżetu miesięcznego, trendów, celów oszczędnościowych, ostatnich transakcji, alertów i szybkim dostępem do kluczowych akcji. Aktualizacja w czasie rzeczywistym, aby użytkownik mógł szybko ocenić sytuację finansową i podjąć decyzje.
+- **Co ma się znaleźć**: Karta podsumowania miesięcznego (wpływy, wydatki, pozostała kwota); wykres kołowy procentowego podziału kategorii wydatków; wykres liniowy trendów wpływów/wydatków (porównanie z poprzednim miesiącem); podsumowanie celów (najbliższy cel z paskiem progresu i predykcją daty); lista ostatnich 5-10 transakcji (wydatki i wpływy); alerty (np. ostrzeżenie jeśli wydatki > wpływy lub zbliżający się koniec miesiąca); szybkie przyciski do dodania wydatku/wpływu/celu oraz linki do pełnych sekcji. Komponenty: Card Shadcn/ui, wykres kołowy (lazy-loaded), wykres liniowy (lazy-loaded), paski progresu dla celów, tabela ostatnich transakcji (mini), alerty (toast/badge), przyciski nawigacyjne.
+- **Z jakich endpointów skorzystamy**: GET /api/budget/monthly (dla podsumowania i wykresu kołowego z parametrem month, np. bieżący miesiąc); GET /api/goals (dla podsumowania celów, z limit=3 dla najbliższych); GET /api/expenses (dla ostatnich transakcji, z limit=10, sort="date DESC"); GET /api/incomes (opcjonalnie dla ostatnich wpływów, jeśli nie połączone z expenses).
 
-- **Nazwa widoku**: Dodaj/Edytuj wpływ  
-  **Ścieżka widoku**: Modal w /incomes lub strona /incomes/add/edit  
-  **Główny cel**: Umożliwić dodanie lub edycję wpływu z walidacją.  
-  **Kluczowe informacje do wyświetlenia**: Formularz z polami kwota, data, opis, źródło; przyciski zapisz/anuluj.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui, toast dla wyników.  
-  **UX, dostępność i względy bezpieczeństwa**: Walidacja kwoty > 0; bezpieczna integracja z API.
+### 4. Lista wydatków
 
-- **Nazwa widoku**: Lista kategorii  
-  **Ścieżka widoku**: /categories  
-  **Główny cel**: Zarządzać kategoriami wydatków użytkownika.  
-  **Kluczowe informacje do wyświetlenia**: Lista kategorii z nazwą i statusem domyślny; przyciski dodaj/edytuj/usuń (tylko własne).  
-  **Kluczowe komponenty widoku**: Lista Shadcn/ui, formularze modalne.  
-  **UX, dostępność i względy bezpieczeństwa**: Proste zarządzanie; toast dla błędów, np. próba usunięcia domyślnej kategorii.
+- **URL**: /expenses
+- **Co tam się robi**: Wyświetlić listę wydatków z opcjami filtrowania (miesiąc/kategoria), dodawania, edycji i usuwania.
+- **Co ma się znaleźć**: Tabela wydatków (kolumny: data, kwota, kategoria, opis); filtry (select dla miesiąca i kategorii); przyciski dodaj/edytuj/usuń (otwierające modal); paginacja. Komponenty: Table Shadcn/ui z paginacją, przyciski, modalne formularze.
+- **Z jakich endpointów skorzystamy**: GET /api/expenses (z parametrami page, limit, month, category_id, sort); DELETE /api/expenses/{id} (dla usunięcia).
 
-- **Nazwa widoku**: Dodaj/Edytuj kategorię  
-  **Ścieżka widoku**: Modal w /categories  
-  **Główny cel**: Tworzyć lub edytować kategorię.  
-  **Kluczowe informacje do wyświetlenia**: Formularz z polem nazwa; przyciski zapisz/anuluj.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui, toast.  
-  **UX, dostępność i względy bezpieczeństwa**: Walidacja unikalności per użytkownik; bezpieczna wysyłka.
+### 5. Dodaj/Edytuj wydatek
 
-- **Nazwa widoku**: Lista celów oszczędnościowych  
-  **Ścieżka widoku**: /goals  
-  **Główny cel**: Wyświetlić cele z progresem i opcjami zarządzania.  
-  **Kluczowe informacje do wyświetlenia**: Lista celów z nazwą, progresem procentowym, pozostałą kwotą, predykcją daty; przyciski dodaj/edytuj/usuń.  
-  **Kluczowe komponenty widoku**: Karty Shadcn/ui z paskami progresu, wykres liniowy lazy-loaded, modalne formularze.  
-  **UX, dostępność i względy bezpieczeństwa**: Wizualizacja progresu; filtry i toasty.
+- **URL**: Modal w /expenses lub strona /expenses/add/edit (modal preferowany dla płynności)
+- **Co tam się robi**: Umożliwić dodanie lub edycję wydatku (kwota, data, kategoria, opis) z walidacją. Po zapisaniu toast sukcesu i odświeżenie listy.
+- **Co ma się znaleźć**: Formularz z polami kwota (number), data (date picker), kategoria (select z API), opis (text); przyciski zapisz/anuluj. Komponenty: Form Shadcn/ui z walidacją, date picker, toast.
+- **Z jakich endpointów skorzystamy**: POST /api/expenses (dla dodania); PUT /api/expenses/{id} (dla edycji); GET /api/categories (dla wypełnienia select kategorii).
 
-- **Nazwa widoku**: Dodaj/Edytuj cel  
-  **Ścieżka widoku**: Modal w /goals  
-  **Główny cel**: Tworzyć lub edytować cel oszczędnościowy.  
-  **Kluczowe informacje do wyświetlenia**: Formularz z nazwą i kwotą docelową; przyciski zapisz/anuluj.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui, toast.  
-  **UX, dostępność i względy bezpieczeństwa**: Walidacja kwoty > 0; bezpieczna integracja.
+### 6. Lista wpływów
 
-- **Nazwa widoku**: Szczegóły celu (wpłaty)  
-  **Ścieżka widoku**: /goals/{id}  
-  **Główny cel**: Zarządzać wpłatami na konkretny cel.  
-  **Kluczowe informacje do wyświetlenia**: Lista wpłat z datą, kwotą, opisem; formularz dodania wpłaty; wykres progresu.  
-  **Kluczowe komponenty widoku**: Tabela wpłat, formularz, wykres liniowy.  
-  **UX, dostępność i względy bezpieczeństwa**: Aktualizacja progresu po mutacjach; toast dla błędów.
+- **URL**: /incomes
+- **Co tam się robi**: Wyświetlić listę wpływów z opcjami filtrowania (miesiąc), dodawania, edycji i usuwania. Podobne do listy wydatków.
+- **Co ma się znaleźć**: Tabela wpływów (kolumny: data, kwota, opis, źródło); filtry (select dla miesiąca); przyciski dodaj/edytuj/usuń (modal). Komponenty: Table Shadcn/ui z paginacją, przyciski, modalne formularze.
+- **Z jakich endpointów skorzystamy**: GET /api/incomes (z parametrami page, limit, month, sort); DELETE /api/incomes/{id} (dla usunięcia).
 
-- **Nazwa widoku**: Raport miesięczny  
-  **Ścieżka widoku**: /reports/monthly  
-  **Główny cel**: Wyświetlić podsumowanie wydatków miesięcznych.  
-  **Kluczowe informacje do wyświetlenia**: Lista wydatków z sumami per kategoria; wybór miesiąca.  
-  **Kluczowe komponenty widoku**: Tabela Shadcn/ui, przycisk eksportu CSV.  
-  **UX, dostępność i względy bezpieczeństwa**: Filtry po miesiącu; toasty dla błędów API.
+### 7. Dodaj/Edytuj wpływ
 
-- **Nazwa widoku**: Raport celów  
-  **Ścieżka widoku**: /reports/goals  
-  **Główny cel**: Przegląd wszystkich celów z progresem.  
-  **Kluczowe informacje do wyświetlenia**: Lista celów z paskami progresu i predykcjami.  
-  **Kluczowe komponenty widoku**: Karty z paskami, wykresy liniowe.  
-  **UX, dostępność i względy bezpieczeństwa**: Wizualizacja całościowa; chroniony widok.
+- **URL**: Modal w /incomes lub strona /incomes/add/edit (modal)
+- **Co tam się robi**: Umożliwić dodanie lub edycję wpływu (kwota, data, opis, źródło) z walidacją. Toast po zapisaniu.
+- **Co ma się znaleźć**: Formularz z polami kwota, data, opis, źródło; przyciski zapisz/anuluj. Komponenty: Form Shadcn/ui z walidacją, toast.
+- **Z jakich endpointów skorzystamy**: POST /api/incomes (dla dodania); PUT /api/incomes/{id} (dla edycji).
 
-- **Nazwa widoku**: Ustawienia (opcjonalne metryki)  
-  **Ścieżka widoku**: /settings  
-  **Główny cel**: Zarządzać opcjami metryk aktywności.  
-  **Kluczowe informacje do wyświetlenia**: Przełącznik dla zbierania timestampów logowań.  
-  **Kluczowe komponenty widoku**: Formularz Shadcn/ui.  
-  **UX, dostępność i względy bezpieczeństwa**: Proste ustawienia; bezpieczna aktualizacja.
+### 8. Lista kategorii
 
-- **Nazwa widoku**: Błąd 500  
-  **Ścieżka widoku**: /500  
-  **Główny cel**: Obsłużyć krytyczne błędy aplikacji.  
-  **Kluczowe informacje do wyświetlenia**: Komunikat błędu, przycisk "Spróbuj ponownie", link do dashboardu.  
-  **Kluczowe komponenty widoku**: Karta błędu z przyciskami.  
-  **UX, dostępność i względy bezpieczeństwa**: Fallback dla błędów; bezpieczne przekierowania.
+- **URL**: /categories
+- **Co tam się robi**: Zarządzać kategoriami wydatków (wyświetlanie listy, dodawanie/ediytowanie/usuwanie własnych kategorii; domyślne nieedytowalne).
+- **Co ma się znaleźć**: Lista kategorii (nazwa, status domyślny); przyciski dodaj/edytuj/usuń (tylko dla własnych); modal dla akcji. Komponenty: Lista Shadcn/ui, przyciski, modalne formularze.
+- **Z jakich endpointów skorzystamy**: GET /api/categories (z parametrami page, limit, sort); DELETE /api/categories/{id} (dla usunięcia własnych).
+
+### 9. Dodaj/Edytuj kategorię
+
+- **URL**: Modal w /categories
+- **Co tam się robi**: Tworzyć lub edytować własną kategorię (nazwa) z walidacją unikalności per użytkownik.
+- **Co ma się znaleźć**: Formularz z polem nazwa; przyciski zapisz/anuluj. Komponenty: Form Shadcn/ui z walidacją, toast.
+- **Z jakich endpointów skorzystamy**: POST /api/categories (dla dodania); PUT /api/categories/{id} (dla edycji).
+
+### 10. Lista celów oszczędnościowych
+
+- **URL**: /goals
+- **Co tam się robi**: Wyświetlić cele z progresem (nazwa, %, pozostała kwota, predykcja daty), opcjami zarządzania.
+- **Co ma się znaleźć**: Lista celów z paskami progresu; przyciski dodaj/edytuj/usuń; linki do szczegółów. Komponenty: Karty Shadcn/ui z paskami progresu, przyciski, modalne formularze.
+- **Z jakich endpointów skorzystamy**: GET /api/goals (z parametrami page, limit, sort); DELETE /api/goals/{id} (dla usunięcia).
+
+### 11. Dodaj/Edytuj cel
+
+- **URL**: Modal w /goals
+- **Co tam się robi**: Tworzyć lub edytować cel (nazwa, kwota docelowa) z walidacją.
+- **Co ma się znaleźć**: Formularz z polami nazwa i kwota docelowa; przyciski zapisz/anuluj. Komponenty: Form Shadcn/ui z walidacją, toast.
+- **Z jakich endpointów skorzystamy**: POST /api/goals (dla dodania); PUT /api/goals/{id} (dla edycji).
+
+### 12. Szczegóły celu (wpłaty)
+
+- **URL**: /goals/{id}
+- **Co tam się robi**: Zarządzać wpłatami na cel (lista wpłat, dodawanie/edycja/usunięcie, wykres progresu).
+- **Co ma się znaleźć**: Lista wpłat (data, kwota, opis); formularz dodania wpłaty; wykres liniowy progresu. Komponenty: Tabela wpłat, formularz, wykres liniowy lazy-loaded.
+- **Z jakich endpointów skorzystamy**: GET /api/goals/{goal_id}/contributions (z parametrami page, limit, sort); POST /api/goals/{goal_id}/contributions (dla dodania); PUT /api/goals/{goal_id}/contributions/{id} (dla edycji); DELETE /api/goals/{goal_id}/contributions/{id} (dla usunięcia); GET /api/goals (dla danych celu).
+
+### 13. Raport miesięczny
+
+- **URL**: /reports/monthly
+- **Co tam się robi**: Wyświetlić podsumowanie wydatków miesięcznych (lista z sumami per kategoria, wybór miesiąca).
+- **Co ma się znaleźć**: Lista wydatków z sumami per kategoria; select dla miesiąca; przycisk eksportu CSV. Komponenty: Tabela Shadcn/ui, przycisk eksportu.
+- **Z jakich endpointów skorzystamy**: GET /api/reports/monthly/{month} (dla danych raportu).
+
+### 14. Raport celów
+
+- **URL**: /reports/goals
+- **Co tam się robi**: Przegląd wszystkich celów z progresem (paski, predykcje).
+- **Co ma się znaleźć**: Lista celów z paskami progresu i predykcjami dat. Komponenty: Karty z paskami, wykresy liniowe lazy-loaded.
+- **Z jakich endpointów skorzystamy**: GET /api/reports/goals (dla listy celów z progresem).
+
+### 15. Ustawienia (opcjonalne metryki)
+
+- **URL**: /settings
+- **Co tam się robi**: Zarządzać opcjami metryk (przełącznik dla zbierania timestampów logowań).
+- **Co ma się znaleźć**: Przełącznik dla metryk; przycisk zapisz. Komponenty: Form Shadcn/ui.
+- **Z jakich endpointów skorzystamy**: POST /api/metrics/login (opcjonalnie, dla aktualizacji ustawień jeśli endpoint rozszerzony; obecnie tylko dla logowań).
+
+### 16. Błąd 500
+
+- **URL**: /500
+- **Co tam się robi**: Obsłużyć krytyczne błędy aplikacji (np. błędy API) i pozwolić użytkownikowi spróbować ponownie.
+- **Co ma się znaleźć**: Komunikat błędu; przycisk "Spróbuj ponownie"; link do dashboardu. Komponenty: Karta błędu z przyciskami.
+- **Z jakich endpointów skorzystamy**: Brak (to fallback; ewentualnie retry dla poprzedniego endpointu).
+
+Ten plan pokrywa wszystkie kluczowe widoki z UI planu, skupiając się na prostocie i responsywności. Endpointy są dopasowane do potrzeb (np. filtrowanie, paginacja). Przed implementacją zalecam sprawdzenie istniejących usług (w `src/services/`) i walidacji (w `src/lib/validation/`), aby uniknąć duplikacji kodu.
 
 ## 3. Mapa podróży użytkownika
 
