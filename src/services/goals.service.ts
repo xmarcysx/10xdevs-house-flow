@@ -234,4 +234,33 @@ export class GoalsService {
       throw new Error(`Błąd podczas usuwania celu: ${deleteError.message}`);
     }
   }
+
+  /**
+   * Pobiera pojedynczy cel oszczędnościowy dla uwierzytelnionego użytkownika
+   * @param goalId ID celu do pobrania
+   * @param userId ID użytkownika
+   * @returns Cel oszczędnościowy
+   * @throws Error gdy cel nie istnieje lub nie należy do użytkownika
+   */
+  async getGoalById(goalId: string, userId: string): Promise<GoalDTO> {
+    const { data: goal, error } = await this.supabase
+      .from("goals")
+      .select("id, name, target_amount, current_amount, created_at")
+      .eq("id", goalId)
+      .eq("user_id", userId)
+      .single();
+
+    if (error) {
+      if (error.code === "PGRST116") {
+        throw new Error("Cel nie istnieje lub nie należy do użytkownika");
+      }
+      throw new Error(`Błąd podczas pobierania celu: ${error.message}`);
+    }
+
+    if (!goal) {
+      throw new Error("Cel nie istnieje lub nie należy do użytkownika");
+    }
+
+    return goal;
+  }
 }

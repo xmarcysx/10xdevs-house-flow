@@ -1,0 +1,26 @@
+---
+// Szczegóły celu oszczędnościowego - strona z wpłatami
+import { GoalContributionsView } from "../../components/goals/GoalContributionsView";
+import Navbar from "../../components/Navbar";
+import Layout from "../../layouts/Layout.astro";
+
+// Pobierz ID celu z parametrów ścieżki
+const { id } = Astro.params;
+
+// Sprawdź czy ID zostało podane
+if (!id) {
+  return Astro.redirect("/goals");
+}
+---
+
+<Layout title="Szczegóły celu - HouseFlow">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Navbar -->
+    <Navbar client:only="react" />
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 pt-24">
+      <GoalContributionsView goalId={id} client:only="react" />
+    </div>
+  </div>
+</Layout>

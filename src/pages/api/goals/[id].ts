@@ -9,6 +9,64 @@ import { GoalsService } from "../../../services/goals.service";
 import type { MessageDTO } from "../../../types";
 
 /**
+ * GET /api/goals/{id}
+ * Pobiera pojedynczy cel oszczędnościowy dla uwierzytelnionego użytkownika
+ */
+export const GET: APIRoute = async (context) => {
+  try {
+    // Pobierz ID celu z parametrów ścieżki
+    const { id } = context.params;
+
+    // Sprawdź czy ID celu zostało podane
+    if (!id) {
+      return new Response(JSON.stringify({ message: "ID celu jest wymagane" } as MessageDTO), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Walidacja ID celu
+    const idValidation = validateGoalId(id);
+    if (!idValidation.isValid) {
+      return new Response(JSON.stringify({ message: idValidation.errors.join(", ") } as MessageDTO), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Utwórz instancję GoalsService
+    const goalsService = new GoalsService(context.locals.supabase);
+
+    // Pobierz cel używając domyślnego ID użytkownika
+    const goal = await goalsService.getGoalById(id, DEFAULT_USER_ID);
+
+    // Zwróć cel z kodem 200
+    return new Response(JSON.stringify(goal), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    console.error("Błąd podczas pobierania celu:", error);
+
+    // Obsługa specyficznych błędów biznesowych
+    if (error instanceof Error) {
+      if (error.message.includes("nie istnieje lub nie należy do użytkownika")) {
+        return new Response(JSON.stringify({ message: "Cel nie został znaleziony" } as MessageDTO), {
+          status: 404,
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+    }
+
+    // Ogólny błąd serwera
+    return new Response(JSON.stringify({ message: "Wystąpił błąd serwera podczas pobierania celu" } as MessageDTO), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+};
+
+/**
  * PUT /api/goals/{id}
  * Aktualizuje istniejący cel oszczędnościowy dla uwierzytelnionego użytkownika
  */

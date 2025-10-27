@@ -81,6 +81,22 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) =>
 
         {/* Przyciski akcji */}
         <div className="flex gap-2 mt-auto">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => (window.location.href = `/goals/${goal.id}`)}
+            className="flex-1"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+            Szczegóły
+          </Button>
           <Button variant="outline" size="sm" onClick={handleEdit} className="flex-1">
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
