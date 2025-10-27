@@ -1,0 +1,17 @@
+---
+import { GoalsPage } from "../components/goals/GoalsPage";
+import Navbar from "../components/Navbar";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Cele oszczędnościowe - HouseFlow">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Navbar -->
+    <Navbar client:only="react" />
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-8 pt-24">
+      <GoalsPage client:only="react" />
+    </div>
+  </div>
+</Layout>
