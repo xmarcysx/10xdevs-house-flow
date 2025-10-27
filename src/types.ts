@@ -99,6 +99,29 @@ export interface GetIncomesQuery {
   sort: string;
 }
 
+// ViewModel types for Incomes view
+
+export interface IncomeFormData {
+  amount: number; // Kwota wpływu (wymagana, > 0)
+  date: string; // Data wpływu w formacie YYYY-MM-DD (wymagana)
+  description?: string; // Opcjonalny opis wpływu (max 500 znaków)
+  source?: string; // Opcjonalne źródło wpływu (max 100 znaków)
+}
+
+export interface IncomesFiltersData {
+  month?: string; // Miesiąc w formacie YYYY-MM (opcjonalny)
+}
+
+export interface IncomesTableData {
+  incomes: IncomeDTO[]; // Lista wpływów na bieżącej stronie
+  pagination: PaginationDTO; // Metadane paginacji
+}
+
+export interface IncomesQuery extends GetIncomesQuery {
+  // Dziedziczy po GetIncomesQuery z types.ts
+  // Dodatkowe pola specyficzne dla widoku jeśli potrzebne
+}
+
 // Common
 export interface MessageDTO {
   message: string;
