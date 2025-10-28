@@ -15,7 +15,9 @@ describe("useCategories", () => {
     const { result } = renderHook(() => useCategories());
 
     expect(result.current.categories).toEqual([]);
+    expect(result.current.pagination).toEqual({ page: 1, limit: 10, total: 0 });
     expect(result.current.isLoading).toBe(false);
+    expect(result.current.isSubmitting).toBe(false);
     expect(result.current.error).toBe(null);
   });
 
@@ -25,9 +27,11 @@ describe("useCategories", () => {
       { id: "2", name: "Transport", is_default: false, created_at: "2024-01-01T00:00:00Z" },
     ];
 
+    const mockPagination = { page: 1, limit: 10, total: 2 };
+
     mockFetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({ data: mockCategories }),
+      json: () => Promise.resolve({ data: mockCategories, pagination: mockPagination }),
     });
 
     const { result } = renderHook(() => useCategories());
@@ -37,11 +41,12 @@ describe("useCategories", () => {
 
     await waitFor(() => {
       expect(result.current.categories).toEqual(mockCategories);
+      expect(result.current.pagination).toEqual(mockPagination);
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBe(null);
     });
 
-    expect(mockFetch).toHaveBeenCalledWith("/api/categories", {
+    expect(mockFetch).toHaveBeenCalledWith("/api/categories?page=1&limit=10", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
@@ -57,6 +62,7 @@ describe("useCategories", () => {
 
     await waitFor(() => {
       expect(result.current.categories).toEqual([]);
+      expect(result.current.pagination).toEqual({ page: 1, limit: 10, total: 0 });
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBe(errorMessage);
     });

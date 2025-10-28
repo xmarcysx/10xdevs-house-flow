@@ -132,3 +132,21 @@ export interface PaginationDTO {
   limit: number;
   total: number;
 }
+
+// Categories ViewModel types
+
+export interface CategoriesListViewModel {
+  categories: CategoryDTO[];
+  pagination: PaginationDTO;
+  isLoading: boolean;
+  error?: string;
+}
+
+export interface CategoryFormViewModel {
+  isOpen: boolean;
+  mode: "create" | "edit";
+  category?: CategoryDTO;
+  formData: { name: string };
+  errors: { name?: string };
+  isSubmitting: boolean;
+}
