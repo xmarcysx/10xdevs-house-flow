@@ -1,0 +1,10 @@
+---
+import ErrorCard from "../components/ErrorCard";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Błąd serwera - HouseFlow">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
+    <ErrorCard client:only="react" />
+  </div>
+</Layout>
