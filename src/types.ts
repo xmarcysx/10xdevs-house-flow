@@ -117,6 +117,14 @@ export interface IncomesTableData {
   pagination: PaginationDTO; // Metadane paginacji
 }
 
+// Register ViewModel types
+
+export interface RegisterFormData {
+  email: string; // Adres email użytkownika
+  password: string; // Hasło użytkownika
+  confirmPassword: string; // Potwierdzenie hasła
+}
+
 export interface IncomesQuery extends GetIncomesQuery {
   // Dziedziczy po GetIncomesQuery z types.ts
   // Dodatkowe pola specyficzne dla widoku jeśli potrzebne
