@@ -1,0 +1,292 @@
+---
+import BudgetSummaryCard from "../components/dashboard/BudgetSummaryCard";
+import CategoryPieChart from "../components/dashboard/CategoryPieChart";
+import GoalsSummary from "../components/dashboard/GoalsSummary";
+import TrendsLineChart from "../components/dashboard/TrendsLineChart";
+import { Button } from "../components/ui/button";
+import Layout from "../layouts/Layout.astro";
+
+// Mock data for demonstration
+const mockBudgetData = {
+  total_income: 8500.0,
+  total_expenses: 6200.5,
+  remaining: 2299.5,
+  category_breakdown: [
+    { category_name: "Żywność", percentage: 35, amount: 2170.31 },
+    { category_name: "Dom", percentage: 25, amount: 1550.13 },
+    { category_name: "Rozrywka", percentage: 15, amount: 930.08 },
+    { category_name: "Transport", percentage: 12, amount: 744.06 },
+    { category_name: "Inne", percentage: 13, amount: 805.92 },
+  ],
+};
+
+const mockGoalsData = [
+  {
+    id: "1",
+    name: "Wakacje nad morzem",
+    target_amount: 5000.0,
+    current_amount: 3200.0,
+    created_at: "2024-01-01",
+  },
+  {
+    id: "2",
+    name: "Nowy telewizor",
+    target_amount: 3000.0,
+    current_amount: 1800.0,
+    created_at: "2024-02-01",
+  },
+  {
+    id: "3",
+    name: "Remont kuchni",
+    target_amount: 15000.0,
+    current_amount: 4500.0,
+    created_at: "2024-03-01",
+  },
+];
+
+const mockTrendsData = [
+  { month: "Październik", income: 8500, expenses: 6200, remaining: 2300 },
+  { month: "Listopad", income: 8200, expenses: 6800, remaining: 1400 },
+  { month: "Grudzień", income: 9000, expenses: 7200, remaining: 1800 },
+  { month: "Styczeń", income: 8800, expenses: 6500, remaining: 2300 },
+];
+---
+
+<Layout title="HouseFlow - Zarządzanie domowym budżetem">
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+          House<span class="text-blue-600">Flow</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+          Uprość zarządzanie swoim domowym budżetem. Śledź wpływy, wydatki i cele oszczędnościowe w jednym miejscu.
+        </p>
+        <p class="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+          Zastąp męczące arkusze kalkulacyjne i notatki intuicyjnym narzędziem, które pomoże Ci szybko sprawdzić stan
+          finansów i monitorować postępy w osiąganiu celów.
+        </p>
+
+        <!-- Auth Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button asChild size="lg" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+            <a href="/register">Rozpocznij za darmo</a>
+          </Button>
+          <Button asChild variant="outline" size="lg" class="px-8 py-3">
+            <a href="/login">Zaloguj się</a>
+          </Button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Preview Section -->
+  <section class="py-20 bg-white dark:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+          Zobacz, jak HouseFlow może pomóc Ci w zarządzaniu finansami
+        </h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          Przykładowe funkcjonalności dostępne po rejestracji
+        </p>
+      </div>
+
+      <!-- Mock Dashboard Components -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <!-- Budget Summary -->
+        <div class="transform hover:scale-105 transition-transform duration-300">
+          <BudgetSummaryCard data={mockBudgetData} client:load />
+        </div>
+
+        <!-- Goals Summary -->
+        <div class="transform hover:scale-105 transition-transform duration-300">
+          <GoalsSummary goals={mockGoalsData} client:load />
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Category Pie Chart -->
+        <div class="transform hover:scale-105 transition-transform duration-300">
+          <CategoryPieChart data={mockBudgetData.category_breakdown} client:load />
+        </div>
+
+        <!-- Trends Line Chart -->
+        <div class="transform hover:scale-105 transition-transform duration-300">
+          <TrendsLineChart data={mockTrendsData} client:load />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features Section -->
+  <section class="py-20 bg-gray-50 dark:bg-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Kluczowe funkcjonalności</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300">
+          Wszystko, czego potrzebujesz do efektywnego zarządzania budżetem domowym
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Rejestrowanie transakcji</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Łatwe dodawanie wpływów i wydatków z kategoriami, datami i opisami.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-green-600 dark:text-green-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Wizualizacja danych</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Interaktywne wykresy i podsumowania pokazujące trendy i strukturę wydatków.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-purple-600 dark:text-purple-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Cele oszczędnościowe</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Twórz cele i śledź postępy z automatycznymi predykcjami terminów osiągnięcia.
+          </p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-orange-600 dark:text-orange-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Raporty miesięczne</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Szczegółowe podsumowania wydatków z filtrowaniem po kategoriach i miesiącach.
+          </p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Responsywność</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Pełna funkcjonalność na wszystkich urządzeniach - komputerach, tabletach i smartfonach.
+          </p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
+          <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mb-4">
+            <svg
+              class="w-6 h-6 text-indigo-600 dark:text-indigo-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              ></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Bezpieczeństwo</h3>
+          <p class="text-gray-600 dark:text-gray-300">
+            Twoje dane finansowe są bezpieczne dzięki nowoczesnym standardom bezpieczeństwa.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="py-20 bg-blue-600 dark:bg-blue-800">
+    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Gotowy, by przejąć kontrolę nad swoim budżetem?</h2>
+      <p class="text-xl text-blue-100 mb-8">
+        Dołącz do tysięcy użytkowników, którzy już uproszczają zarządzanie finansami z HouseFlow.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button asChild size="lg" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3">
+          <a href="/register">Rozpocznij za darmo</a>
+        </Button>
+        <Button
+          asChild
+          variant="outline"
+          size="lg"
+          class="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3"
+        >
+          <a href="/login">Zaloguj się</a>
+        </Button>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .transform {
+    transition: transform 0.3s ease;
+  }
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+  }
+</style>
