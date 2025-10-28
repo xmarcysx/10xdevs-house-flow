@@ -125,6 +125,17 @@ export interface RegisterFormData {
   confirmPassword: string; // Potwierdzenie hasła
 }
 
+// Login ViewModel types
+
+export interface LoginViewModel {
+  email: string; // Adres email użytkownika
+  password: string; // Hasło użytkownika
+}
+
+export interface ErrorDTO {
+  message: string; // Komunikat błędu
+}
+
 export interface IncomesQuery extends GetIncomesQuery {
   // Dziedziczy po GetIncomesQuery z types.ts
   // Dodatkowe pola specyficzne dla widoku jeśli potrzebne
