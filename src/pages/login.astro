@@ -1,25 +1,23 @@
 ---
 import LoginForm from "../components/LoginForm";
-import Layout from "../layouts/Layout.astro";
+import AuthLayout from "../layouts/AuthLayout.astro";
 ---
 
-<Layout title="Logowanie - HouseFlow">
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-      <div>
-        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">Zaloguj się</h2>
-        <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Lub{" "}
-          <a
-            href="/register"
-            class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
-          >
-            utwórz nowe konto
-          </a>
-        </p>
-      </div>
-
-      <LoginForm client:only="react" />
+<AuthLayout title="Logowanie - HouseFlow">
+  <div class="max-w-md w-full space-y-8">
+    <div>
+      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">Zaloguj się</h2>
+      <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
+        Lub{" "}
+        <a
+          href="/register"
+          class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+        >
+          utwórz nowe konto
+        </a>
+      </p>
     </div>
+
+    <LoginForm client:only="react" />
   </div>
-</Layout>
+</AuthLayout>

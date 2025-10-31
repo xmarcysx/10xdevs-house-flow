@@ -12,6 +12,7 @@ interface UseAuthReturn {
   // Actions
   login: (data: LoginViewModel) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  updatePassword: (newPassword: string) => Promise<void>;
 
   // Utils
   clearError: () => void;
@@ -113,11 +114,47 @@ export const useAuth = (): UseAuthReturn => {
     [handleApiError]
   );
 
+  const updatePassword = useCallback(
+    async (newPassword: string): Promise<void> => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // TODO: Implementacja z Supabase Auth SDK
+        // const { error: updateError } = await supabaseClient.auth.updateUser({
+        //   password: newPassword,
+        // });
+
+        // if (updateError) {
+        //   throw updateError;
+        // }
+
+        // Symulacja aktualizacji hasła dla wydmuszki
+        console.log("Updating password");
+
+        // Symulacja opóźnienia API
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        // Symulacja sukcesu
+        toast.success("Hasło zostało pomyślnie zaktualizowane!");
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas aktualizacji hasła";
+        handleApiError(err, errorMessage);
+        toast.error(errorMessage);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [handleApiError]
+  );
+
   return {
     isLoading,
     error,
     login,
     resetPassword,
+    updatePassword,
     clearError,
   };
 };

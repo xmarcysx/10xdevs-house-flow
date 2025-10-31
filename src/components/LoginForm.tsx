@@ -29,6 +29,7 @@ const LoginForm: React.FC = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
+    getValues,
   } = useForm<LoginViewModel>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
