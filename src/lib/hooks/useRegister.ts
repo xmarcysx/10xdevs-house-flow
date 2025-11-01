@@ -2,6 +2,25 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { RegisterFormData } from "../../types";
 
+// Mapowanie błędów Supabase na polskie komunikaty (takie same jak w useAuth)
+const errorTranslations: Record<string, string> = {
+  "Invalid login credentials": "Nieprawidłowy email lub hasło",
+  "Email not confirmed": "Adres email nie został potwierdzony",
+  "Too many requests": "Zbyt wiele prób. Spróbuj ponownie później",
+  "User not found": "Użytkownik nie został znaleziony",
+  "Password should be at least 6 characters": "Hasło musi mieć przynajmniej 6 znaków",
+  "Signup is disabled": "Rejestracja jest tymczasowo niedostępna",
+  "Email link is invalid or has expired": "Link resetowania hasła jest nieprawidłowy lub wygasł",
+  "Unable to validate email address: invalid format": "Nieprawidłowy format adresu email",
+  "User already registered": "Użytkownik o tym adresie email już istnieje",
+  "Weak password": "Hasło jest zbyt słabe",
+};
+
+// Funkcja tłumacząca błędy na polski
+const translateError = (errorMessage: string): string => {
+  return errorTranslations[errorMessage] || errorMessage;
+};
+
 interface UseRegisterReturn {
   // Loading states
   isLoading: boolean;
@@ -43,33 +62,46 @@ export const useRegister = (): UseRegisterReturn => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Implementacja z Supabase Auth SDK
-        // const { data: authData, error: authError } = await supabase.auth.signUp({
-        //   email: data.email,
-        //   password: data.password,
-        // });
+        const response = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        });
 
-        // if (authError) {
-        //   throw authError;
-        // }
+        const result = await response.json();
 
-        // Symulacja rejestracji dla wydmuszki
-        console.log("Registering user:", data);
+        if (!response.ok) {
+          throw new Error(translateError(result.error) || "Wystąpił błąd podczas rejestracji");
+        }
 
-        // Symulacja opóźnienia API
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        // Symulacja sukcesu
         toast.success("Konto zostało utworzone pomyślnie!");
 
-        // TODO: Automatyczne logowanie
-        // await supabase.auth.signInWithPassword({
-        //   email: data.email,
-        //   password: data.password,
-        // });
+        // Automatyczne logowanie po rejestracji
+        const loginResponse = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: data.email,
+            password: data.password,
+          }),
+        });
 
-        // Przekierowanie do dashboardu
-        window.location.href = "/";
+        if (loginResponse.ok) {
+          toast.success("Zalogowano automatycznie!");
+          // Przekierowanie do dashboardu
+          window.location.href = "/";
+        } else {
+          // Jeśli automatyczne logowanie się nie powiedzie, przekieruj na login
+          toast.info("Przejdź do logowania, aby uzyskać dostęp do swojego konta");
+          window.location.href = "/login";
+        }
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas rejestracji";
         handleApiError(err, errorMessage);

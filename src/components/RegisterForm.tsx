@@ -2,34 +2,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { useRegister } from "../lib/hooks/useRegister";
 import type { RegisterFormData } from "../types";
+import { registerSchema } from "../lib/validation/auth.validation";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 
-// Schemat walidacji dla formularza rejestracyjnego
-const registerFormSchema = z
-  .object({
-    email: z
-      .string()
-      .min(1, "Adres email jest wymagany")
-      .email("Podaj prawidłowy adres email")
-      .max(254, "Adres email może mieć maksymalnie 254 znaki"),
-    password: z
-      .string()
-      .min(1, "Hasło jest wymagane")
-      .min(8, "Hasło musi mieć przynajmniej 8 znaków")
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])/, "Hasło musi zawierać przynajmniej jedną małą i jedną wielką literę")
-      .max(128, "Hasło może mieć maksymalnie 128 znaków"),
-    confirmPassword: z.string().min(1, "Potwierdzenie hasła jest wymagane"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Hasła nie są identyczne",
-    path: ["confirmPassword"],
-  });
 
 const RegisterForm: React.FC = () => {
   const { register: registerUser, isLoading, error: apiError } = useRegister();
@@ -41,7 +21,7 @@ const RegisterForm: React.FC = () => {
     reset,
     setError,
   } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerFormSchema),
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: "",
       password: "",

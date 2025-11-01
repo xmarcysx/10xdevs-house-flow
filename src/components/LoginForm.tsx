@@ -2,24 +2,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 import { useAuth } from "../lib/hooks/useAuth";
+import { loginSchema } from "../lib/validation/auth.validation";
 import type { LoginViewModel } from "../types";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-
-// Schemat walidacji dla formularza logowania
-const loginFormSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Adres email jest wymagany")
-    .email("Podaj prawidłowy adres email")
-    .max(254, "Adres email może mieć maksymalnie 254 znaki"),
-  password: z.string().min(1, "Hasło jest wymagane").max(128, "Hasło może mieć maksymalnie 128 znaków"),
-});
 
 const LoginForm: React.FC = () => {
   const { login, resetPassword, isLoading, error: apiError } = useAuth();
@@ -31,7 +20,7 @@ const LoginForm: React.FC = () => {
     reset,
     getValues,
   } = useForm<LoginViewModel>({
-    resolver: zodResolver(loginFormSchema),
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -50,23 +39,11 @@ const LoginForm: React.FC = () => {
   };
 
   const handleForgotPassword = async () => {
-    const email = getValues("email");
-    if (!email) {
-      // Jeśli email nie jest wprowadzony, pokaż komunikat
-      toast.error("Wprowadź adres email, aby zresetować hasło");
-      return;
-    }
-
-    try {
-      await resetPassword(email);
-    } catch (error) {
-      // Błąd jest już obsługiwany w hooku useAuth
-      console.error("Forgot password failed:", error);
-    }
+    window.location.href = "/reset-password";
   };
 
   const handleRegisterRedirect = () => {
-    // TODO: Przekierowanie do strony rejestracji
+    // TODO: Przekierowanie do  rejestracji
     window.location.href = "/register";
   };
 

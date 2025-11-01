@@ -16,6 +16,8 @@ create table public.users (
     password_hash varchar(255) not null,
     first_name varchar(50),
     last_name varchar(50),
+    last_login timestamptz,
+    login_count integer not null default 0,
     created_at timestamptz not null default now()
 );
 

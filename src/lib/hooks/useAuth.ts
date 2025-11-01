@@ -2,6 +2,25 @@ import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import type { LoginViewModel } from "../../types";
 
+// Mapowanie błędów Supabase na polskie komunikaty
+const errorTranslations: Record<string, string> = {
+  "Invalid login credentials": "Nieprawidłowy email lub hasło",
+  "Email not confirmed": "Adres email nie został potwierdzony",
+  "Too many requests": "Zbyt wiele prób logowania. Spróbuj ponownie później",
+  "User not found": "Użytkownik nie został znaleziony",
+  "Password should be at least 6 characters": "Hasło musi mieć przynajmniej 6 znaków",
+  "Signup is disabled": "Rejestracja jest tymczasowo niedostępna",
+  "Email link is invalid or has expired": "Link resetowania hasła jest nieprawidłowy lub wygasł",
+  "Unable to validate email address: invalid format": "Nieprawidłowy format adresu email",
+  "User already registered": "Użytkownik o tym adresie email już istnieje",
+  "Weak password": "Hasło jest zbyt słabe",
+};
+
+// Funkcja tłumacząca błędy na polski
+const translateError = (errorMessage: string): string => {
+  return errorTranslations[errorMessage] || errorMessage;
+};
+
 interface UseAuthReturn {
   // Loading states
   isLoading: boolean;
@@ -11,6 +30,7 @@ interface UseAuthReturn {
 
   // Actions
   login: (data: LoginViewModel) => Promise<void>;
+  logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (newPassword: string) => Promise<void>;
 
@@ -45,24 +65,20 @@ export const useAuth = (): UseAuthReturn => {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Implementacja z Supabase Auth SDK
-        // import { supabaseClient } from "../../db/supabase.client";
-        // const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
-        //   email: data.email,
-        //   password: data.password,
-        // });
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
 
-        // if (authError) {
-        //   throw authError;
-        // }
+        const result = await response.json();
 
-        // Symulacja logowania dla wydmuszki
-        console.log("Logging in user:", data);
+        if (!response.ok) {
+          throw new Error(translateError(result.error) || "Wystąpił błąd podczas logowania");
+        }
 
-        // Symulacja opóźnienia API
-        await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        // Symulacja sukcesu
         toast.success("Zalogowano pomyślnie!");
 
         // Przekierowanie do dashboardu
@@ -79,29 +95,62 @@ export const useAuth = (): UseAuthReturn => {
     [handleApiError]
   );
 
+  const logout = useCallback(
+    async (): Promise<void> => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await fetch("/api/auth/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(translateError(result.error) || "Wystąpił błąd podczas wylogowywania");
+        }
+
+        toast.success("Wylogowano pomyślnie!");
+
+        // Przekierowanie na stronę powitalną
+        window.location.href = "/guest";
+      } catch (err) {
+        const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas wylogowywania";
+        handleApiError(err, errorMessage);
+        toast.error(errorMessage);
+        throw err;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [handleApiError]
+  );
+
   const resetPassword = useCallback(
     async (email: string): Promise<void> => {
       try {
         setIsLoading(true);
         setError(null);
 
-        // TODO: Implementacja z Supabase Auth SDK
-        // const { error: resetError } = await supabaseClient.auth.resetPasswordForEmail(email, {
-        //   redirectTo: `${window.location.origin}/reset-password`,
-        // });
+        const response = await fetch("/api/auth/reset-password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        });
 
-        // if (resetError) {
-        //   throw resetError;
-        // }
+        const result = await response.json();
 
-        // Symulacja resetowania hasła dla wydmuszki
-        console.log("Resetting password for:", email);
+        if (!response.ok) {
+          throw new Error(translateError(result.error) || "Wystąpił błąd podczas wysyłania linku resetowania");
+        }
 
-        // Symulacja opóźnienia API
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Symulacja sukcesu
-        toast.success("Link do resetowania hasła został wysłany na Twój adres email!");
+        toast.success(result.message || "Link do resetowania hasła został wysłany na Twój adres email!");
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas wysyłania linku resetowania";
         handleApiError(err, errorMessage);
@@ -153,6 +202,7 @@ export const useAuth = (): UseAuthReturn => {
     isLoading,
     error,
     login,
+    logout,
     resetPassword,
     updatePassword,
     clearError,
