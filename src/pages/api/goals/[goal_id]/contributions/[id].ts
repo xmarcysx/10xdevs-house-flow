@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../../../db/supabase.client";
 import {
   sanitizeUpdateGoalContributionCommand,
   validateGoalContributionId,
@@ -85,7 +84,7 @@ export const PUT: APIRoute = async (context) => {
     const goalContributionsService = new GoalContributionsService(context.locals.supabase);
 
     // Aktualizuj wpłatę używając domyślnego ID użytkownika
-    const updatedContribution = await goalContributionsService.update(id, goal_id, command, DEFAULT_USER_ID);
+    const updatedContribution = await goalContributionsService.update(id, goal_id, command, context.locals.user.id);
 
     // Zwróć zaktualizowaną wpłatę z kodem 200
     return new Response(JSON.stringify(updatedContribution), {
@@ -163,7 +162,7 @@ export const DELETE: APIRoute = async (context) => {
     const goalContributionsService = new GoalContributionsService(context.locals.supabase);
 
     // Usuń wpłatę używając domyślnego ID użytkownika
-    await goalContributionsService.delete(id, goal_id, DEFAULT_USER_ID);
+    await goalContributionsService.delete(id, goal_id, context.locals.user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Wpłata została usunięta" } as MessageDTO), {

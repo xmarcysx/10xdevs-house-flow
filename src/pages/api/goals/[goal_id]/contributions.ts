@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import {
   sanitizeCreateGoalContributionCommand,
   sanitizeGetGoalContributionsQuery,
@@ -56,7 +55,7 @@ export const GET: APIRoute = async (context) => {
     const goalContributionsService = new GoalContributionsService(context.locals.supabase);
 
     // Pobierz wpłaty używając domyślnego ID użytkownika
-    const result = await goalContributionsService.getGoalContributions(goal_id, DEFAULT_USER_ID, query);
+    const result = await goalContributionsService.getGoalContributions(goal_id, context.locals.user.id, query);
 
     // Zwróć wpłaty z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -133,7 +132,7 @@ export const POST: APIRoute = async (context) => {
     const goalContributionsService = new GoalContributionsService(context.locals.supabase);
 
     // Utwórz wpłatę używając domyślnego ID użytkownika
-    const contribution = await goalContributionsService.create(goal_id, command, DEFAULT_USER_ID);
+    const contribution = await goalContributionsService.create(goal_id, command, context.locals.user.id);
 
     // Zwróć utworzoną wpłatę z kodem 201
     return new Response(JSON.stringify(contribution), {

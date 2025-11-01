@@ -33,24 +33,37 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  // IMPORTANT: Always get user session first before any other operations
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // For API routes, check authentication
+  if (context.url.pathname.startsWith('/api/')) {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
 
-  if (user) {
-    context.locals.user = {
-      email: user.email,
-      id: user.id,
-    };
-
-    // Redirect logged-in users away from auth pages
-    if (AUTH_ROUTES.includes(context.url.pathname)) {
-      return context.redirect('/');
+      if (user) {
+        context.locals.user = {
+          email: user.email,
+          id: user.id,
+        };
+      } else {
+        // Return 401 for API routes without authentication
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    } catch (error) {
+      console.error('Auth error in middleware:', error);
+      return new Response(JSON.stringify({ error: 'Authentication error' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
-  } else if (!PUBLIC_PATHS.includes(context.url.pathname)) {
-    // Redirect to login for protected routes
-    return context.redirect('/login');
+  } else {
+    // For pages, let them render and handle auth on client side
+    // This prevents redirect loops and auth errors on page load
+    return next();
   }
 
   return next();

@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeCreateIncomeCommand,
   sanitizeGetIncomesQuery,
@@ -34,8 +33,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję IncomesService
     const incomesService = new IncomesService(context.locals.supabase);
 
-    // Pobierz wpływy używając domyślnego ID użytkownika
-    const result = await incomesService.getIncomes(DEFAULT_USER_ID, query);
+    // Pobierz wpływy używając ID aktualnie zalogowanego użytkownika
+    const result = await incomesService.getIncomes(context.locals.user.id, query);
 
     // Zwróć wpływy z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -91,8 +90,8 @@ export const POST: APIRoute = async (context) => {
     // Utwórz instancję IncomesService
     const incomesService = new IncomesService(context.locals.supabase);
 
-    // Utwórz wpływ używając domyślnego ID użytkownika
-    const income = await incomesService.create(command, DEFAULT_USER_ID);
+    // Utwórz wpływ używając ID aktualnie zalogowanego użytkownika
+    const income = await incomesService.create(command, context.locals.user.id);
 
     // Zwróć utworzony wpływ z kodem 201
     return new Response(JSON.stringify(income), {

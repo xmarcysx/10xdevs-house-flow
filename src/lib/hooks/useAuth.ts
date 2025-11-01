@@ -79,6 +79,17 @@ export const useAuth = (): UseAuthReturn => {
           throw new Error(translateError(result.error) || "Wystąpił błąd podczas logowania");
         }
 
+        // Ręcznie ustaw sesję w kliencie Supabase
+        if (result.session) {
+          const { supabaseClient } = await import("../../db/supabase.client");
+          console.log("Setting session in client...");
+          const { data, error } = await supabaseClient.auth.setSession({
+            access_token: result.session.access_token,
+            refresh_token: result.session.refresh_token,
+          });
+          console.log("Session set result:", !!data.session, data.session?.user?.email, error);
+        }
+
         toast.success("Zalogowano pomyślnie!");
 
         // Przekierowanie do dashboardu

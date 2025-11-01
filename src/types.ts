@@ -152,21 +152,8 @@ export interface PaginationDTO {
   total: number;
 }
 
-// Auth related types
-export interface User {
-  id: string;
-  email: string;
-  created_at: string;
-  updated_at: string;
-  last_login?: string;
-}
-
-export interface Session {
-  access_token: string;
-  refresh_token: string;
-  expires_at: number;
-  user: User;
-}
+// Auth related types - używamy typów bezpośrednio z Supabase
+export type { Session, User } from "@supabase/supabase-js";
 
 export interface AuthState {
   user: User | null;

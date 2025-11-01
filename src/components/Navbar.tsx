@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAuth } from "../lib/hooks/useAuth";
+import { useAuthState } from "../lib/hooks/useAuthState";
 import ThemeToggle from "./ThemeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
@@ -12,14 +14,11 @@ interface NavItem {
 
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-
-  // Mock user data
-  const user = {
-    name: "Jan Kowalski",
-    email: "jan.kowalski@example.com",
-    avatar: null, // możemy później dodać URL do avatara
-    initials: "JK",
-  };
+  const { user, isLoading, isAuthenticated } = useAuthState();
+  const { logout } = useAuth();
+  // Przygotuj dane użytkownika dla wyświetlania
+  const userEmail = user?.email || "";
+  const userInitials = userEmail ? userEmail.charAt(0).toUpperCase() : "?";
 
   const navItems: NavItem[] = [
     { label: "Dashboard", href: "/", active: true },
@@ -73,51 +72,54 @@ const Navbar: React.FC = () => {
               </Button>
             </div>
 
-            {/* User Menu */}
-            <div className="relative">
-              <button
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                <Avatar className="w-8 h-8">
-                  <AvatarImage src={user.avatar || undefined} alt={user.name} />
-                  <AvatarFallback className="bg-blue-600 text-white text-sm">{user.initials}</AvatarFallback>
-                </Avatar>
-                <div className="hidden sm:block text-left">
-                  <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">{user.email}</div>
-                </div>
-                <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? "rotate-180" : ""}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            {/* User Menu - tylko jeśli użytkownik jest zalogowany */}
+            {user && (
+              <div className="relative">
+                <button
+                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                  className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                  <Avatar className="w-8 h-8">
+                    <AvatarImage src={undefined} alt={userEmail} />
+                    <AvatarFallback className="bg-blue-600 text-white text-sm">{userInitials}</AvatarFallback>
+                  </Avatar>
+                  <div className="hidden sm:block text-left">
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">{userEmail}</div>
+                  </div>
+                  <svg
+                    className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-              {/* Dropdown Menu */}
-              {isUserMenuOpen && (
-                <Card className="absolute right-0 mt-2 w-56 py-2 shadow-lg border border-gray-200 dark:border-gray-700">
-                  <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                    <div className="text-sm font-medium text-gray-900 dark:text-white">{user.name}</div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">{user.email}</div>
-                  </div>
-                  <div className="py-1">
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      Ustawienia
-                    </button>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      Pomoc
-                    </button>
-                    <button className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
-                      Wyloguj się
-                    </button>
-                  </div>
-                </Card>
-              )}
-            </div>
+                {/* Dropdown Menu */}
+                {isUserMenuOpen && (
+                  <Card className="absolute right-0 mt-2 w-56 py-2 shadow-lg border border-gray-200 dark:border-gray-700">
+                    <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                      <div className="text-sm font-medium text-gray-900 dark:text-white">{userEmail}</div>
+                    </div>
+                    <div className="py-1">
+                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        Ustawienia
+                      </button>
+                      <button className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        Pomoc
+                      </button>
+                      <button
+                        onClick={() => logout()}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      >
+                        Wyloguj się
+                      </button>
+                    </div>
+                  </Card>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

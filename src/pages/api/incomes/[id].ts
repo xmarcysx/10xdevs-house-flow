@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeUpdateIncomeCommand,
   validateIncomeId,
@@ -67,7 +66,7 @@ export const PUT: APIRoute = async (context) => {
     const incomesService = new IncomesService(context.locals.supabase);
 
     // Aktualizuj wpływ używając domyślnego ID użytkownika
-    const updatedIncome = await incomesService.update(id, command, DEFAULT_USER_ID);
+    const updatedIncome = await incomesService.update(id, command, context.locals.user.id);
 
     // Zwróć zaktualizowany wpływ z kodem 200
     return new Response(JSON.stringify(updatedIncome), {
@@ -128,7 +127,7 @@ export const DELETE: APIRoute = async (context) => {
     const incomesService = new IncomesService(context.locals.supabase);
 
     // Usuń wpływ używając domyślnego ID użytkownika
-    await incomesService.delete(id, DEFAULT_USER_ID);
+    await incomesService.delete(id, context.locals.user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Wydatek usunięty" } as MessageDTO), {

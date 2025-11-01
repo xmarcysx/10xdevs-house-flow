@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeUpdateCategoryCommand,
   validateCategoryId,
@@ -67,7 +66,7 @@ export const PUT: APIRoute = async (context) => {
     const categoriesService = new CategoriesService(context.locals.supabase);
 
     // Aktualizuj kategorię używając domyślnego ID użytkownika
-    const updatedCategory = await categoriesService.update(id, command, DEFAULT_USER_ID);
+    const updatedCategory = await categoriesService.update(id, command, context.locals.user.id);
 
     // Zwróć zaktualizowaną kategorię z kodem 200
     return new Response(JSON.stringify(updatedCategory), {
@@ -135,7 +134,7 @@ export const DELETE: APIRoute = async (context) => {
     const categoriesService = new CategoriesService(context.locals.supabase);
 
     // Usuń kategorię używając domyślnego ID użytkownika
-    await categoriesService.delete(id, DEFAULT_USER_ID);
+    await categoriesService.delete(id, context.locals.user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Kategoria została usunięta" } as MessageDTO), {

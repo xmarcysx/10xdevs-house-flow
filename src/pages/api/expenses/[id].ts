@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeUpdateExpenseCommand,
   validateExpenseId,
@@ -67,7 +66,7 @@ export const PUT: APIRoute = async (context) => {
     const expensesService = new ExpensesService(context.locals.supabase);
 
     // Aktualizuj wydatek używając domyślnego ID użytkownika
-    const updatedExpense = await expensesService.update(id, command, DEFAULT_USER_ID);
+    const updatedExpense = await expensesService.update(id, command, context.locals.user.id);
 
     // Zwróć zaktualizowany wydatek z kodem 200
     return new Response(JSON.stringify(updatedExpense), {
@@ -160,7 +159,7 @@ export const DELETE: APIRoute = async (context) => {
     const expensesService = new ExpensesService(context.locals.supabase);
 
     // Usuń wydatek używając domyślnego ID użytkownika
-    await expensesService.delete(id, DEFAULT_USER_ID);
+    await expensesService.delete(id, context.locals.user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Wydatek został usunięty" } as MessageDTO), {

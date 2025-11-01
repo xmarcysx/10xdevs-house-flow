@@ -33,11 +33,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     });
 
     if (error) {
+      console.error("Login error:", error);
       return new Response(JSON.stringify({ error: error.message }), {
         status: 400,
         headers: { "Content-Type": "application/json" },
       });
     }
+
+    console.log("Login successful, user:", data.user?.email, "session exists:", !!data.session);
 
     // Aktualizuj last_login w tabeli users (jeśli kolumny istnieją)
     if (data.user) {
@@ -60,7 +63,10 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     }
 
-    return new Response(JSON.stringify({ user: data.user }), {
+    return new Response(JSON.stringify({
+      user: data.user,
+      session: data.session
+    }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

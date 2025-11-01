@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeCreateCategoryCommand,
   sanitizeGetCategoriesQuery,
@@ -34,8 +33,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję CategoriesService
     const categoriesService = new CategoriesService(context.locals.supabase);
 
-    // Pobierz kategorie używając domyślnego ID użytkownika
-    const result = await categoriesService.getCategories(DEFAULT_USER_ID, query);
+    // Pobierz kategorie używając ID aktualnie zalogowanego użytkownika
+    const result = await categoriesService.getCategories(context.locals.user.id, query);
 
     // Zwróć kategorie z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -93,8 +92,8 @@ export const POST: APIRoute = async (context) => {
     // Utwórz instancję CategoriesService
     const categoriesService = new CategoriesService(context.locals.supabase);
 
-    // Utwórz kategorię używając domyślnego ID użytkownika
-    const category = await categoriesService.create(command, DEFAULT_USER_ID);
+    // Utwórz kategorię używając ID aktualnie zalogowanego użytkownika
+    const category = await categoriesService.create(command, context.locals.user.id);
 
     // Zwróć utworzoną kategorię z kodem 201
     return new Response(JSON.stringify(category), {

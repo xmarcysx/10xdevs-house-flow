@@ -1,6 +1,7 @@
+import type { Session, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { supabaseClient } from "../../db/supabase.client";
-import type { AuthState, Session, User } from "../../types";
+import type { AuthState } from "../../types";
 
 export const useAuthState = (): AuthState => {
   const [user, setUser] = useState<User | null>(null);
@@ -12,16 +13,26 @@ export const useAuthState = (): AuthState => {
     // Pobierz początkową sesję
     const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        const {
+          data: { session },
+          error,
+        } = await supabaseClient.auth.getSession();
         if (error) {
           console.error("Error getting session:", error);
+          setSession(null);
+          setUser(null);
+          setIsAuthenticated(false);
         } else {
+          console.log("Initial session loaded:", !!session, session?.user?.email);
           setSession(session);
           setUser(session?.user ?? null);
           setIsAuthenticated(!!session);
         }
       } catch (error) {
         console.error("Error in getInitialSession:", error);
+        setSession(null);
+        setUser(null);
+        setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
       }
@@ -30,20 +41,17 @@ export const useAuthState = (): AuthState => {
     getInitialSession();
 
     // Nasłuchuj zmian stanu autentyfikacji
-    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsAuthenticated(!!session);
-        setIsLoading(false);
+    const {
+      data: { subscription },
+    } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      console.log("Auth state change:", event, !!session, session?.user?.email);
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsAuthenticated(!!session);
+      setIsLoading(false);
 
-        if (event === 'SIGNED_IN') {
-          console.log('User signed in');
-        } else if (event === 'SIGNED_OUT') {
-          console.log('User signed out');
-        }
-      }
-    );
+      // Handle auth state changes silently
+    });
 
     // Cleanup subscription
     return () => {

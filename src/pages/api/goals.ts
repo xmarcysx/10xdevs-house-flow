@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../db/supabase.client";
 import {
   sanitizeCreateGoalCommand,
   sanitizeGetGoalsQuery,
@@ -34,8 +33,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję GoalsService
     const goalsService = new GoalsService(context.locals.supabase);
 
-    // Pobierz cele używając domyślnego ID użytkownika
-    const result = await goalsService.getGoals(DEFAULT_USER_ID, query);
+    // Pobierz cele używając ID aktualnie zalogowanego użytkownika
+    const result = await goalsService.getGoals(context.locals.user.id, query);
 
     // Zwróć cele z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -91,8 +90,8 @@ export const POST: APIRoute = async (context) => {
     // Utwórz instancję GoalsService
     const goalsService = new GoalsService(context.locals.supabase);
 
-    // Utwórz cel używając domyślnego ID użytkownika
-    const goal = await goalsService.create(command, DEFAULT_USER_ID);
+    // Utwórz cel używając ID aktualnie zalogowanego użytkownika
+    const goal = await goalsService.create(command, context.locals.user.id);
 
     // Zwróć utworzony cel z kodem 201
     return new Response(JSON.stringify(goal), {

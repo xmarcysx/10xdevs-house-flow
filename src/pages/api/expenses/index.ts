@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeCreateExpenseCommand,
   sanitizeGetExpensesQuery,
@@ -34,8 +33,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję ExpensesService
     const expensesService = new ExpensesService(context.locals.supabase);
 
-    // Pobierz wydatki używając domyślnego ID użytkownika
-    const result = await expensesService.getExpenses(DEFAULT_USER_ID, query);
+    // Pobierz wydatki używając ID aktualnie zalogowanego użytkownika
+    const result = await expensesService.getExpenses(context.locals.user.id, query);
 
     // Zwróć wydatki z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -94,8 +93,8 @@ export const POST: APIRoute = async (context) => {
     // Utwórz instancję ExpensesService
     const expensesService = new ExpensesService(context.locals.supabase);
 
-    // Utwórz wydatek używając domyślnego ID użytkownika
-    const expense = await expensesService.create(command, DEFAULT_USER_ID);
+    // Utwórz wydatek używając ID aktualnie zalogowanego użytkownika
+    const expense = await expensesService.create(command, context.locals.user.id);
 
     // Zwróć utworzony wydatek z kodem 201
     return new Response(JSON.stringify(expense), {

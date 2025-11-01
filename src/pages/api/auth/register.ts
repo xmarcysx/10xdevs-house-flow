@@ -41,6 +41,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Jeśli rejestracja się udała, dodaj użytkownika do lokalnej tabeli users
     // aby trigger create_default_categories zadziałał
+    // password_hash jest null ponieważ używamy Supabase Auth
     if (data.user) {
       try {
         const { error: insertError } = await supabase
@@ -48,6 +49,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           .insert({
             id: data.user.id,
             email: data.user.email,
+            password_hash: null, // Supabase Auth zarządza hasłami
           });
 
         if (insertError) {

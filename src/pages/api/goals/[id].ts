@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeUpdateGoalCommand,
   validateGoalId,
@@ -37,8 +36,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję GoalsService
     const goalsService = new GoalsService(context.locals.supabase);
 
-    // Pobierz cel używając domyślnego ID użytkownika
-    const goal = await goalsService.getGoalById(id, DEFAULT_USER_ID);
+    // Pobierz cel używając ID aktualnie zalogowanego użytkownika
+    const goal = await goalsService.getGoalById(id, context.locals.user.id);
 
     // Zwróć cel z kodem 200
     return new Response(JSON.stringify(goal), {
@@ -125,7 +124,7 @@ export const PUT: APIRoute = async (context) => {
     const goalsService = new GoalsService(context.locals.supabase);
 
     // Aktualizuj cel używając domyślnego ID użytkownika
-    const updatedGoal = await goalsService.update(id, command, DEFAULT_USER_ID);
+    const updatedGoal = await goalsService.update(id, command, context.locals.user.id);
 
     // Zwróć zaktualizowany cel z kodem 200
     return new Response(JSON.stringify(updatedGoal), {
@@ -197,7 +196,7 @@ export const DELETE: APIRoute = async (context) => {
     const goalsService = new GoalsService(context.locals.supabase);
 
     // Usuń cel używając domyślnego ID użytkownika
-    await goalsService.delete(id, DEFAULT_USER_ID);
+    await goalsService.delete(id, context.locals.user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Cel został usunięty" } as MessageDTO), {

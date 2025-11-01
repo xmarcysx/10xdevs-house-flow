@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../db/supabase.client";
 import {
   sanitizeGetMonthlyBudgetQuery,
   validateGetMonthlyBudgetQuery,
@@ -32,8 +31,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję BudgetService
     const budgetService = new BudgetService(context.locals.supabase);
 
-    // Pobierz miesięczne podsumowanie budżetu używając domyślnego ID użytkownika
-    const monthlyBudget = await budgetService.getMonthlyBudget(DEFAULT_USER_ID, query.month);
+    // Pobierz miesięczne podsumowanie budżetu używając ID aktualnie zalogowanego użytkownika
+    const monthlyBudget = await budgetService.getMonthlyBudget(context.locals.user.id, query.month);
 
     // Zwróć podsumowanie budżetu
     return new Response(JSON.stringify(monthlyBudget), {

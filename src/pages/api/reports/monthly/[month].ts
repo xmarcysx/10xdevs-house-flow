@@ -1,5 +1,4 @@
 import type { APIRoute } from "astro";
-import { DEFAULT_USER_ID } from "../../../../db/supabase.client";
 import { sanitizeMonthParameter, validateMonthParameter } from "../../../../lib/validation/reports.validation";
 import { ReportsService } from "../../../../services/reports.service";
 import type { MessageDTO } from "../../../../types";
@@ -41,8 +40,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję ReportsService
     const reportsService = new ReportsService(context.locals.supabase);
 
-    // Pobierz miesięczny raport używając domyślnego ID użytkownika
-    const report = await reportsService.getMonthlyReport(DEFAULT_USER_ID, sanitizedMonth);
+    // Pobierz miesięczny raport używając ID aktualnie zalogowanego użytkownika
+    const report = await reportsService.getMonthlyReport(context.locals.user.id, sanitizedMonth);
 
     // Zwróć raport z kodem 200
     return new Response(JSON.stringify(report), {
