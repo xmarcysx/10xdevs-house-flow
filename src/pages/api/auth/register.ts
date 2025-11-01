@@ -30,6 +30,11 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     const { data, error } = await supabase.auth.signUp({
       email: validationResult.data.email,
       password: validationResult.data.password,
+      options: {
+        data: {
+          // Możemy dodać dodatkowe dane użytkownika jeśli potrzebne
+        }
+      }
     });
 
     if (error) {
@@ -63,7 +68,32 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     }
 
-    return new Response(JSON.stringify({ user: data.user }), {
+    // Automatycznie zaloguj użytkownika po rejestracji
+    console.log("Auto-login after registration...");
+    const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+      email: validationResult.data.email,
+      password: validationResult.data.password,
+    });
+
+    if (loginError) {
+      console.error("Auto-login failed:", loginError);
+      // Jeśli automatyczne logowanie się nie powiedzie, zwróć tylko dane rejestracji
+      return new Response(JSON.stringify({
+        user: data.user,
+        autoLoginFailed: true
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("Auto-login successful, user:", loginData.user?.email, "session exists:", !!loginData.session);
+
+    return new Response(JSON.stringify({
+      user: data.user,
+      session: loginData.session,
+      autoLoggedIn: true
+    }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

@@ -79,29 +79,24 @@ export const useRegister = (): UseRegisterReturn => {
           throw new Error(translateError(result.error) || "Wystąpił błąd podczas rejestracji");
         }
 
-        toast.success("Konto zostało utworzone pomyślnie!");
-
-        // Automatyczne logowanie po rejestracji
-        const loginResponse = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: data.email,
-            password: data.password,
-          }),
-        });
-
-        if (loginResponse.ok) {
-          toast.success("Zalogowano automatycznie!");
-          // Przekierowanie do dashboardu
-          window.location.href = "/";
-        } else {
-          // Jeśli automatyczne logowanie się nie powiedzie, przekieruj na login
-          toast.info("Przejdź do logowania, aby uzyskać dostęp do swojego konta");
-          window.location.href = "/login";
+        // Ręcznie ustaw sesję w kliencie Supabase po rejestracji
+        if (result.session) {
+          const { supabaseClient } = await import("../../db/supabase.client");
+          console.log("Setting session after registration...");
+          await supabaseClient.auth.setSession({
+            access_token: result.session.access_token,
+            refresh_token: result.session.refresh_token,
+          });
         }
+
+        if (result.autoLoggedIn) {
+          toast.success("Konto zostało utworzone i zalogowano automatycznie!");
+        } else {
+          toast.success("Konto zostało utworzone pomyślnie!");
+        }
+
+        // Przekierowanie do dashboardu
+        window.location.href = "/";
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas rejestracji";
         handleApiError(err, errorMessage);
