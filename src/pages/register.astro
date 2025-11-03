@@ -6,18 +6,33 @@ import AuthLayout from "../layouts/AuthLayout.astro";
 <AuthLayout title="Rejestracja - HouseFlow">
   <div class="max-w-md w-full space-y-8">
     <div>
-      <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">Utwórz konto</h2>
+      <h2 class="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
+        Utwórz konto
+      </h2>
       <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
         Lub{" "}
         <a
           href="/login"
-          class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+          class="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors duration-200"
         >
           zaloguj się do istniejącego konta
         </a>
       </p>
     </div>
 
-    <RegisterForm client:only="react" />
+    <div class="transform hover:scale-105 transition-all duration-300">
+      <RegisterForm client:only="react" />
+    </div>
   </div>
 </AuthLayout>
+<style>
+  .bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .text-transparent {
+    -webkit-text-fill-color: transparent;
+  }
+</style>
+
