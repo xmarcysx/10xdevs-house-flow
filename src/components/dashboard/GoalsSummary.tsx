@@ -20,7 +20,7 @@ const GoalItem: React.FC<{ goal: GoalDTO }> = ({ goal }) => {
 
   return (
     <div
-      className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+      className="p-4 bg-white dark:bg-gray-800 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
       onClick={handleClick}
     >
       <div className="flex items-center justify-between mb-2">
@@ -32,7 +32,7 @@ const GoalItem: React.FC<{ goal: GoalDTO }> = ({ goal }) => {
 
       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
         <div
-          className={`h-2 rounded-full transition-all duration-300 ${isCompleted ? "bg-green-500" : "bg-blue-500"}`}
+          className={`h-2 rounded-full transition-all duration-300 ${isCompleted ? "bg-green-500" : "bg-primary"}`}
           style={{ width: `${progressPercentage}%` }}
         ></div>
       </div>

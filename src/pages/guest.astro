@@ -1,9 +1,8 @@
 ---
-import BudgetSummaryCard from "../components/dashboard/BudgetSummaryCard";
 import CategoryPieChart from "../components/dashboard/CategoryPieChart";
 import GoalsSummary from "../components/dashboard/GoalsSummary";
-import TrendsLineChart from "../components/dashboard/TrendsLineChart";
 import { Button } from "../components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import Layout from "../layouts/Layout.astro";
 
 // Mock data for demonstration
@@ -43,39 +42,189 @@ const mockGoalsData = [
     created_at: "2024-03-01",
   },
 ];
-
-const mockTrendsData = [
-  { month: "Październik", income: 8500, expenses: 6200, remaining: 2300 },
-  { month: "Listopad", income: 8200, expenses: 6800, remaining: 1400 },
-  { month: "Grudzień", income: 9000, expenses: 7200, remaining: 1800 },
-  { month: "Styczeń", income: 8800, expenses: 6500, remaining: 2300 },
-];
 ---
 
 <Layout title="HouseFlow - Zarządzanie domowym budżetem">
   <!-- Hero Section -->
-  <section class="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section
+    class="relative bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-indigo-900 dark:to-purple-900 py-24 overflow-hidden"
+  >
+    <!-- Background decorations -->
+    <div class="absolute inset-0 bg-gradient-to-br from-transparent via-white/5 to-transparent"></div>
+
+    <!-- Floating elements -->
+    <div
+      class="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-20 animate-pulse"
+    >
+    </div>
+    <div
+      class="absolute top-40 right-20 w-16 h-16 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-20 animate-pulse animation-delay-1000"
+    >
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div class="text-center">
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-          House<span class="text-blue-600">Flow</span>
-        </h1>
-        <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+        <!-- Logo and Title -->
+        <div class="flex items-center justify-center gap-6 mb-8">
+          <div class="relative">
+            <img src="/src/assets/logo.png" alt="HouseFlow Logo" class="h-20 w-20 md:h-24 md:w-24 drop-shadow-lg" />
+          </div>
+          <h1
+            class="text-5xl md:text-7xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent"
+          >
+            House<span class="text-blue-600 dark:text-blue-400">Flow</span>
+          </h1>
+        </div>
+
+        <!-- Subtitle -->
+        <p
+          class="text-xl md:text-3xl text-gray-700 dark:text-gray-300 mb-6 max-w-4xl mx-auto font-medium leading-relaxed"
+        >
           Uprość zarządzanie swoim domowym budżetem. Śledź wpływy, wydatki i cele oszczędnościowe w jednym miejscu.
         </p>
-        <p class="text-lg text-gray-500 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
+
+        <!-- Description -->
+        <p class="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
           Zastąp męczące arkusze kalkulacyjne i notatki intuicyjnym narzędziem, które pomoże Ci szybko sprawdzić stan
           finansów i monitorować postępy w osiąganiu celów.
         </p>
 
-        <!-- Auth Buttons -->
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
-            <a href="/register">Rozpocznij za darmo</a>
-          </Button>
-          <Button asChild variant="outline" size="lg" class="px-8 py-3">
-            <a href="/login">Zaloguj się</a>
-          </Button>
+        <!-- Enhanced Auth Buttons -->
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <a href="/register" class="group">
+            <Button
+              size="lg"
+              className="text-lg px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+            >
+              Rozpocznij za darmo
+            </Button>
+          </a>
+          <a href="/login" class="group">
+            <Button
+              variant="outline"
+              size="lg"
+              className="text-lg px-10 py-4 border-2 border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-blue-400 dark:hover:border-blue-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+            >
+              Zaloguj się
+            </Button>
+          </a>
+        </div>
+
+        <!-- Trust indicators -->
+        <div
+          class="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-gray-500 dark:text-gray-400"
+        >
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <span>Bezpłatne konto</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <span>Brak karty kredytowej</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"></path>
+            </svg>
+            <span>Konfiguracja w 5 minut</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Indicators Section -->
+  <section
+    class="py-16 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-800 dark:via-indigo-800 dark:to-purple-800"
+  >
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+        <!-- Stat 1 -->
+        <div class="group">
+          <div class="flex flex-col items-center">
+            <div
+              class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300"
+            >
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                ></path>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-white mb-2">10,000+</div>
+            <div class="text-blue-100 font-medium">Zadowolonych użytkowników</div>
+          </div>
+        </div>
+
+        <!-- Stat 2 -->
+        <div class="group">
+          <div class="flex flex-col items-center">
+            <div
+              class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300"
+            >
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                ></path>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-white mb-2">500,000+</div>
+            <div class="text-blue-100 font-medium">Zarejestrowanych transakcji</div>
+          </div>
+        </div>
+
+        <!-- Stat 3 -->
+        <div class="group">
+          <div class="flex flex-col items-center">
+            <div
+              class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300"
+            >
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-white mb-2">25,000+</div>
+            <div class="text-blue-100 font-medium">Osiągniętych celów</div>
+          </div>
+        </div>
+
+        <!-- Stat 4 -->
+        <div class="group">
+          <div class="flex flex-col items-center">
+            <div
+              class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-white/20 transition-all duration-300"
+            >
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                ></path>
+              </svg>
+            </div>
+            <div class="text-3xl md:text-4xl font-bold text-white mb-2">98%</div>
+            <div class="text-blue-100 font-medium">Zadowolenie użytkowników</div>
+          </div>
         </div>
       </div>
     </div>
@@ -95,27 +244,12 @@ const mockTrendsData = [
 
       <!-- Mock Dashboard Components -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-        <!-- Budget Summary -->
-        <div class="transform hover:scale-105 transition-transform duration-300">
-          <BudgetSummaryCard data={mockBudgetData} client:load />
-        </div>
-
         <!-- Goals Summary -->
         <div class="transform hover:scale-105 transition-transform duration-300">
           <GoalsSummary goals={mockGoalsData} client:load />
         </div>
-      </div>
-
-      <!-- Charts Section -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- Category Pie Chart -->
         <div class="transform hover:scale-105 transition-transform duration-300">
           <CategoryPieChart data={mockBudgetData.category_breakdown} client:load />
-        </div>
-
-        <!-- Trends Line Chart -->
-        <div class="transform hover:scale-105 transition-transform duration-300">
-          <TrendsLineChart data={mockTrendsData} client:load />
         </div>
       </div>
     </div>
@@ -133,160 +267,515 @@ const mockTrendsData = [
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Feature 1 -->
-        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-              ></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Rejestrowanie transakcji</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Łatwe dodawanie wpływów i wydatków z kategoriami, datami i opisami.
-          </p>
-        </div>
+        <Card
+          className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-blue-50/50 dark:from-gray-800 dark:to-blue-900/20"
+        >
+          <CardHeader className="pb-4">
+            <div class="relative">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110"
+              >
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Rejestrowanie transakcji
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Łatwe dodawanie wpływów i wydatków z kategoriami, datami i opisami. Szybkie skanowanie paragonów i
+              automatyczna kategoryzacja.
+            </CardDescription>
+          </CardContent>
+        </Card>
 
         <!-- Feature 2 -->
-        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              class="w-6 h-6 text-green-600 dark:text-green-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              ></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Wizualizacja danych</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Interaktywne wykresy i podsumowania pokazujące trendy i strukturę wydatków.
-          </p>
-        </div>
+        <Card
+          className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-green-50/50 dark:from-gray-800 dark:to-green-900/20"
+        >
+          <CardHeader className="pb-4">
+            <div class="relative">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110"
+              >
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Wizualizacja danych
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Interaktywne wykresy i podsumowania pokazujące trendy i strukturę wydatków. Analiza miesięczna i roczna z
+              prognozami.
+            </CardDescription>
+          </CardContent>
+        </Card>
 
         <!-- Feature 3 -->
-        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              class="w-6 h-6 text-purple-600 dark:text-purple-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"
-              ></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Cele oszczędnościowe</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Twórz cele i śledź postępy z automatycznymi predykcjami terminów osiągnięcia.
-          </p>
-        </div>
+        <Card
+          className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/20"
+        >
+          <CardHeader className="pb-4">
+            <div class="relative">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110"
+              >
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Cele oszczędnościowe
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Twórz cele i śledź postępy z automatycznymi predykcjami terminów osiągnięcia. Motywujące powiadomienia i
+              śledzenie postępów.
+            </CardDescription>
+          </CardContent>
+        </Card>
 
         <!-- Feature 4 -->
-        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="w-12 h-12 bg-orange-100 dark:bg-orange-900 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              class="w-6 h-6 text-orange-600 dark:text-orange-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-              ></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Raporty miesięczne</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Szczegółowe podsumowania wydatków z filtrowaniem po kategoriach i miesiącach.
-          </p>
-        </div>
+        <Card
+          className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-orange-50/50 dark:from-gray-800 dark:to-orange-900/20"
+        >
+          <CardHeader className="pb-4">
+            <div class="relative">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110"
+              >
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Raporty miesięczne
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Szczegółowe podsumowania wydatków z filtrowaniem po kategoriach i miesiącach. Eksport do PDF i porównania
+              rok do roku.
+            </CardDescription>
+          </CardContent>
+        </Card>
 
         <!-- Feature 5 -->
-        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="w-12 h-12 bg-red-100 dark:bg-red-900 rounded-lg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Responsywność</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Pełna funkcjonalność na wszystkich urządzeniach - komputerach, tabletach i smartfonach.
-          </p>
-        </div>
+        <Card
+          className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-red-50/50 dark:from-gray-800 dark:to-red-900/20"
+        >
+          <CardHeader className="pb-4">
+            <div class="relative">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110"
+              >
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Responsywność
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Pełna funkcjonalność na wszystkich urządzeniach - komputerach, tabletach i smartfonach. Synchronizacja
+              danych w czasie rzeczywistym.
+            </CardDescription>
+          </CardContent>
+        </Card>
 
         <!-- Feature 6 -->
-        <div class="bg-white dark:bg-gray-700 rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow">
-          <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-lg flex items-center justify-center mb-4">
-            <svg
-              class="w-6 h-6 text-indigo-600 dark:text-indigo-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-              ></path>
-            </svg>
+        <Card
+          className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-indigo-50/50 dark:from-gray-800 dark:to-indigo-900/20"
+        >
+          <CardHeader className="pb-4">
+            <div class="relative">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110"
+              >
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+            <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              Bezpieczeństwo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription className="text-gray-600 dark:text-gray-300 leading-relaxed">
+              Twoje dane finansowe są bezpieczne dzięki nowoczesnym standardom bezpieczeństwa. Szyfrowanie end-to-end i
+              regularne audyty.
+            </CardDescription>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Co mówią nasi użytkownicy</h2>
+        <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          Dołącz do tysięcy zadowolonych użytkowników, którzy już uproszczają zarządzanie swoimi finansami
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Testimonial 1 -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col justify-between h-full"
+        >
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+            </div>
           </div>
-          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Bezpieczeństwo</h3>
-          <p class="text-gray-600 dark:text-gray-300">
-            Twoje dane finansowe są bezpieczne dzięki nowoczesnym standardom bezpieczeństwa.
+          <p class="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
+            "HouseFlow całkowicie zmienił sposób, w jaki zarządzam naszym domowym budżetem. Wszystko jest tak proste i
+            intuicyjne!"
           </p>
+          <div class="flex items-center">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3"
+            >
+              A
+            </div>
+            <div>
+              <div class="font-semibold text-gray-900 dark:text-white">Anna Kowalska</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Menedżer projektu</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col justify-between h-full"
+        >
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+            </div>
+          </div>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
+            "Dzięki HouseFlow w końcu mam pełną kontrolę nad naszymi wydatkami. Cele oszczędnościowe to świetna
+            motywacja!"
+          </p>
+          <div class="flex items-center">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3"
+            >
+              M
+            </div>
+            <div>
+              <div class="font-semibold text-gray-900 dark:text-white">Marek Nowak</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Przedsiębiorca</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div
+          class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 flex flex-col justify-between h-full"
+        >
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"
+                ><path
+                  d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                ></path></svg
+              >
+            </div>
+          </div>
+          <p class="text-gray-600 dark:text-gray-300 mb-6 italic leading-relaxed">
+            "Aplikacja jest intuicyjna i bezpieczna. Wreszcie wiem, na co wydaję pieniądze i jak oszczędzać na ważne
+            cele."
+          </p>
+          <div class="flex items-center">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-purple-500 to-violet-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-3"
+            >
+              K
+            </div>
+            <div>
+              <div class="font-semibold text-gray-900 dark:text-white">Katarzyna Wiśniewska</div>
+              <div class="text-sm text-gray-500 dark:text-gray-400">Nauczycielka</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Call to Action Section -->
-  <section class="py-20 bg-blue-600 dark:bg-blue-800">
-    <div class="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Gotowy, by przejąć kontrolę nad swoim budżetem?</h2>
-      <p class="text-xl text-blue-100 mb-8">
-        Dołącz do tysięcy użytkowników, którzy już uproszczają zarządzanie finansami z HouseFlow.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button asChild size="lg" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3">
-          <a href="/register">Rozpocznij za darmo</a>
-        </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="lg"
-          class="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3"
-        >
-          <a href="/login">Zaloguj się</a>
-        </Button>
+  <section
+    class="relative py-24 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-800 dark:via-purple-800 dark:to-pink-800 overflow-hidden"
+  >
+    <!-- Background decorations -->
+    <div class="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
+
+    <!-- Floating elements -->
+    <div class="absolute top-10 left-10 w-32 h-32 bg-white/5 rounded-full blur-xl animate-pulse"></div>
+    <div
+      class="absolute bottom-10 right-10 w-40 h-40 bg-white/5 rounded-full blur-xl animate-pulse animation-delay-1000"
+    >
+    </div>
+    <div class="absolute top-1/2 left-1/4 w-24 h-24 bg-white/5 rounded-full blur-xl animate-pulse animation-delay-2000">
+    </div>
+
+    <div class="max-w-6xl mx-auto text-center px-4 sm:px-6 lg:px-8 relative z-10">
+      <!-- Main heading -->
+      <div class="mb-8">
+        <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+          Gotowy, by przejąć
+          <span class="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+            kontrolę nad swoim budżetem?
+          </span>
+        </h2>
+        <p class="text-xl md:text-2xl text-indigo-100 mb-12 max-w-3xl mx-auto leading-relaxed">
+          Dołącz do tysięcy użytkowników, którzy już uproszczają zarządzanie finansami z HouseFlow. Rozpocznij swoją
+          podróż do finansowej wolności już dziś!
+        </p>
+      </div>
+
+      <!-- Enhanced CTA Buttons -->
+      <div class="flex flex-col sm:flex-row gap-10 justify-center items-center mb-12">
+        <a href="/register" class="group">
+          <Button
+            size="lg"
+            className="text-xl px-12 py-5 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 text-gray-900 font-bold rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-110 transition-all duration-500 border-0 group-hover:shadow-yellow-400/25"
+          >
+            🚀 Rozpocznij za darmo
+          </Button>
+        </a>
+        <a href="/login" class="group">
+          <Button
+            variant="outline"
+            size="lg"
+            className="text-xl px-12 py-5 border-3 border-white/30 hover:border-white text-white hover:text-white hover:bg-white/10 font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 bg-white/5 backdrop-blur-sm"
+          >
+            Zaloguj się
+          </Button>
+        </a>
+      </div>
+
+      <!-- Trust indicators -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-8 text-indigo-200">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium">14 dni gwarancji zwrotu</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium">Bezpieczne płatności SSL</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <span class="font-medium">Wsparcie 24/7</span>
+        </div>
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .transform {
-    transition: transform 0.3s ease;
+  /* Animation utilities */
+  .animation-delay-1000 {
+    animation-delay: 1s;
   }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  /* Enhanced hover effects */
   .hover\:scale-105:hover {
     transform: scale(1.05);
+  }
+
+  .hover\:scale-110:hover {
+    transform: scale(1.1);
+  }
+
+  /* Gradient text utilities */
+  .bg-clip-text {
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .text-transparent {
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Custom shadows */
+  .shadow-3xl {
+    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom button hover effects */
+  .group:hover .group-hover\:animate-bounce {
+    animation: bounce 1s infinite;
+  }
+
+  /* Enhanced card animations */
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-in-up {
+    animation: slideInUp 0.6s ease-out;
+  }
+
+  /* Staggered animation for feature cards */
+  .feature-card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .feature-card:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .feature-card:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .feature-card:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+  .feature-card:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+  .feature-card:nth-child(6) {
+    animation-delay: 0.6s;
   }
 </style>
