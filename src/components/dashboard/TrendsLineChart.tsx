@@ -15,14 +15,23 @@ interface TrendsLineChartProps {
 const LineChartComponent = React.lazy(() => import("./charts/LineChart"));
 
 const TrendsLineChart: React.FC<TrendsLineChartProps> = ({ data }) => {
-  if (!data || data.length < 2) {
+  if (
+    !data ||
+    data.length === 0 ||
+    data.every((item) => item.income === 0 && item.expenses === 0 && item.remaining === 0)
+  ) {
     return (
       <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-cyan-50/50 dark:from-gray-800 dark:to-cyan-900/20">
         <CardHeader className="pb-4">
           <div className="relative">
             <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                ></path>
               </svg>
             </div>
           </div>
@@ -31,14 +40,18 @@ const TrendsLineChart: React.FC<TrendsLineChartProps> = ({ data }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
             </div>
-            <p className="text-lg font-medium mb-2">Za mało danych dla trendów</p>
-            <p className="text-sm">Wymagane minimum 2 miesiące danych</p>
+            Brak danych do wyświetlenia
           </div>
         </CardContent>
       </Card>
@@ -51,7 +64,12 @@ const TrendsLineChart: React.FC<TrendsLineChartProps> = ({ data }) => {
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+              ></path>
             </svg>
           </div>
         </div>

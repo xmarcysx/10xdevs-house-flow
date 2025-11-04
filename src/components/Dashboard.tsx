@@ -13,7 +13,7 @@ const Dashboard: React.FC = () => {
 
   // Add styles for animations
   React.useEffect(() => {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .animation-delay-100 {
         animation-delay: 0.1s;
@@ -39,7 +39,7 @@ const Dashboard: React.FC = () => {
     return (
       <DashboardLayout>
         <div className="col-span-full flex items-center justify-center py-20">
-          <div className="text-center">
+          <div className="flex flex-col items-center justify-center">
             <div className="relative mb-8">
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 dark:border-blue-800"></div>
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 absolute top-0"></div>
@@ -47,9 +47,7 @@ const Dashboard: React.FC = () => {
             <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">
               Ładowanie panelu głównego...
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              Przygotowujemy Twoje dane finansowe
-            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">Przygotowujemy Twoje dane finansowe</p>
             <div className="flex justify-center gap-2 mt-6">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-100"></div>
@@ -68,15 +66,18 @@ const Dashboard: React.FC = () => {
           <div className="text-center max-w-lg">
             <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
               <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                ></path>
               </svg>
             </div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-pink-800 dark:from-white dark:via-red-200 dark:to-pink-200 bg-clip-text text-transparent mb-4">
               Błąd podczas ładowania danych
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg leading-relaxed">
-              {error}
-            </p>
+            <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg leading-relaxed">{error}</p>
             <div className="flex gap-4 justify-center">
               <button
                 onClick={() => window.location.reload()}

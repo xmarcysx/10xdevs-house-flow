@@ -129,7 +129,7 @@ export const useDashboardData = (): UseDashboardDataReturn => {
             type: "expense" as const,
             amount: expense.amount,
             date: expense.date,
-            description: expense.description,
+            description: expense.description || undefined,
             category_name: expense.category_name,
             created_at: expense.created_at,
           })),
@@ -138,8 +138,8 @@ export const useDashboardData = (): UseDashboardDataReturn => {
             type: "income" as const,
             amount: income.amount,
             date: income.date,
-            description: income.description,
-            source: income.source,
+            description: income.description || undefined,
+            source: income.source || undefined,
             created_at: income.created_at,
           })),
         ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -174,26 +174,50 @@ export const useDashboardData = (): UseDashboardDataReturn => {
 
         setAlerts(newAlerts);
 
-        // Generate sample trends data (6 months)
-        const currentDate = new Date();
+        // Calculate trends data from actual expenses and incomes for the last 6 months
         const trends: TrendsVM[] = [];
+        const currentDate = new Date();
 
+        // Create a map to aggregate data by month
+        const monthlyData = new Map<string, { income: number; expenses: number }>();
+
+        // Initialize last 6 months
         for (let i = 5; i >= 0; i--) {
           const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
           const monthStr = date.toISOString().slice(0, 7);
+          monthlyData.set(monthStr, { income: 0, expenses: 0 });
+        }
 
-          // Generate sample data with some variation
-          const baseIncome = 5000 + Math.random() * 2000;
-          const baseExpenses = 3500 + Math.random() * 1500;
-          const baseRemaining = baseIncome - baseExpenses;
+        // Aggregate expenses by month
+        expenses.forEach((expense) => {
+          const month = expense.date.slice(0, 7); // YYYY-MM format
+          if (monthlyData.has(month)) {
+            const data = monthlyData.get(month)!;
+            data.expenses += expense.amount;
+          }
+        });
 
+        // Aggregate incomes by month
+        incomes.forEach((income) => {
+          const month = income.date.slice(0, 7); // YYYY-MM format
+          if (monthlyData.has(month)) {
+            const data = monthlyData.get(month)!;
+            data.income += income.amount;
+          }
+        });
+
+        // Convert to TrendsVM array
+        for (const [month, data] of monthlyData) {
           trends.push({
-            month: monthStr,
-            income: Math.round(baseIncome),
-            expenses: Math.round(baseExpenses),
-            remaining: Math.round(baseRemaining),
+            month,
+            income: Math.round(data.income),
+            expenses: Math.round(data.expenses),
+            remaining: Math.round(data.income - data.expenses),
           });
         }
+
+        // Sort by month (oldest first)
+        trends.sort((a, b) => a.month.localeCompare(b.month));
 
         setTrendsData(trends);
       } catch (err) {

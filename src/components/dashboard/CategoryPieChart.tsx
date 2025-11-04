@@ -12,7 +12,7 @@ interface CategoryPieChartProps {
 const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/20 h-100">
+      <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-orange-50/50 dark:from-gray-800 dark:to-orange-900/20 h-100">
         <CardHeader className="pb-4">
           <div className="relative">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
@@ -37,14 +37,26 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">Brak danych do wyświetlenia</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
+              </svg>
+            </div>
+            Brak danych do wyświetlenia
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/20">
+    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-orange-50/50 dark:from-gray-800 dark:to-orange-900/20">
       <CardHeader className="pb-4">
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
