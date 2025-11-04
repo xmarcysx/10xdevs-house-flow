@@ -40,28 +40,29 @@ export const ExpensesList: React.FC<ExpensesListProps> = ({
   // Brak danych
   if (!expenses || expenses.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
         <div className="p-8 text-center">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="mx-auto h-16 w-16 text-red-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={1}
+              strokeWidth={1.5}
               d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
             />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">Brak wydatków</h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Nie znaleziono żadnych wydatków spełniających kryteria wyszukiwania.
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Brak wydatków</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
+            Rozpocznij śledzenie swoich wydatków - dodaj pierwszy wydatek.
           </p>
-          <div className="mt-6">
-            <Button onClick={onAdd} className="inline-flex items-center px-4 py-2">
-              <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Dodaj pierwszy wydatek
-            </Button>
-          </div>
+          <Button
+            onClick={onAdd}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+          >
+            <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Dodaj pierwszy wydatek
+          </Button>
         </div>
       </div>
     );

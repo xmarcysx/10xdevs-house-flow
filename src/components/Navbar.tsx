@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../lib/hooks/useAuth";
 import { useAuthState } from "../lib/hooks/useAuthState";
 import ThemeToggle from "./ThemeToggle";
@@ -27,9 +27,9 @@ const Navbar: React.FC = () => {
     updatePath();
 
     // Nasłuchuj zmian w historii przeglądarki
-    window.addEventListener('popstate', updatePath);
+    window.addEventListener("popstate", updatePath);
 
-    return () => window.removeEventListener('popstate', updatePath);
+    return () => window.removeEventListener("popstate", updatePath);
   }, []);
 
   const navItems: NavItem[] = [
@@ -47,9 +47,13 @@ const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo/Brand */}
           <div className="flex items-center">
-            <div className="flex items-center space-x-3 group cursor-pointer">
+            <div className="flex items-center space-x-3 group">
               <div className="relative">
-                <img src="/src/assets/logo.png" alt="HouseFlow Logo" className="h-10 w-10 md:h-12 md:w-12 rounded-xl shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-110" />
+                <img
+                  src="/src/assets/logo.png"
+                  alt="HouseFlow Logo"
+                  className="h-10 w-10 md:h-12 md:w-12 rounded-xl shadow-lg group-hover:shadow-xl"
+                />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full opacity-80"></div>
               </div>
               <span className="text-2xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent">
@@ -73,9 +77,6 @@ const Navbar: React.FC = () => {
                   }`}
                 >
                   {item.label}
-                  {isActive && (
-                    <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full"></div>
-                  )}
                 </a>
               );
             })}

@@ -2,6 +2,7 @@
 import React from "react";
 import type { IncomesTableData } from "../../types";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "../ui/table";
+import { Button } from "../ui/button";
 import { IncomeRow } from "./IncomeRow";
 import { Pagination } from "./Pagination";
 
@@ -32,29 +33,27 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
     return (
       <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
         <div className="p-8 text-center">
-          <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="mx-auto h-16 w-16 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={1}
+              strokeWidth={1.5}
               d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
             />
           </svg>
-          <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">Brak wpływów</h3>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Nie znaleziono żadnych wpływów spełniających kryteria wyszukiwania.
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Brak wpływów</h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-sm mx-auto">
+            Rozpocznij śledzenie swoich wpływów - dodaj pierwszy wpływ.
           </p>
-          <div className="mt-6">
-            <button
-              onClick={onAdd}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
-            >
-              <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Dodaj pierwszy wpływ
-            </button>
-          </div>
+          <Button
+            onClick={onAdd}
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+          >
+            <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Dodaj pierwszy wpływ
+          </Button>
         </div>
       </div>
     );
