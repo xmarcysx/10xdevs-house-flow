@@ -34,7 +34,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // For API routes, check authentication
-  if (context.url.pathname.startsWith('/api/')) {
+  if (context.url.pathname.startsWith("/api/")) {
     try {
       const {
         data: { session },
@@ -48,22 +48,49 @@ export const onRequest = defineMiddleware(async (context, next) => {
         };
       } else {
         // Return 401 for API routes without authentication
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         });
       }
     } catch (error) {
-      console.error('Auth error in middleware:', error);
-      return new Response(JSON.stringify({ error: 'Authentication error' }), {
+      console.error("Auth error in middleware:", error);
+      return new Response(JSON.stringify({ error: "Authentication error" }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
     }
   } else {
-    // For pages, let them render and handle auth on client side
-    // This prevents redirect loops and auth errors on page load
-    return next();
+    // For pages, check authentication and redirect if needed
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const user = session?.user ?? null;
+
+      // If user is authenticated
+      if (user) {
+        context.locals.user = {
+          email: user.email,
+          id: user.id,
+        };
+
+        // If user is on auth routes (/login, /register), redirect to dashboard
+        if (AUTH_ROUTES.includes(context.url.pathname)) {
+          return context.redirect("/");
+        }
+
+        // Allow authenticated user to access protected pages
+        return next();
+      } else {
+        // User is not authenticated, redirect to guest page
+        return context.redirect("/guest");
+      }
+    } catch (error) {
+      console.error("Auth error in middleware:", error);
+      // On auth error, redirect to guest page
+      return context.redirect("/guest");
+    }
   }
 
   return next();

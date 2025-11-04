@@ -12,13 +12,23 @@ interface CategoryPieChartProps {
 const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
   if (!data || data.length === 0) {
     return (
-      <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/20">
+      <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-purple-50/50 dark:from-gray-800 dark:to-purple-900/20 h-100">
         <CardHeader className="pb-4">
           <div className="relative">
             <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+                ></path>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+                ></path>
               </svg>
             </div>
           </div>
@@ -39,8 +49,18 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
+              ></path>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
+              ></path>
             </svg>
           </div>
         </div>
@@ -72,7 +92,7 @@ const CategoryPieChart: React.FC<CategoryPieChartProps> = ({ data }) => {
               <div
                 className="w-3 h-3 rounded-full shadow-sm"
                 style={{
-                  backgroundColor: `hsl(${index * 60}, 70%, 50%)`
+                  backgroundColor: `hsl(${index * 60}, 70%, 50%)`,
                 }}
               ></div>
               <span className="text-gray-600 dark:text-gray-400 truncate">{category.category_name}</span>

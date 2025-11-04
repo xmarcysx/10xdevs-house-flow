@@ -78,7 +78,7 @@ const GoalsSummary: React.FC<GoalsSummaryProps> = ({ goals }) => {
   const topGoals = goals.slice(0, 3);
 
   return (
-    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-green-50/50 dark:from-gray-800 dark:to-green-900/20">
+    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-green-50/50 dark:from-gray-800 dark:to-green-900/20 h-100">
       <CardHeader className="pb-4">
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">

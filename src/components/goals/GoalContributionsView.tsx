@@ -265,7 +265,7 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
           disabled={submitting}
         >
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
