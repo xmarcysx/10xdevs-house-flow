@@ -26,6 +26,9 @@ export type UpdateExpenseCommand = Partial<
 
 // Goals
 export type GoalDTO = Pick<Tables<"goals">, "id" | "name" | "target_amount" | "current_amount" | "created_at">;
+export type GoalWithContributionsDTO = GoalDTO & {
+  contributions: GoalContributionDTO[];
+};
 export type CreateGoalCommand = Pick<TablesInsert<"goals">, "name" | "target_amount">;
 export type UpdateGoalCommand = Partial<Pick<TablesInsert<"goals">, "name" | "target_amount">>;
 

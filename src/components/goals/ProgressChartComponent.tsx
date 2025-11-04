@@ -69,57 +69,58 @@ const ProgressChartComponent: React.FC<ProgressChartComponentProps> = ({ data, t
   }));
 
   return (
-    <div className="w-full h-80">
-      <ResponsiveContainer width="100%" height="100%">
-        <RechartsLineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
-          <XAxis
-            dataKey="formattedDate"
-            className="text-gray-600 dark:text-gray-400"
-            fontSize={12}
-            interval="preserveStartEnd"
-          />
-          <YAxis className="text-gray-600 dark:text-gray-400" fontSize={12} tickFormatter={formatAmount} />
-          <Tooltip content={renderTooltip} />
-          <Legend />
+    <div>
+      <div className="w-full h-80">
+        <ResponsiveContainer width="100%" height="100%">
+          <RechartsLineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+            <XAxis
+              dataKey="formattedDate"
+              className="text-gray-600 dark:text-gray-400"
+              fontSize={12}
+              interval="preserveStartEnd"
+            />
+            <YAxis className="text-gray-600 dark:text-gray-400" fontSize={12} tickFormatter={formatAmount} />
+            <Tooltip content={renderTooltip} />
+            <Legend />
 
-          {/* Linia celu (pozioma) */}
-          <ReferenceLine
-            y={targetAmount}
-            stroke="#EF4444"
-            strokeDasharray="5 5"
-            strokeWidth={2}
-            label={{
-              value: "Cel",
-              position: "topRight",
-              className: "text-red-600 dark:text-red-400 font-medium",
-            }}
-          />
+            {/* Linia celu (pozioma) */}
+            <ReferenceLine
+              y={targetAmount}
+              stroke="#EF4444"
+              strokeDasharray="5 5"
+              strokeWidth={2}
+              label={{
+                value: "Cel",
+                position: "topRight",
+                className: "text-red-600 dark:text-red-400 font-medium",
+              }}
+            />
 
-          {/* Linia progresu */}
-          <Line
-            type="monotone"
-            dataKey="cumulativeAmount"
-            stroke="#10B981"
-            strokeWidth={3}
-            name="Skumulowana kwota"
-            dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 6, stroke: "#10B981", strokeWidth: 2, fill: "#ffffff" }}
-          />
+            {/* Linia progresu */}
+            <Line
+              type="monotone"
+              dataKey="cumulativeAmount"
+              stroke="#10B981"
+              strokeWidth={3}
+              name="Skumulowana kwota"
+              dot={{ fill: "#10B981", strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, stroke: "#10B981", strokeWidth: 2, fill: "#ffffff" }}
+            />
 
-          {/* Linia wpłat dziennych (jeśli potrzebne) */}
-          <Line
-            type="monotone"
-            dataKey="amount"
-            stroke="#3B82F6"
-            strokeWidth={2}
-            name="Wpłaty dzienne"
-            dot={{ fill: "#3B82F6", strokeWidth: 2, r: 3 }}
-            activeDot={{ r: 5, stroke: "#3B82F6", strokeWidth: 2, fill: "#ffffff" }}
-          />
-        </RechartsLineChart>
-      </ResponsiveContainer>
-
+            {/* Linia wpłat dziennych (jeśli potrzebne) */}
+            <Line
+              type="monotone"
+              dataKey="amount"
+              stroke="#3B82F6"
+              strokeWidth={2}
+              name="Wpłaty dzienne"
+              dot={{ fill: "#3B82F6", strokeWidth: 2, r: 3 }}
+              activeDot={{ r: 5, stroke: "#3B82F6", strokeWidth: 2, fill: "#ffffff" }}
+            />
+          </RechartsLineChart>
+        </ResponsiveContainer>
+      </div>
       {/* Informacja o przewidywanym terminie */}
       {predictedDate && (
         <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">

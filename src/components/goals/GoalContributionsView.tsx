@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useContributions } from "../../lib/hooks/useContributions";
-import { useGoal } from "../../lib/hooks/useGoal";
+import { useGoalWithContributions } from "../../lib/hooks/useGoal";
 import type { CreateGoalContributionCommand, GoalContributionDTO, UpdateGoalContributionCommand } from "../../types";
 import { ContributionFormModal } from "./ContributionFormModal";
 import { ContributionsTable } from "./ContributionsTable";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import { GoalHeader } from "./GoalHeader";
 import { ProgressChart } from "./ProgressChart";
 
@@ -27,11 +28,25 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
     mode: "add",
   });
 
+  const [contributionDeleteDialogState, setContributionDeleteDialogState] = useState<{
+    isOpen: boolean;
+    contributionId?: string;
+  }>({
+    isOpen: false,
+  });
+
   // Hooki API
-  const { goal, isLoading: goalLoading, error: goalError, fetchGoal, clearError: clearGoalError } = useGoal();
+  const {
+    goal,
+    contributions: goalContributions,
+    isLoading: goalLoading,
+    error: goalError,
+    fetchGoalWithContributions,
+    clearError: clearGoalError
+  } = useGoalWithContributions();
 
   const {
-    contributions,
+    contributions: paginatedContributions,
     pagination,
     isLoading: contributionsLoading,
     isSubmitting: contributionsSubmitting,
@@ -53,19 +68,21 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
     loadGoalAndContributions();
   }, [goalId]);
 
-  // Efekt do ładowania wpłat przy zmianie strony lub sortowania
+  // Efekt do ładowania wpłat przy zmianie strony lub sortowania (tylko dla paginacji)
   useEffect(() => {
-    fetchContributions(goalId, { page: currentPage, limit: 10, sort: currentSort });
+    if (goalId) {
+      fetchContributions(goalId, { page: currentPage, limit: 10, sort: currentSort });
+    }
   }, [goalId, currentPage, currentSort, fetchContributions]);
 
   // Funkcja ładowania danych celu i wpłat
   const loadGoalAndContributions = async () => {
     try {
-      // Ładuj dane celu i wpłat równolegle
-      await Promise.all([
-        fetchGoal(goalId),
-        fetchContributions(goalId, { page: currentPage, limit: 10, sort: currentSort }),
-      ]);
+      // Ładuj dane celu wraz z wpłatami
+      await fetchGoalWithContributions(goalId);
+
+      // Dodatkowo załaduj paginowane wpłaty dla tabeli
+      await fetchContributions(goalId, { page: currentPage, limit: 10, sort: currentSort });
     } catch (err) {
       console.error("Error loading data:", err);
       // Błędy są obsługiwane przez hooki
@@ -103,18 +120,36 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
     }
   };
 
-  // Obsługa usunięcia wpłaty
-  const handleDeleteContribution = async (contributionId: string) => {
+  // Obsługa rozpoczęcia usunięcia wpłaty (otwiera dialog)
+  const handleStartDeleteContribution = (contributionId: string) => {
+    setContributionDeleteDialogState({
+      isOpen: true,
+      contributionId,
+    });
+  };
+
+  // Obsługa potwierdzenia usunięcia wpłaty
+  const handleConfirmDeleteContribution = async () => {
+    if (!contributionDeleteDialogState.contributionId) return;
+
     try {
-      await deleteContribution(goalId, contributionId);
+      await deleteContribution(goalId, contributionDeleteDialogState.contributionId);
 
       // Po sukcesie odśwież dane
       await loadGoalAndContributions();
       toast.success("Wpłata została usunięta pomyślnie");
+
+      // Zamknij dialog
+      setContributionDeleteDialogState({ isOpen: false });
     } catch (err) {
       // Błędy są obsługiwane przez hook
       console.error("Error deleting contribution:", err);
     }
+  };
+
+  // Obsługa anulowania usunięcia wpłaty
+  const handleCancelDeleteContribution = () => {
+    setContributionDeleteDialogState({ isOpen: false });
   };
 
   // Obsługa rozpoczęcia edycji wpłaty
@@ -278,7 +313,7 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
       {/* Wykres progresu */}
       {goal && (
         <ProgressChart
-          contributions={contributions}
+          contributions={goalContributions}
           targetAmount={goal.target_amount}
           currentAmount={goal.current_amount}
         />
@@ -299,13 +334,22 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
 
       {/* Tabela wpłat */}
       <ContributionsTable
-        contributions={contributions}
+        contributions={paginatedContributions}
         pagination={pagination}
         onEdit={handleStartEdit}
-        onDelete={handleDeleteContribution}
+        onDelete={handleStartDeleteContribution}
         onPageChange={handlePageChange}
         onSort={handleSortChange}
         isLoading={contributionsLoading}
+      />
+
+      {/* Dialog potwierdzenia usunięcia wpłaty */}
+      <DeleteConfirmationDialog
+        isOpen={contributionDeleteDialogState.isOpen}
+        onConfirm={handleConfirmDeleteContribution}
+        onCancel={handleCancelDeleteContribution}
+        loading={submitting}
+        type="contribution"
       />
     </div>
   );

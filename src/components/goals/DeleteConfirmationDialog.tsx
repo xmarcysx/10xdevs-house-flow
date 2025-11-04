@@ -8,6 +8,7 @@ interface DeleteConfirmationDialogProps {
   onConfirm: () => void;
   onCancel: () => void;
   loading: boolean;
+  type?: "goal" | "contribution";
 }
 
 export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> = ({
@@ -15,18 +16,26 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
   onConfirm,
   onCancel,
   loading,
+  type = "goal",
 }) => {
+  const isGoal = type === "goal";
+
   return (
     <Dialog open={isOpen} onOpenChange={onCancel}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>Potwierdź usunięcie</DialogTitle>
-          <DialogDescription>Czy na pewno chcesz usunąć ten cel oszczędnościowy? Tej operacji nie można cofnąć.</DialogDescription>
+          <DialogDescription>
+            Czy na pewno chcesz usunąć {isGoal ? "ten cel oszczędnościowy" : "tę wpłatę"}? Tej operacji nie można cofnąć.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="mt-4">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Po usunięciu celu zostanie on trwale usunięty z systemu wraz ze wszystkimi wpłatami i nie będzie można go odzyskać.
+            {isGoal
+              ? "Po usunięciu celu zostanie on trwale usunięty z systemu wraz ze wszystkimi wpłatami i nie będzie można go odzyskać."
+              : "Po usunięciu wpłaty zostanie ona trwale usunięta z systemu i nie będzie można jej odzyskać."
+            }
           </p>
         </div>
 

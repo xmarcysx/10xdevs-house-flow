@@ -5,11 +5,11 @@ import {
   validateUpdateGoalCommand,
 } from "../../../lib/validation/goals.validation";
 import { GoalsService } from "../../../services/goals.service";
-import type { MessageDTO } from "../../../types";
+import type { GoalWithContributionsDTO, MessageDTO } from "../../../types";
 
 /**
  * GET /api/goals/{id}
- * Pobiera pojedynczy cel oszczędnościowy dla uwierzytelnionego użytkownika
+ * Pobiera pojedynczy cel oszczędnościowy wraz z historią wpłat dla uwierzytelnionego użytkownika
  */
 export const GET: APIRoute = async (context) => {
   try {
@@ -36,8 +36,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję GoalsService
     const goalsService = new GoalsService(context.locals.supabase);
 
-    // Pobierz cel używając ID aktualnie zalogowanego użytkownika
-    const goal = await goalsService.getGoalById(id, context.locals.user.id);
+    // Pobierz cel wraz z historią wpłat używając ID aktualnie zalogowanego użytkownika
+    const goal = await goalsService.getGoalWithContributionsById(id, context.locals.user.id);
 
     // Zwróć cel z kodem 200
     return new Response(JSON.stringify(goal), {

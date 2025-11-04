@@ -1,7 +1,7 @@
 import type { Database } from "../db/database.types";
 import type { SupabaseClient } from "../db/supabase.client";
 import type { GetGoalsQuery } from "../lib/validation/goals.validation";
-import type { CreateGoalCommand, GoalDTO, PaginationDTO, UpdateGoalCommand, UpdateGoalDTO } from "../types";
+import type { CreateGoalCommand, GoalDTO, GoalWithContributionsDTO, PaginationDTO, UpdateGoalCommand, UpdateGoalDTO } from "../types";
 
 export class GoalsService {
   constructor(private supabase: SupabaseClient<Database>) {}
@@ -262,5 +262,33 @@ export class GoalsService {
     }
 
     return goal;
+  }
+
+  /**
+   * Pobiera pojedynczy cel oszczędnościowy wraz z historią wpłat dla uwierzytelnionego użytkownika
+   * @param goalId ID celu do pobrania
+   * @param userId ID użytkownika
+   * @returns Cel oszczędnościowy wraz z historią wpłat
+   * @throws Error gdy cel nie istnieje lub nie należy do użytkownika
+   */
+  async getGoalWithContributionsById(goalId: string, userId: string): Promise<GoalWithContributionsDTO> {
+    // Najpierw pobierz cel
+    const goal = await this.getGoalById(goalId, userId);
+
+    // Następnie pobierz historię wpłat dla tego celu
+    const { data: contributions, error: contributionsError } = await this.supabase
+      .from("goal_contributions")
+      .select("id, amount, date, description, created_at")
+      .eq("goal_id", goalId)
+      .order("date", { ascending: false });
+
+    if (contributionsError) {
+      throw new Error(`Błąd podczas pobierania historii wpłat: ${contributionsError.message}`);
+    }
+
+    return {
+      ...goal,
+      contributions: contributions || [],
+    };
   }
 }
