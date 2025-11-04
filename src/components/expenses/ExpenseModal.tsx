@@ -1,6 +1,6 @@
 // Modal dialog dla dodawania/edycji wydatku
 import React from "react";
-import type { ExpenseDTO, CreateExpenseCommand, UpdateExpenseCommand } from "../../types";
+import type { CategoryDTO, CreateExpenseCommand, ExpenseDTO, UpdateExpenseCommand } from "../../types";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import { ExpenseFormFields } from "./ExpenseFormFields";
 
@@ -8,6 +8,7 @@ interface ExpenseModalProps {
   isOpen: boolean;
   mode: "add" | "edit";
   expense?: ExpenseDTO;
+  categories: CategoryDTO[];
   onSubmit: (data: CreateExpenseCommand | UpdateExpenseCommand) => void;
   onClose: () => void;
   isSubmitting: boolean;
@@ -18,10 +19,11 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
   isOpen,
   mode,
   expense,
+  categories,
   onSubmit,
   onClose,
   isSubmitting,
-  serverError
+  serverError,
 }) => {
   const title = mode === "add" ? "Dodaj wydatek" : "Edytuj wydatek";
   const description =
@@ -39,7 +41,9 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
 
         <ExpenseFormFields
           initialData={expense}
+          categories={categories}
           onSubmit={onSubmit}
+          onClose={onClose}
           isSubmitting={isSubmitting}
           serverError={serverError}
         />

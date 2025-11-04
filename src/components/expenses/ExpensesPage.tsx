@@ -246,6 +246,7 @@ export const ExpensesPage: React.FC = () => {
         isOpen={modalState.isOpen}
         mode={modalState.mode}
         expense={selectedExpense}
+        categories={categories || []}
         onSubmit={handleSubmitForm}
         onClose={handleCloseModal}
         isSubmitting={isSubmitting}

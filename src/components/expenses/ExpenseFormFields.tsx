@@ -30,7 +30,7 @@ const createExpenseFormSchema = (categories: CategoryDTO[]) =>
       .string()
       .min(1, "Kategoria jest wymagana")
       .uuid("Nieprawidłowy identyfikator kategorii")
-      .refine((val) => categories.some((cat) => cat.id === val), "Wybrana kategoria nie istnieje"),
+      .refine((val) => categories && categories.some((cat) => cat.id === val), "Wybrana kategoria nie istnieje"),
     description: z.string().max(1000, "Opis może mieć maksymalnie 1000 znaków").optional(),
   });
 
@@ -38,17 +38,21 @@ interface ExpenseFormFieldsProps {
   initialData?: ExpenseDTO;
   categories: CategoryDTO[];
   onSubmit: (data: CreateExpenseCommand | UpdateExpenseCommand) => void;
+  onClose: () => void;
   isSubmitting: boolean;
+  serverError?: string;
 }
 
 export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
   initialData,
   categories,
   onSubmit,
+  onClose,
   isSubmitting,
+  serverError,
 }) => {
   // Utwórz schemat walidacji z kategoriami
-  const expenseFormSchema = createExpenseFormSchema(categories);
+  const expenseFormSchema = React.useMemo(() => createExpenseFormSchema(categories), [categories]);
   type ExpenseFormValues = z.infer<typeof expenseFormSchema>;
 
   const {
@@ -129,16 +133,21 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
           Kategoria *
         </Label>
         <Select value={watch("category_id")} onValueChange={(value) => setValue("category_id", value)} disabled={isSubmitting}>
-          <SelectTrigger className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.category_id ? "border-red-500" : ""}`}>
+          <SelectTrigger className={`w-full bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.category_id ? "border-red-500" : ""}`}>
             <SelectValue placeholder="Wybierz kategorię" />
           </SelectTrigger>
           <SelectContent>
-            {Array.isArray(categories) &&
+            {Array.isArray(categories) && categories.length > 0 ? (
               categories.map((category) => (
                 <SelectItem key={category.id} value={category.id}>
                   {category.name}
                 </SelectItem>
-              ))}
+              ))
+            ) : (
+              <SelectItem value="" disabled>
+                Brak dostępnych kategorii
+              </SelectItem>
+            )}
           </SelectContent>
         </Select>
         {errors.category_id && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.category_id.message}</p>}
@@ -160,11 +169,18 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
         {errors.description && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>}
       </div>
 
+      {/* Błąd serwera */}
+      {serverError && (
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-3">
+          <p className="text-sm text-red-600 dark:text-red-400">{serverError}</p>
+        </div>
+      )}
+
       {/* Przyciski */}
       <div className="flex justify-end space-x-3 pt-4">
         <Button
           type="button"
-          onClick={() => reset()}
+          onClick={() => onClose()}
           disabled={isSubmitting}
           variant="outline"
           className="px-6 py-3 border-2 border-gray-300 hover:border-red-500 text-gray-700 hover:text-red-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-red-400 dark:hover:border-red-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
