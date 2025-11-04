@@ -69,6 +69,18 @@ export const GoalsPage: React.FC = () => {
     fetchGoals(query);
   }, [currentPage]);
 
+  // Efekt do sprawdzania localStorage i otwierania modala przy przekierowaniu z dashboard
+  useEffect(() => {
+    const openModal = localStorage.getItem("openModal");
+    if (openModal === "add") {
+      setModalState({
+        isOpen: true,
+        mode: "add",
+      });
+      localStorage.removeItem("openModal");
+    }
+  }, []);
+
   // Obsługa zmiany strony w paginacji
   const handlePageChange = useCallback((page: number) => {
     setCurrentPage(page);

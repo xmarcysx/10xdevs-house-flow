@@ -144,9 +144,9 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
                 </SelectItem>
               ))
             ) : (
-              <SelectItem value="" disabled>
+              <div className="p-2 text-sm text-gray-500">
                 Brak dostępnych kategorii
-              </SelectItem>
+              </div>
             )}
           </SelectContent>
         </Select>

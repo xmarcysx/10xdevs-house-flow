@@ -4,15 +4,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const QuickActions: React.FC = () => {
   const handleAddExpense = () => {
-    window.location.href = "/expenses/new";
+    localStorage.setItem("openModal", "add");
+    window.location.href = "/expenses";
   };
 
   const handleAddIncome = () => {
-    window.location.href = "/incomes/new";
+    localStorage.setItem("openModal", "add");
+    window.location.href = "/incomes";
   };
 
   const handleAddGoal = () => {
-    window.location.href = "/goals/new";
+    localStorage.setItem("openModal", "add");
+    window.location.href = "/goals";
   };
 
   return (

@@ -54,6 +54,19 @@ export const IncomesPage: React.FC = () => {
     fetchIncomes(query);
   }, [filters, currentPage, fetchIncomes]);
 
+  // Efekt do sprawdzania localStorage i otwierania modala przy przekierowaniu z dashboard
+  useEffect(() => {
+    const openModal = localStorage.getItem("openModal");
+    if (openModal === "add") {
+      setModalState({
+        isOpen: true,
+        mode: "add",
+        serverError: undefined,
+      });
+      localStorage.removeItem("openModal");
+    }
+  }, []);
+
   // Obsługa zmian filtrów
   const handleFiltersChange = (newFilters: IncomesFiltersData) => {
     setFilters(newFilters);
