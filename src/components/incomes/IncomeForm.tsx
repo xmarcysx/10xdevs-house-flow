@@ -34,14 +34,21 @@ interface IncomeFormProps {
   initialData?: IncomeDTO;
   onSubmit: (data: IncomeFormData) => void;
   isSubmitting: boolean;
+  serverError?: string;
 }
 
-export const IncomeForm: React.FC<IncomeFormProps> = ({ initialData, onSubmit, isSubmitting }) => {
+export const IncomeForm: React.FC<IncomeFormProps> = ({
+  initialData,
+  onSubmit,
+  isSubmitting,
+  serverError
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm<IncomeFormValues>({
     resolver: zodResolver(incomeFormSchema),
     defaultValues: {
@@ -52,70 +59,125 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({ initialData, onSubmit, i
     },
   });
 
-  const handleFormSubmit = (data: IncomeFormValues) => {
-    onSubmit({
-      amount: data.amount,
-      date: data.date,
-      description: data.description || undefined,
-      source: data.source || undefined,
+  // Reset formularza gdy initialData się zmienia
+  React.useEffect(() => {
+    reset({
+      amount: initialData?.amount || 0,
+      date: initialData?.date || new Date().toISOString().split("T")[0],
+      description: initialData?.description || "",
+      source: initialData?.source || "",
     });
+  }, [initialData, reset]);
+
+  const handleFormSubmit = async (data: IncomeFormValues) => {
+    try {
+      await onSubmit({
+        amount: data.amount,
+        date: data.date,
+        description: data.description || undefined,
+        source: data.source || undefined,
+      });
+    } catch (error) {
+      // Błędy będą obsługiwane przez rodzica
+      console.error("Form submission error:", error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-      {/* Kwota */}
-      <div className="space-y-2">
-        <Label htmlFor="amount">Kwota (PLN) *</Label>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      <div>
+        <Label htmlFor="amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Kwota (PLN) *
+        </Label>
         <Input
-          id="amount"
+          {...register("amount", { valueAsNumber: true })}
           type="number"
+          id="amount"
           step="0.01"
           min="0"
           max="999999.99"
           placeholder="0.00"
-          {...register("amount", { valueAsNumber: true })}
-          className={errors.amount ? "border-red-500" : ""}
+          disabled={isSubmitting}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.amount ? "border-red-500" : ""}`}
         />
-        {errors.amount && <p className="text-sm text-red-600">{errors.amount.message}</p>}
+        {errors.amount && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.amount.message}</p>}
       </div>
 
-      {/* Data */}
-      <div className="space-y-2">
-        <Label htmlFor="date">Data *</Label>
-        <Input id="date" type="date" {...register("date")} className={errors.date ? "border-red-500" : ""} />
-        {errors.date && <p className="text-sm text-red-600">{errors.date.message}</p>}
-      </div>
-
-      {/* Opis */}
-      <div className="space-y-2">
-        <Label htmlFor="description">Opis</Label>
-        <Textarea
-          id="description"
-          placeholder="Dodatkowe informacje o wpływie..."
-          rows={3}
-          {...register("description")}
-          className={errors.description ? "border-red-500" : ""}
-        />
-        {errors.description && <p className="text-sm text-red-600">{errors.description.message}</p>}
-      </div>
-
-      {/* Źródło */}
-      <div className="space-y-2">
-        <Label htmlFor="source">Źródło</Label>
+      <div>
+        <Label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Data *
+        </Label>
         <Input
-          id="source"
-          type="text"
-          placeholder="np. Pensja, Freelance, Inwestycje..."
-          {...register("source")}
-          className={errors.source ? "border-red-500" : ""}
+          {...register("date")}
+          type="date"
+          id="date"
+          disabled={isSubmitting}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.date ? "border-red-500" : ""}`}
         />
-        {errors.source && <p className="text-sm text-red-600">{errors.source.message}</p>}
+        {errors.date && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.date.message}</p>}
       </div>
 
-      {/* Przyciski */}
+      <div>
+        <Label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Opis
+        </Label>
+        <Textarea
+          {...register("description")}
+          id="description"
+          rows={3}
+          placeholder="Dodatkowe informacje o wpływie..."
+          disabled={isSubmitting}
+          maxLength={500}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.description ? "border-red-500" : ""}`}
+        />
+        {errors.description && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>}
+      </div>
+
+      <div>
+        <Label htmlFor="source" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Źródło
+        </Label>
+        <Input
+          {...register("source")}
+          type="text"
+          id="source"
+          placeholder="np. Pensja, Freelance, Inwestycje..."
+          disabled={isSubmitting}
+          maxLength={100}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.source ? "border-red-500" : ""}`}
+        />
+        {errors.source && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.source.message}</p>}
+      </div>
+
+      {serverError && (
+        <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-3">
+          <p className="text-sm text-red-800 dark:text-red-200">{serverError}</p>
+        </div>
+      )}
+
       <div className="flex justify-end space-x-3 pt-4">
-        <Button type="submit" disabled={isSubmitting} className="min-w-[100px]">
-          {isSubmitting ? "Zapisywanie..." : "Zapisz"}
+        <Button
+          type="button"
+          onClick={() => reset()}
+          disabled={isSubmitting}
+          variant="outline"
+          className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+        >
+          Anuluj
+        </Button>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Zapisywanie...
+            </>
+          ) : (
+            "Zapisz wpływ"
+          )}
         </Button>
       </div>
     </form>

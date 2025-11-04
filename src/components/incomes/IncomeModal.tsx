@@ -11,9 +11,18 @@ interface IncomeModalProps {
   onSubmit: (data: IncomeFormData) => void;
   onClose: () => void;
   isSubmitting: boolean;
+  serverError?: string;
 }
 
-export const IncomeModal: React.FC<IncomeModalProps> = ({ isOpen, mode, income, onSubmit, onClose, isSubmitting }) => {
+export const IncomeModal: React.FC<IncomeModalProps> = ({
+  isOpen,
+  mode,
+  income,
+  onSubmit,
+  onClose,
+  isSubmitting,
+  serverError
+}) => {
   const title = mode === "add" ? "Dodaj wpływ" : "Edytuj wpływ";
   const description =
     mode === "add"
@@ -22,15 +31,18 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({ isOpen, mode, income, 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
-        <div className="mt-4">
-          <IncomeForm initialData={income} onSubmit={onSubmit} isSubmitting={isSubmitting} />
-        </div>
+        <IncomeForm
+          initialData={income}
+          onSubmit={onSubmit}
+          isSubmitting={isSubmitting}
+          serverError={serverError}
+        />
       </DialogContent>
     </Dialog>
   );

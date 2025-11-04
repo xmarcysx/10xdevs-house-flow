@@ -5,6 +5,7 @@ import type { IncomeFormData, IncomesFiltersData } from "../../types";
 import { IncomeModal } from "./IncomeModal";
 import { IncomesFilters } from "./IncomesFilters";
 import { IncomesTable } from "./IncomesTable";
+import IncomesLayout from "./IncomesLayout";
 
 export const IncomesPage: React.FC = () => {
   // Stan komponentu
@@ -14,6 +15,7 @@ export const IncomesPage: React.FC = () => {
     isOpen: boolean;
     mode: "add" | "edit";
     incomeId?: string;
+    serverError?: string;
   }>({
     isOpen: false,
     mode: "add",
@@ -59,6 +61,7 @@ export const IncomesPage: React.FC = () => {
     setModalState({
       isOpen: true,
       mode: "add",
+      serverError: undefined,
     });
   };
 
@@ -68,6 +71,7 @@ export const IncomesPage: React.FC = () => {
       isOpen: true,
       mode: "edit",
       incomeId,
+      serverError: undefined,
     });
   };
 
@@ -104,6 +108,9 @@ export const IncomesPage: React.FC = () => {
   // Obsługa zatwierdzenia formularza
   const handleSubmitForm = async (data: IncomeFormData) => {
     try {
+      // Wyczyść poprzedni błąd
+      setModalState((prev) => ({ ...prev, serverError: undefined }));
+
       if (modalState.mode === "add") {
         await createIncome(data);
       } else if (modalState.mode === "edit" && modalState.incomeId) {
@@ -124,7 +131,12 @@ export const IncomesPage: React.FC = () => {
         setCurrentPage(1);
       }
     } catch (err) {
-      // Błędy są obsługiwane przez hook
+      // Ustaw błąd w modalu
+      let errorMessage = "Wystąpił błąd podczas zapisywania wpływu";
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setModalState((prev) => ({ ...prev, serverError: errorMessage }));
       console.error("Form submission error:", err);
     }
   };
@@ -136,12 +148,8 @@ export const IncomesPage: React.FC = () => {
       : undefined;
 
   return (
-    <div className="space-y-6">
-      {/* Nagłówek */}
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Wpływy</h1>
-        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-2">Zarządzaj swoimi źródłami dochodów</p>
-      </div>
+    <IncomesLayout>
+      <div className="space-y-6">
 
       {/* Komunikaty błędów */}
       {error && (
@@ -178,27 +186,45 @@ export const IncomesPage: React.FC = () => {
         </div>
       )}
 
-      {/* Filtry */}
-      <IncomesFilters filters={filters} onFiltersChange={handleFiltersChange} />
+      {/* Filtry i sekcja tytułu - tylko gdy są dane */}
+      {incomesData && incomesData.incomes && incomesData.incomes.length > 0 && (
+        <>
+          {/* Filtry */}
+          <IncomesFilters filters={filters} onFiltersChange={handleFiltersChange} />
 
-      {/* Przycisk dodania nowego wpływu */}
-      <div className="flex justify-end">
-        <button
-          onClick={handleAddIncome}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          Dodaj wpływ
-        </button>
-      </div>
+          {/* Sekcja tytułu i przycisku dodania */}
+          <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+            <div className="px-6 py-6">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Lista wpływów</h3>
+                  <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+                    Zarządzaj swoimi źródłami dochodów
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <button
+                    onClick={handleAddIncome}
+                    className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    Dodaj wpływ
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {/* Tabela wpływów */}
       <IncomesTable
         data={incomesData}
         onEdit={handleEditIncome}
         onDelete={handleDeleteIncome}
+        onAdd={handleAddIncome}
         isLoading={isLoading}
         onPageChange={handlePageChange}
       />
@@ -211,7 +237,9 @@ export const IncomesPage: React.FC = () => {
         onSubmit={handleSubmitForm}
         onClose={handleCloseModal}
         isSubmitting={isSubmitting}
+        serverError={modalState.serverError}
       />
-    </div>
+      </div>
+    </IncomesLayout>
   );
 };

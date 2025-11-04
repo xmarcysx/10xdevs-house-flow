@@ -9,15 +9,16 @@ interface IncomesTableProps {
   data: IncomesTableData | null;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onAdd: () => void;
   isLoading: boolean;
   onPageChange?: (page: number) => void;
 }
 
-export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDelete, isLoading, onPageChange }) => {
+export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDelete, onAdd, isLoading, onPageChange }) => {
   // Stan ładowania
   if (isLoading) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
         <div className="p-8 text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Ładowanie wpływów...</p>
@@ -29,7 +30,7 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
   // Brak danych
   if (!data || !data.incomes || data.incomes.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
         <div className="p-8 text-center">
           <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -43,6 +44,17 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Nie znaleziono żadnych wpływów spełniających kryteria wyszukiwania.
           </p>
+          <div className="mt-6">
+            <button
+              onClick={onAdd}
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+            >
+              <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              Dodaj pierwszy wpływ
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -55,10 +67,11 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+    <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
       {/* Tabela */}
       <div className="overflow-x-auto">
-        <Table>
+        <div className="mx-6">
+          <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -78,18 +91,48 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
               </TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <TableBody className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 divide-y divide-gray-200 dark:divide-gray-700">
             {data.incomes.map((income) => (
               <IncomeRow key={income.id} income={income} onEdit={onEdit} onDelete={onDelete} />
             ))}
           </TableBody>
-        </Table>
+          </Table>
+        </div>
       </div>
 
       {/* Paginacja */}
       {data.pagination && data.pagination.total > data.pagination.limit && (
-        <div className="bg-gray-50 dark:bg-gray-900 px-4 py-3 sm:px-6">
-          <Pagination pagination={data.pagination} onPageChange={handlePageChange} />
+        <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+          <div className="px-4 py-4 flex items-center justify-between sm:px-6">
+            <div className="flex-1 flex justify-between sm:hidden">
+              <button
+                onClick={() => handlePageChange(data.pagination.page - 1)}
+                disabled={data.pagination.page <= 1}
+                className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Poprzednia
+              </button>
+              <button
+                onClick={() => handlePageChange(data.pagination.page + 1)}
+                disabled={data.pagination.page >= Math.ceil(data.pagination.total / data.pagination.limit)}
+                className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Następna
+              </button>
+            </div>
+            <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm text-gray-700 dark:text-gray-300">
+                  Wyświetlanie <span className="font-medium">{(data.pagination.page - 1) * data.pagination.limit + 1}</span> do{" "}
+                  <span className="font-medium">{Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)}</span>{" "}
+                  z <span className="font-medium">{data.pagination.total}</span> wyników
+                </p>
+              </div>
+              <div>
+                <Pagination pagination={data.pagination} onPageChange={handlePageChange} />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
