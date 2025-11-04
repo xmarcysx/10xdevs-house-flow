@@ -20,7 +20,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ category, onEdit, on
   };
 
   return (
-    <tr className="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+    <tr className="hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-indigo-50/30 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20 transition-all duration-200">
       {/* Nazwa kategorii */}
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{category.name}</td>
 

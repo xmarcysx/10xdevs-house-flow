@@ -59,12 +59,6 @@ export const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange
 
   return (
     <div className="flex items-center justify-between">
-      {/* Informacja o zakresie */}
-      <div className="text-sm text-gray-700 dark:text-gray-300">
-        Wyświetlanie <span className="font-medium">{startItem}</span> do <span className="font-medium">{endItem}</span>{" "}
-        z <span className="font-medium">{total}</span> wyników
-      </div>
-
       {/* Przyciski nawigacji */}
       <div className="flex items-center space-x-2">
         {/* Poprzednia strona */}
@@ -78,7 +72,6 @@ export const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange
           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Poprzednia
         </Button>
 
         {/* Numery stron */}
@@ -113,7 +106,6 @@ export const Pagination: React.FC<PaginationProps> = ({ pagination, onPageChange
           disabled={page >= totalPages}
           className="flex items-center"
         >
-          Następna
           <svg className="h-4 w-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>

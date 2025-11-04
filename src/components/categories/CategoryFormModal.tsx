@@ -117,10 +117,20 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           )}
 
           <div className="flex justify-end space-x-3 pt-4">
-            <Button type="button" onClick={handleCancel} disabled={loading || isSubmitting} variant="outline">
+            <Button
+              type="button"
+              onClick={handleCancel}
+              disabled={loading || isSubmitting}
+              variant="outline"
+              className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+            >
               Anuluj
             </Button>
-            <Button type="submit" disabled={loading || isSubmitting}>
+            <Button
+              type="submit"
+              disabled={loading || isSubmitting}
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+            >
               {loading || isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
