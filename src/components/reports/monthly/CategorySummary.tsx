@@ -10,11 +10,11 @@ export const CategorySummary: React.FC<CategorySummaryProps> = ({ categoryTotals
   // Brak danych
   if (!categoryTotals || categoryTotals.length === 0) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Podsumowanie kategorii</CardTitle>
+      <Card className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+        <CardHeader className="px-6 py-6 border-b border-white/20 dark:border-gray-700/50">
+          <CardTitle className="text-lg font-medium text-gray-900 dark:text-white">Podsumowanie kategorii</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-6 py-6">
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">Brak danych kategorii do wyświetlenia</div>
         </CardContent>
       </Card>
@@ -28,12 +28,12 @@ export const CategorySummary: React.FC<CategorySummaryProps> = ({ categoryTotals
   const totalAmount = categoryTotals.reduce((sum, category) => sum + category.total, 0);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Podsumowanie kategorii</CardTitle>
+    <Card className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+      <CardHeader className="px-6 py-6 border-b border-white/20 dark:border-gray-700/50">
+        <CardTitle className="text-lg font-medium text-gray-900 dark:text-white">Podsumowanie kategorii</CardTitle>
         <p className="text-sm text-gray-600 dark:text-gray-400">Łączna suma wydatków: {formatAmount(totalAmount)}</p>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-6 py-6">
         <div className="space-y-4">
           {categoryTotals.map((category, index) => {
             const percentage = totalAmount > 0 ? (category.total / totalAmount) * 100 : 0;

@@ -1,8 +1,13 @@
 ---
 import MonthlyReportPage from "../../components/reports/monthly/MonthlyReportPage.tsx";
+import Navbar from "../../components/Navbar";
 import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout title="Raport miesięczny | HouseFlow">
+  <!-- Navbar -->
+  <Navbar client:only="react" />
+
+  <!-- Monthly Report Page -->
   <MonthlyReportPage client:load />
 </Layout>

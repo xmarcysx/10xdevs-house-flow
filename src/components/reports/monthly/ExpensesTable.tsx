@@ -10,7 +10,7 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses }) => {
   // Brak danych
   if (!expenses || expenses.length === 0) {
     return (
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
+      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
         <div className="p-8 text-center">
           <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -43,8 +43,8 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+    <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+      <div className="px-6 py-6 border-b border-white/20 dark:border-gray-700/50">
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Lista wydatków</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Wszystkie wydatki z wybranego miesiąca ({expenses.length} pozycji)
@@ -67,7 +67,7 @@ export const ExpensesTable: React.FC<ExpensesTableProps> = ({ expenses }) => {
               </TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+          <TableBody className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 divide-y divide-gray-200 dark:divide-gray-700">
             {expenses.map((expense, index) => (
               <TableRow key={`${expense.date}-${expense.amount}-${index}`}>
                 <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">

@@ -65,7 +65,9 @@ const Navbar: React.FC = () => {
           {/* Navigation Menu */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
-              const isActive = currentPath === item.href;
+              const isActive = item.href === "/reports"
+                ? currentPath.startsWith("/reports")
+                : currentPath === item.href;
               return (
                 <a
                   key={item.label}

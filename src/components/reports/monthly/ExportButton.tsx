@@ -1,7 +1,6 @@
 import { DownloadIcon } from "lucide-react";
 import React from "react";
 import type { MonthlyReportDTO } from "../../../types";
-import { Button } from "../../ui/button";
 
 interface ExportButtonProps {
   reportData: MonthlyReportDTO;
@@ -56,9 +55,12 @@ export const ExportButton: React.FC<ExportButtonProps> = ({ reportData, disabled
   const isDisabled = disabled || !reportData || (!reportData.expenses.length && !reportData.category_totals.length);
 
   return (
-    <Button onClick={handleExport} disabled={isDisabled} variant="outline" className="flex items-center gap-2">
-      <DownloadIcon className="h-4 w-4" />
+    <button
+      onClick={handleExport}
+      className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <DownloadIcon className="h-4 w-4 mr-2" />
       Eksportuj CSV
-    </Button>
+    </button>
   );
 };
