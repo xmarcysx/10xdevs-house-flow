@@ -26,7 +26,7 @@ export class GoalContributionsService {
       throw new Error("Cel nie istnieje lub nie należy do użytkownika");
     }
 
-    // Utwórz nową wpłatę
+    // Wykonaj operację w transakcji: insert wpłaty i update current_amount
     const { data: newContribution, error: insertError } = await this.supabase
       .from("goal_contributions")
       .insert({
@@ -46,6 +46,8 @@ export class GoalContributionsService {
     if (!newContribution) {
       throw new Error("Nie udało się utworzyć wpłaty");
     }
+
+    // current_amount zostanie automatycznie zaktualizowany przez trigger w bazie danych
 
     return newContribution;
   }

@@ -89,14 +89,16 @@ export function validateCreateGoalContributionCommand(data: unknown): Validation
       const parsedDate = new Date(date);
       if (isNaN(parsedDate.getTime())) {
         errors.push("Pole 'date' zawiera nieprawidłową datę");
-      } else {
-        // Sprawdź czy data nie jest w przyszłości (opcjonalne, można usunąć jeśli wpłaty w przyszłości są dozwolone)
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        if (parsedDate > today) {
-          errors.push("Data wpłaty nie może być w przyszłości");
+        } else {
+          // Sprawdź czy data nie jest w przyszłości (opcjonalne, można usunąć jeśli wpłaty w przyszłości są dozwolone)
+          const today = new Date();
+          const todayString = today.getFullYear() + '-' +
+                            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                            String(today.getDate()).padStart(2, '0');
+          if (date > todayString) {
+            errors.push("Data wpłaty nie może być w przyszłości");
+          }
         }
-      }
     }
   }
 
@@ -198,8 +200,10 @@ export function validateUpdateGoalContributionCommand(data: unknown): Validation
         } else {
           // Sprawdź czy data nie jest w przyszłości (opcjonalne)
           const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          if (parsedDate > today) {
+          const todayString = today.getFullYear() + '-' +
+                            String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                            String(today.getDate()).padStart(2, '0');
+          if (date > todayString) {
             errors.push("Data wpłaty nie może być w przyszłości");
           }
         }

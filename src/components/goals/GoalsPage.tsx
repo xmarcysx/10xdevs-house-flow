@@ -7,6 +7,7 @@ import type { CreateGoalCommand, GoalDTO, UpdateGoalCommand, CreateGoalContribut
 import { GoalForm } from "./GoalForm";
 import { ContributionFormModal } from "./ContributionFormModal";
 import { GoalsList } from "./GoalsList";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import GoalsLayout from "./GoalsLayout";
 
 export const GoalsPage: React.FC = () => {
@@ -47,6 +48,13 @@ export const GoalsPage: React.FC = () => {
     isOpen: boolean;
     selectedGoalId?: string;
     serverError?: string;
+  }>({
+    isOpen: false,
+  });
+
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    isOpen: boolean;
+    goalId?: string;
   }>({
     isOpen: false,
   });
@@ -93,28 +101,42 @@ export const GoalsPage: React.FC = () => {
   }, []);
 
   // Obsługa usunięcia celu
-  const handleDeleteGoal = useCallback(
-    async (goalId: string) => {
-      try {
-        await deleteGoal(goalId);
+  const handleDeleteGoal = useCallback((goalId: string) => {
+    setDeleteDialogState({
+      isOpen: true,
+      goalId,
+    });
+  }, []);
 
-        // Odśwież dane
-        const query = {
-          page: currentPage,
-          limit: 10,
-          sort: "created_at DESC" as const,
-        };
-        await fetchGoals(query);
+  // Obsługa potwierdzenia usunięcia celu
+  const handleConfirmDelete = useCallback(async () => {
+    if (!deleteDialogState.goalId) return;
 
-        // Pokaż toast sukcesu
-        toast.success("Cel został usunięty pomyślnie");
-      } catch (err) {
-        // Błędy są obsługiwane przez hook
-        console.error("Delete error:", err);
-      }
-    },
-    [deleteGoal, currentPage, fetchGoals]
-  );
+    try {
+      await deleteGoal(deleteDialogState.goalId);
+
+      // Zamknij dialog
+      setDeleteDialogState({ isOpen: false });
+
+      // Odśwież dane
+      const query = {
+        page: currentPage,
+        limit: 10,
+        sort: "created_at DESC" as const,
+      };
+      await fetchGoals(query);
+
+      // Pokaż toast sukcesu
+      toast.success("Cel został usunięty pomyślnie");
+    } catch (err) {
+      console.error("Delete goal error:", err);
+    }
+  }, [deleteDialogState.goalId, deleteGoal, currentPage, fetchGoals]);
+
+  // Obsługa anulowania usunięcia celu
+  const handleCancelDelete = useCallback(() => {
+    setDeleteDialogState({ isOpen: false });
+  }, []);
 
   // Obsługa zamknięcia modala formularza
   const handleCloseModal = useCallback(() => {
@@ -181,8 +203,16 @@ export const GoalsPage: React.FC = () => {
 
         await createContribution(goalId, data);
 
-        // Zamknij modal i odśwież dane
+        // Zamknij modal i odśwież dane celów
         handleCloseContributionModal();
+
+        // Odśwież listę celów, żeby pokazać zaktualizowane kwoty
+        const query = {
+          page: currentPage,
+          limit: 10,
+          sort: "created_at DESC" as const,
+        };
+        await fetchGoals(query);
 
         // Pokaż toast sukcesu
         toast.success("Wpłata została dodana pomyślnie");
@@ -200,7 +230,7 @@ export const GoalsPage: React.FC = () => {
         console.error("Form submission error:", err);
       }
     },
-    [createContribution, handleCloseContributionModal]
+    [createContribution, handleCloseContributionModal, currentPage, fetchGoals]
   );
 
   // Obsługa czyszczenia błędu
@@ -278,6 +308,14 @@ export const GoalsPage: React.FC = () => {
         onCancel={handleCloseContributionModal}
         loading={contributionSubmitting}
         serverError={contributionModalState.serverError}
+      />
+
+      {/* Dialog potwierdzenia usunięcia */}
+      <DeleteConfirmationDialog
+        isOpen={deleteDialogState.isOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        loading={submitting}
       />
       </div>
     </GoalsLayout>

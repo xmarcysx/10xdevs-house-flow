@@ -26,7 +26,13 @@ const contributionFormSchema = z.object({
     .string()
     .min(1, "Data jest wymagana")
     .refine((val) => !isNaN(Date.parse(val)), "Data musi być prawidłową datą")
-    .refine((val) => new Date(val) <= new Date(), "Data nie może być w przyszłości"),
+    .refine((val) => {
+      const today = new Date();
+      const todayString = today.getFullYear() + '-' +
+                        String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(today.getDate()).padStart(2, '0');
+      return val <= todayString;
+    }, "Data nie może być w przyszłości"),
   description: z.string().max(500, "Opis może mieć maksymalnie 500 znaków").optional(),
 });
 

@@ -159,6 +159,20 @@ begin
 end;
 $$ language plpgsql;
 
+-- Function to increment goal current_amount
+create or replace function public.increment_goal_current_amount(
+  goal_id_param uuid,
+  user_id_param uuid,
+  amount_param numeric
+)
+returns void as $$
+begin
+  update public.goals
+  set current_amount = current_amount + amount_param
+  where id = goal_id_param and user_id = user_id_param;
+end;
+$$ language plpgsql security definer;
+
 -- Trigger to automatically update goal current_amount on contribution changes
 create trigger goal_contributions_update_current_amount
 after insert or update or delete on public.goal_contributions
