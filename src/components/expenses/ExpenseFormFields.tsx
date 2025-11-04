@@ -91,35 +91,45 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
   }, [initialData, reset]);
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
-      {/* Kwota */}
-      <div className="space-y-2">
-        <Label htmlFor="amount">Kwota (PLN) *</Label>
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      <div>
+        <Label htmlFor="amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Kwota (PLN) *
+        </Label>
         <Input
-          id="amount"
+          {...register("amount", { valueAsNumber: true })}
           type="number"
+          id="amount"
           step="0.01"
           min="0"
           max="999999.99"
           placeholder="0.00"
-          {...register("amount", { valueAsNumber: true })}
-          className={errors.amount ? "border-red-500" : ""}
+          disabled={isSubmitting}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.amount ? "border-red-500" : ""}`}
         />
-        {errors.amount && <p className="text-sm text-red-600">{errors.amount.message}</p>}
+        {errors.amount && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.amount.message}</p>}
       </div>
 
-      {/* Data */}
-      <div className="space-y-2">
-        <Label htmlFor="date">Data *</Label>
-        <Input id="date" type="date" {...register("date")} className={errors.date ? "border-red-500" : ""} />
-        {errors.date && <p className="text-sm text-red-600">{errors.date.message}</p>}
+      <div>
+        <Label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Data *
+        </Label>
+        <Input
+          {...register("date")}
+          type="date"
+          id="date"
+          disabled={isSubmitting}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.date ? "border-red-500" : ""}`}
+        />
+        {errors.date && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.date.message}</p>}
       </div>
 
-      {/* Kategoria */}
-      <div className="space-y-2">
-        <Label htmlFor="category_id">Kategoria *</Label>
-        <Select value={watch("category_id")} onValueChange={(value) => setValue("category_id", value)}>
-          <SelectTrigger className={errors.category_id ? "border-red-500" : ""}>
+      <div>
+        <Label htmlFor="category_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Kategoria *
+        </Label>
+        <Select value={watch("category_id")} onValueChange={(value) => setValue("category_id", value)} disabled={isSubmitting}>
+          <SelectTrigger className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.category_id ? "border-red-500" : ""}`}>
             <SelectValue placeholder="Wybierz kategorię" />
           </SelectTrigger>
           <SelectContent>
@@ -131,29 +141,49 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
               ))}
           </SelectContent>
         </Select>
-        {errors.category_id && <p className="text-sm text-red-600">{errors.category_id.message}</p>}
+        {errors.category_id && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.category_id.message}</p>}
       </div>
 
-      {/* Opis */}
-      <div className="space-y-2">
-        <Label htmlFor="description">Opis</Label>
+      <div>
+        <Label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+          Opis
+        </Label>
         <Textarea
-          id="description"
-          placeholder="Dodatkowe informacje o wydatku..."
-          rows={3}
           {...register("description")}
-          className={errors.description ? "border-red-500" : ""}
+          id="description"
+          rows={3}
+          placeholder="Dodatkowe informacje o wydatku..."
+          disabled={isSubmitting}
+          maxLength={1000}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.description ? "border-red-500" : ""}`}
         />
-        {errors.description && <p className="text-sm text-red-600">{errors.description.message}</p>}
+        {errors.description && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>}
       </div>
 
       {/* Przyciski */}
       <div className="flex justify-end space-x-3 pt-4">
-        <Button type="button" variant="outline" onClick={() => reset()} disabled={isSubmitting}>
-          Wyczyść
+        <Button
+          type="button"
+          onClick={() => reset()}
+          disabled={isSubmitting}
+          variant="outline"
+          className="px-6 py-3 border-2 border-gray-300 hover:border-red-500 text-gray-700 hover:text-red-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-red-400 dark:hover:border-red-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+        >
+          Anuluj
         </Button>
-        <Button type="submit" disabled={isSubmitting || Object.keys(errors).length > 0} className="min-w-[100px]">
-          {isSubmitting ? "Zapisywanie..." : "Zapisz"}
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Zapisywanie...
+            </>
+          ) : (
+            "Zapisz wydatek"
+          )}
         </Button>
       </div>
     </form>

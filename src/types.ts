@@ -117,6 +117,16 @@ export interface IncomesTableData {
   pagination: PaginationDTO; // Metadane paginacji
 }
 
+export interface ExpensesFiltersData {
+  month?: string; // Miesiąc w formacie YYYY-MM (opcjonalny)
+  category_id?: string; // ID kategorii (opcjonalny)
+}
+
+export interface ExpensesTableData {
+  expenses: ExpenseDTO[]; // Lista wydatków na bieżącej stronie
+  pagination: PaginationDTO; // Metadane paginacji
+}
+
 // Register ViewModel types
 
 export interface RegisterFormData {
