@@ -1,8 +1,13 @@
 ---
 import GoalsReportPage from "../../components/reports/goals/GoalsReportPage.tsx";
+import Navbar from "../../components/Navbar";
 import Layout from "../../layouts/Layout.astro";
 ---
 
 <Layout title="Raport celów | HouseFlow">
+  <!-- Navbar -->
+  <Navbar client:only="react" />
+
+  <!-- Goals Report Page -->
   <GoalsReportPage client:load />
 </Layout>
