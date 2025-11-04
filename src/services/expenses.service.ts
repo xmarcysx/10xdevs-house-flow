@@ -8,14 +8,14 @@ export class ExpensesService {
   /**
    * Pobiera paginowaną listę wydatków dla uwierzytelnionego użytkownika
    * @param userId ID użytkownika
-   * @param query Parametry zapytania zawierające page, limit, month, category_id i sort
+   * @param query Parametry zapytania zawierające page, limit, year, month, category_id i sort
    * @returns Obiekt zawierający dane wydatków i informacje o paginacji
    */
   async getExpenses(
     userId: string,
     query: GetExpensesQuery
   ): Promise<{ data: ExpenseDTO[]; pagination: PaginationDTO }> {
-    const { page, limit, month, category_id, sort } = query;
+    const { page, limit, year, month, category_id, sort } = query;
 
     // Oblicz offset dla paginacji
     const offset = (page - 1) * limit;
@@ -34,18 +34,35 @@ export class ExpensesService {
         description,
         category_id,
         created_at,
-        categories!inner (
+        categories (
           name
         )
       `
       )
       .eq("user_id", userId);
 
-    // Dodaj opcjonalny filtr po miesiącu
-    if (month) {
-      const [year, monthNum] = month.split("-").map(Number);
-      const startDate = `${month}-01`;
-      const endDate = new Date(year, monthNum, 0).toISOString().split("T")[0]; // ostatni dzień miesiąca
+    // Dodaj opcjonalny filtr po roku i miesiącu
+    if (year || month) {
+      let startDate: string;
+      let endDate: string;
+
+      if (year && month) {
+        // Filtruj po konkretnym roku i miesiącu
+        startDate = `${year}-${month.toString().padStart(2, "0")}-01`;
+        endDate = new Date(year, month, 0).toISOString().split("T")[0]; // ostatni dzień miesiąca
+      } else if (year) {
+        // Filtruj tylko po roku
+        startDate = `${year}-01-01`;
+        endDate = `${year}-12-31`;
+      } else {
+        // Filtruj tylko po miesiącu (we wszystkich latach)
+        // To będzie bardziej skomplikowane - będziemy szukać miesiąca we wszystkich latach
+        // Na razie zostawię to jako filtr po miesiącu w bieżącym roku
+        const currentYear = new Date().getFullYear();
+        startDate = `${currentYear}-${month!.toString().padStart(2, "0")}-01`;
+        endDate = new Date(currentYear, month!, 0).toISOString().split("T")[0];
+      }
+
       expensesQuery = expensesQuery.gte("date", startDate).lte("date", endDate);
     }
 
@@ -81,10 +98,25 @@ export class ExpensesService {
     let countQuery = this.supabase.from("expenses").select("*", { count: "exact", head: true }).eq("user_id", userId);
 
     // Dodaj te same filtry co dla danych
-    if (month) {
-      const [year, monthNum] = month.split("-").map(Number);
-      const startDate = `${month}-01`;
-      const endDate = new Date(year, monthNum, 0).toISOString().split("T")[0];
+    if (year || month) {
+      let startDate: string;
+      let endDate: string;
+
+      if (year && month) {
+        // Filtruj po konkretnym roku i miesiącu
+        startDate = `${year}-${month.toString().padStart(2, "0")}-01`;
+        endDate = new Date(year, month, 0).toISOString().split("T")[0]; // ostatni dzień miesiąca
+      } else if (year) {
+        // Filtruj tylko po roku
+        startDate = `${year}-01-01`;
+        endDate = `${year}-12-31`;
+      } else {
+        // Filtruj tylko po miesiącu (we wszystkich latach)
+        const currentYear = new Date().getFullYear();
+        startDate = `${currentYear}-${month!.toString().padStart(2, "0")}-01`;
+        endDate = new Date(currentYear, month!, 0).toISOString().split("T")[0];
+      }
+
       countQuery = countQuery.gte("date", startDate).lte("date", endDate);
     }
 

@@ -13,7 +13,8 @@ Endpoint umożliwia uwierzytelnionym użytkownikom pobranie listy swoich wydatk�
   - Opcjonalne:
     - `page`: integer (domyślnie 1) - numer strony (minimum 1)
     - `limit`: integer (domyślnie 10) - liczba elementów na stronie (1-100)
-    - `month`: string (format YYYY-MM) - filtr po miesiącu (np. "2024-01")
+    - `year`: number - filtr po roku (2025-2030)
+- `month`: number - filtr po miesiącu (1-12)
     - `category_id`: uuid - filtr po identyfikatorze kategorii
     - `sort`: string (domyślnie "date DESC") - pole sortowania i kierunek (dozwolone: date, amount, created_at)
 - **Request Body**: Brak
@@ -80,7 +81,8 @@ Endpoint umożliwia uwierzytelnionym użytkownikom pobranie listy swoich wydatk�
 
 - **400 Bad Request**: Gdy parametr page jest mniejszy niż 1
 - **400 Bad Request**: Gdy parametr limit jest poza zakresem 1-100
-- **400 Bad Request**: Gdy parametr month nie jest w formacie YYYY-MM
+- **400 Bad Request**: Gdy parametr year nie jest w zakresie 2025-2030
+- **400 Bad Request**: Gdy parametr month nie jest w zakresie 1-12
 - **400 Bad Request**: Gdy parametr category_id nie jest prawidłowym UUID
 - **400 Bad Request**: Gdy parametr sort zawiera niedozwoloną wartość
 - **401 Unauthorized**: Gdy brakuje tokenu JWT lub jest nieprawidłowy

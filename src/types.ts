@@ -86,7 +86,8 @@ export interface GoalReportItemDTO {
 export interface GetExpensesQuery {
   page: number;
   limit: number;
-  month?: string;
+  year?: number;
+  month?: number;
   category_id?: string;
   sort: string;
 }

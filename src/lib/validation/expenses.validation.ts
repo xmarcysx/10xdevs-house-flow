@@ -8,7 +8,8 @@ export interface ValidationResult {
 export interface GetExpensesQueryInternal {
   page: number;
   limit: number;
-  month?: string;
+  year?: number;
+  month?: number;
   category_id?: string;
   sort: string;
 }
@@ -58,19 +59,21 @@ export function validateGetExpensesQuery(query: URLSearchParams): ValidationResu
     }
   }
 
+  // Walidacja parametru year
+  const yearParam = query.get("year");
+  if (yearParam !== null && yearParam.trim() !== "") {
+    const year = parseInt(yearParam, 10);
+    if (isNaN(year) || year < 2025 || year > 2030) {
+      errors.push("Parametr 'year' musi być liczbą całkowitą w zakresie 2025-2030");
+    }
+  }
+
   // Walidacja parametru month
   const monthParam = query.get("month");
   if (monthParam !== null && monthParam.trim() !== "") {
-    const monthRegex = /^\d{4}-\d{2}$/;
-    if (!monthRegex.test(monthParam)) {
-      errors.push("Parametr 'month' musi mieć format YYYY-MM");
-    } else {
-      // Sprawdź czy miesiąc jest prawidłowy (01-12)
-      const [, year, month] = monthParam.match(/^(\d{4})-(\d{2})$/) || [];
-      const monthNum = parseInt(month, 10);
-      if (monthNum < 1 || monthNum > 12) {
-        errors.push("Miesiąc w parametrze 'month' musi być w zakresie 01-12");
-      }
+    const month = parseInt(monthParam, 10);
+    if (isNaN(month) || month < 1 || month > 12) {
+      errors.push("Parametr 'month' musi być liczbą całkowitą w zakresie 1-12");
     }
   }
 
@@ -128,17 +131,23 @@ export function sanitizeGetExpensesQuery(query: URLSearchParams): GetExpensesQue
   const limit = limitParam ? parseInt(limitParam, 10) : DEFAULT_LIMIT;
   const sanitizedLimit = !isNaN(limit) && limit >= MIN_LIMIT && limit <= MAX_LIMIT ? limit : DEFAULT_LIMIT;
 
+  // Parsowanie i sanityzacja parametru year
+  const yearParam = query.get("year");
+  let sanitizedYear: number | undefined;
+  if (yearParam && yearParam.trim() !== "") {
+    const year = parseInt(yearParam, 10);
+    if (!isNaN(year) && year >= 2025 && year <= 2030) {
+      sanitizedYear = year;
+    }
+  }
+
   // Parsowanie i sanityzacja parametru month
   const monthParam = query.get("month");
-  let sanitizedMonth: string | undefined;
+  let sanitizedMonth: number | undefined;
   if (monthParam && monthParam.trim() !== "") {
-    const monthRegex = /^\d{4}-\d{2}$/;
-    if (monthRegex.test(monthParam)) {
-      const [, year, month] = monthParam.match(/^(\d{4})-(\d{2})$/) || [];
-      const monthNum = parseInt(month, 10);
-      if (monthNum >= 1 && monthNum <= 12) {
-        sanitizedMonth = monthParam;
-      }
+    const month = parseInt(monthParam, 10);
+    if (!isNaN(month) && month >= 1 && month <= 12) {
+      sanitizedMonth = month;
     }
   }
 
@@ -173,6 +182,7 @@ export function sanitizeGetExpensesQuery(query: URLSearchParams): GetExpensesQue
   return {
     page: sanitizedPage,
     limit: sanitizedLimit,
+    year: sanitizedYear,
     month: sanitizedMonth,
     category_id: sanitizedCategoryId,
     sort: sanitizedSort,

@@ -63,7 +63,8 @@ export const useExpensesApi = (): UseExpensesApiReturn => {
           page: query.page.toString(),
           limit: query.limit.toString(),
           sort: query.sort,
-          ...(query.month && { month: query.month }),
+          ...(query.year && { year: query.year.toString() }),
+          ...(query.month && { month: query.month.toString() }),
           ...(query.category_id && { category_id: query.category_id }),
         });
 

@@ -36,11 +36,11 @@ const TransactionRow: React.FC<{ transaction: TransactionVM }> = ({ transaction 
       onClick={handleClick}
     >
       <div className="flex items-center space-x-4">
-        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-md ${
-          isExpense
-            ? "bg-gradient-to-br from-red-500 to-pink-600"
-            : "bg-gradient-to-br from-green-500 to-emerald-600"
-        } transition-transform duration-300`}>
+        <div
+          className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-md ${
+            isExpense ? "bg-gradient-to-br from-red-500 to-pink-600" : "bg-gradient-to-br from-green-500 to-emerald-600"
+          } transition-transform duration-300`}
+        >
           <div className={`w-2 h-2 rounded-full bg-white`}></div>
         </div>
         <div className="flex-1">
@@ -49,30 +49,43 @@ const TransactionRow: React.FC<{ transaction: TransactionVM }> = ({ transaction 
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
             <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+              <path
+                fill-rule="evenodd"
+                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
             {displayDate}
             <span className="mx-1">•</span>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-              isExpense
-                ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
-                : "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
-            }`}>
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                isExpense
+                  ? "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
+                  : "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300"
+              }`}
+            >
               {isExpense ? transaction.category_name : transaction.source}
             </span>
           </div>
         </div>
       </div>
-      <div className={`font-bold text-lg flex items-center gap-1 ${
-        isExpense ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
-      }`}>
+      <div
+        className={`font-bold text-lg flex items-center gap-1 ${
+          isExpense ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+        }`}
+      >
         {isExpense ? (
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 13l-5 5-5-5h3V8h4v5h3z"></path>
           </svg>
         ) : (
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11l5-5 5 5h-3v5H10v-5H7z"></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M7 11l5-5 5 5h-3v5H10v-5H7z"
+            ></path>
           </svg>
         )}
         {transaction.amount.toFixed(2)} zł
@@ -90,7 +103,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+              ></path>
             </svg>
           </div>
         </div>
@@ -103,7 +121,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
           <div className="text-center py-12 text-gray-500 dark:text-gray-400">
             <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                ></path>
               </svg>
             </div>
             Brak transakcji do wyświetlenia
@@ -120,11 +143,11 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
         {recentTransactions.length > 0 && (
           <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
-              onClick={() => window.location.href = "/transactions"}
+              onClick={() => (window.location.href = "/expenses")}
               className="w-full text-center py-3 px-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 rounded-xl border border-blue-200 dark:border-blue-800 transition-all duration-300 group"
             >
               <span className="text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300">
-                Zobacz wszystkie transakcje →
+                Zobacz wszystkie wydatki
               </span>
             </button>
           </div>
