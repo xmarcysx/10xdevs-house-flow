@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { useContributions } from "../../lib/hooks/useContributions";
 import { useGoal } from "../../lib/hooks/useGoal";
 import type { CreateGoalContributionCommand, GoalContributionDTO, UpdateGoalContributionCommand } from "../../types";
-import { ContributionForm } from "./ContributionForm";
+import { ContributionFormModal } from "./ContributionFormModal";
 import { ContributionsTable } from "./ContributionsTable";
 import { GoalHeader } from "./GoalHeader";
 import { ProgressChart } from "./ProgressChart";
@@ -15,10 +15,17 @@ interface GoalContributionsViewProps {
 
 export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ goalId }) => {
   // Stan komponentu
-  const [editingContribution, setEditingContribution] = useState<GoalContributionDTO | null>(null);
-  const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [currentSort, setCurrentSort] = useState("date DESC");
+  const [contributionModalState, setContributionModalState] = useState<{
+    isOpen: boolean;
+    mode: "add" | "edit";
+    contribution?: GoalContributionDTO;
+    serverError?: string;
+  }>({
+    isOpen: false,
+    mode: "add",
+  });
 
   // Hooki API
   const { goal, isLoading: goalLoading, error: goalError, fetchGoal, clearError: clearGoalError } = useGoal();
@@ -70,31 +77,29 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
     try {
       await createContribution(goalId, data);
 
-      // Po sukcesie odśwież dane i zamknij formularz
+      // Po sukcesie odśwież dane
       await loadGoalAndContributions();
-      setShowForm(false);
       toast.success("Wpłata została dodana pomyślnie");
     } catch (err) {
       // Błędy są obsługiwane przez hook
-      console.error("Error adding contribution:", err);
+      throw err; // Przekaż błąd dalej, żeby modal mógł go obsłużyć
     }
   };
 
   // Obsługa edycji wpłaty
-  const handleEditContribution = async (data: UpdateGoalContributionCommand) => {
-    if (!editingContribution) return;
+  const handleEditContribution = async (data: UpdateGoalContributionCommand, contributionId?: string) => {
+    const idToUse = contributionId || contributionModalState.contribution?.id;
+    if (!idToUse) return;
 
     try {
-      await updateContribution(goalId, editingContribution.id, data);
+      await updateContribution(goalId, idToUse, data);
 
-      // Po sukcesie odśwież dane i zamknij formularz
+      // Po sukcesie odśwież dane
       await loadGoalAndContributions();
-      setEditingContribution(null);
-      setShowForm(false);
       toast.success("Wpłata została zaktualizowana pomyślnie");
     } catch (err) {
       // Błędy są obsługiwane przez hook
-      console.error("Error editing contribution:", err);
+      throw err; // Przekaż błąd dalej, żeby modal mógł go obsłużyć
     }
   };
 
@@ -114,20 +119,55 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
 
   // Obsługa rozpoczęcia edycji wpłaty
   const handleStartEdit = (contribution: GoalContributionDTO) => {
-    setEditingContribution(contribution);
-    setShowForm(true);
-  };
-
-  // Obsługa anulowania edycji
-  const handleCancelEdit = () => {
-    setEditingContribution(null);
-    setShowForm(false);
+    setContributionModalState({
+      isOpen: true,
+      mode: "edit",
+      contribution,
+      serverError: undefined,
+    });
   };
 
   // Obsługa rozpoczęcia dodawania nowej wpłaty
   const handleStartAdd = () => {
-    setEditingContribution(null);
-    setShowForm(true);
+    setContributionModalState({
+      isOpen: true,
+      mode: "add",
+      serverError: undefined,
+    });
+  };
+
+  // Obsługa zamknięcia modala wpłat
+  const handleCloseContributionModal = () => {
+    setContributionModalState({
+      isOpen: false,
+      mode: "add",
+      serverError: undefined,
+    });
+  };
+
+  // Obsługa zatwierdzenia formularza wpłaty w modalu
+  const handleSubmitContributionModal = async (data: CreateGoalContributionCommand | UpdateGoalContributionCommand) => {
+    try {
+      // Wyczyść poprzedni błąd
+      setContributionModalState((prev) => ({ ...prev, serverError: undefined }));
+
+      if (contributionModalState.mode === "add") {
+        await handleAddContribution(data as CreateGoalContributionCommand);
+      } else if (contributionModalState.mode === "edit" && contributionModalState.contribution) {
+        await handleEditContribution(data as UpdateGoalContributionCommand, contributionModalState.contribution.id);
+      }
+
+      // Zamknij modal
+      handleCloseContributionModal();
+    } catch (err) {
+      // Ustaw błąd w modalu
+      let errorMessage = "Wystąpił błąd podczas zapisywania wpłaty";
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      setContributionModalState((prev) => ({ ...prev, serverError: errorMessage }));
+      console.error("Modal form submission error:", err);
+    }
   };
 
   // Obsługa zmiany strony w paginacji
@@ -144,8 +184,26 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
   // Stan ładowania
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50 p-8">
+        <div className="flex items-center justify-center min-h-[300px]">
+          <div className="text-center">
+            <div className="relative mb-8">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 dark:border-blue-800"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 absolute top-0"></div>
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">
+              Ładowanie danych celu...
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              Przygotowujemy szczegóły Twojego celu oszczędnościowego
+            </p>
+            <div className="flex justify-center gap-2 mt-6">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-100"></div>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-200"></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -153,37 +211,40 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
   // Stan błędu
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-        <div className="flex">
+      <div className="bg-gradient-to-br from-red-50/90 via-red-50/80 to-red-50/70 dark:from-red-900/20 dark:via-red-900/15 dark:to-red-900/10 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-red-200/50 dark:border-red-800/50 p-6">
+        <div className="flex items-start">
           <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path
+                  fillRule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
           </div>
-          <div className="ml-3">
-            <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+          <div className="ml-4 flex-1">
+            <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">Wystąpił błąd</h3>
+            <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
           </div>
-          <div className="ml-auto pl-3">
+          <div className="ml-4 flex-shrink-0">
             <button
               onClick={() => {
                 clearGoalError();
                 clearContributionsError();
                 loadGoalAndContributions();
               }}
-              className="inline-flex rounded-md bg-red-50 dark:bg-red-900/20 p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+              className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
             >
-              <span className="sr-only">Spróbuj ponownie</span>
-              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <svg className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
                 <path
                   fillRule="evenodd"
                   d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
                   clipRule="evenodd"
                 />
               </svg>
+              Spróbuj ponownie
             </button>
           </div>
         </div>
@@ -200,13 +261,17 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
       <div className="flex justify-end">
         <button
           onClick={handleStartAdd}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:shadow-lg"
           disabled={submitting}
         >
-          <svg className="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-          Dodaj wpłatę
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </div>
+            <span className="text-sm">Dodaj wpłatę</span>
+          </div>
         </button>
       </div>
 
@@ -219,15 +284,18 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
         />
       )}
 
-      {/* Formularz wpłaty */}
-      {showForm && (
-        <ContributionForm
-          contribution={editingContribution || undefined}
-          onSubmit={editingContribution ? handleEditContribution : handleAddContribution}
-          onCancel={handleCancelEdit}
-          isSubmitting={submitting}
-        />
-      )}
+      {/* Modal formularza wpłaty */}
+      <ContributionFormModal
+        isOpen={contributionModalState.isOpen}
+        mode={contributionModalState.mode}
+        contribution={contributionModalState.contribution}
+        goals={goal ? [goal] : []}
+        selectedGoalId={goalId}
+        onSave={handleSubmitContributionModal}
+        onCancel={handleCloseContributionModal}
+        loading={submitting}
+        serverError={contributionModalState.serverError}
+      />
 
       {/* Tabela wpłat */}
       <ContributionsTable

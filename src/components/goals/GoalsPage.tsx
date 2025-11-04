@@ -2,9 +2,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useGoals } from "../../lib/hooks/useGoals";
-import type { CreateGoalCommand, GoalDTO, UpdateGoalCommand } from "../../types";
+import { useContributions } from "../../lib/hooks/useContributions";
+import type { CreateGoalCommand, GoalDTO, UpdateGoalCommand, CreateGoalContributionCommand } from "../../types";
 import { GoalForm } from "./GoalForm";
+import { ContributionFormModal } from "./ContributionFormModal";
 import { GoalsList } from "./GoalsList";
+import GoalsLayout from "./GoalsLayout";
 
 export const GoalsPage: React.FC = () => {
   // Stan komponentu
@@ -24,6 +27,13 @@ export const GoalsPage: React.FC = () => {
     clearError,
   } = useGoals();
 
+  const {
+    isSubmitting: contributionSubmitting,
+    error: contributionError,
+    createContribution,
+    clearError: clearContributionError,
+  } = useContributions();
+
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
     mode: "add" | "edit";
@@ -31,6 +41,14 @@ export const GoalsPage: React.FC = () => {
   }>({
     isOpen: false,
     mode: "add",
+  });
+
+  const [contributionModalState, setContributionModalState] = useState<{
+    isOpen: boolean;
+    selectedGoalId?: string;
+    serverError?: string;
+  }>({
+    isOpen: false,
   });
 
   // Efekt do ładowania danych przy zmianie strony
@@ -53,6 +71,15 @@ export const GoalsPage: React.FC = () => {
     setModalState({
       isOpen: true,
       mode: "add",
+    });
+  }, []);
+
+  // Obsługa dodania nowej wpłaty
+  const handleAddContribution = useCallback((goalId: string) => {
+    setContributionModalState({
+      isOpen: true,
+      selectedGoalId: goalId,
+      serverError: undefined,
     });
   }, []);
 
@@ -97,6 +124,14 @@ export const GoalsPage: React.FC = () => {
     });
   }, []);
 
+  // Obsługa zamknięcia modala wpłat
+  const handleCloseContributionModal = useCallback(() => {
+    setContributionModalState({
+      isOpen: false,
+      serverError: undefined,
+    });
+  }, []);
+
   // Obsługa zatwierdzenia formularza
   const handleSubmitForm = useCallback(
     async (data: CreateGoalCommand | UpdateGoalCommand) => {
@@ -132,22 +167,51 @@ export const GoalsPage: React.FC = () => {
     [modalState, currentPage, createGoal, updateGoal, fetchGoals]
   );
 
+  // Obsługa zatwierdzenia formularza wpłaty
+  const handleSubmitContributionForm = useCallback(
+    async (data: CreateGoalContributionCommand, goalId?: string) => {
+      try {
+        // Wyczyść poprzedni błąd
+        setContributionModalState((prev) => ({ ...prev, serverError: undefined }));
+
+        if (!goalId) {
+          setContributionModalState((prev) => ({ ...prev, serverError: "Nie wybrano celu oszczędnościowego" }));
+          return;
+        }
+
+        await createContribution(goalId, data);
+
+        // Zamknij modal i odśwież dane
+        handleCloseContributionModal();
+
+        // Pokaż toast sukcesu
+        toast.success("Wpłata została dodana pomyślnie");
+      } catch (err) {
+        // Ustaw błąd w modalu
+        let errorMessage = "Wystąpił błąd podczas zapisywania wpłaty";
+        if (err instanceof Error) {
+          if (err.message.includes("już istnieje")) {
+            errorMessage = "Wpłata już istnieje";
+          } else {
+            errorMessage = err.message;
+          }
+        }
+        setContributionModalState((prev) => ({ ...prev, serverError: errorMessage }));
+        console.error("Form submission error:", err);
+      }
+    },
+    [createContribution, handleCloseContributionModal]
+  );
+
   // Obsługa czyszczenia błędu
   const handleClearError = useCallback(() => {
     clearError();
   }, [clearError]);
 
   return (
-    <div className="space-y-6">
-      {/* Nagłówek */}
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Cele oszczędnościowe</h1>
-        <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 mt-2">
-          Zarządzaj swoimi celami oszczędnościowymi i śledź postęp
-        </p>
-      </div>
-
-      {/* Komunikaty błędów */}
+    <GoalsLayout>
+      <div className="space-y-6">
+        {/* Komunikaty błędów */}
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
           <div className="flex">
@@ -188,6 +252,7 @@ export const GoalsPage: React.FC = () => {
         pagination={pagination}
         loading={loading}
         onAdd={handleAddGoal}
+        onAddContribution={handleAddContribution}
         onEdit={handleEditGoal}
         onDelete={handleDeleteGoal}
         onPageChange={handlePageChange}
@@ -202,6 +267,19 @@ export const GoalsPage: React.FC = () => {
         onCancel={handleCloseModal}
         loading={submitting}
       />
-    </div>
+
+      {/* Modal formularza wpłaty */}
+      <ContributionFormModal
+        isOpen={contributionModalState.isOpen}
+        mode="add"
+        goals={goals}
+        selectedGoalId={contributionModalState.selectedGoalId}
+        onSave={(data) => handleSubmitContributionForm(data, contributionModalState.selectedGoalId)}
+        onCancel={handleCloseContributionModal}
+        loading={contributionSubmitting}
+        serverError={contributionModalState.serverError}
+      />
+      </div>
+    </GoalsLayout>
   );
 };

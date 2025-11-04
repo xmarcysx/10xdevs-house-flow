@@ -105,7 +105,7 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               placeholder="np. Jedzenie, Transport, Rozrywka"
               disabled={loading || isSubmitting}
               maxLength={100}
-              className={errors.name ? "border-red-500 focus:border-red-500 focus:ring-red-500" : ""}
+              className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.name ? "border-red-500" : ""}`}
             />
             {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
           </div>

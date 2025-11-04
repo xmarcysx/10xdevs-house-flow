@@ -1,6 +1,6 @@
 ---
 // Szczegóły celu oszczędnościowego - strona z wpłatami
-import { GoalContributionsView } from "../../components/goals/GoalContributionsView";
+import { GoalDetailPage } from "../../components/goals/GoalDetailPage";
 import Navbar from "../../components/Navbar";
 import Layout from "../../layouts/Layout.astro";
 
@@ -14,13 +14,9 @@ if (!id) {
 ---
 
 <Layout title="Szczegóły celu - HouseFlow">
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- Navbar -->
-    <Navbar client:only="react" />
+  <!-- Navbar -->
+  <Navbar client:only="react" />
 
-    <!-- Main Content -->
-    <div class="container mx-auto px-4 py-8 pt-24">
-      <GoalContributionsView goalId={id} client:only="react" />
-    </div>
-  </div>
+  <!-- Goal Detail Page -->
+  <GoalDetailPage goalId={id} client:only="react" />
 </Layout>

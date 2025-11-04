@@ -33,10 +33,11 @@ type GoalFormValues = z.infer<typeof goalFormSchema>;
 interface GoalFormFieldsProps {
   initialData?: GoalDTO;
   onSubmit: (data: CreateGoalCommand | UpdateGoalCommand) => void;
+  onCancel: () => void;
   isSubmitting: boolean;
 }
 
-export const GoalFormFields: React.FC<GoalFormFieldsProps> = ({ initialData, onSubmit, isSubmitting }) => {
+export const GoalFormFields: React.FC<GoalFormFieldsProps> = ({ initialData, onSubmit, onCancel, isSubmitting }) => {
   const {
     register,
     handleSubmit,
@@ -78,7 +79,7 @@ export const GoalFormFields: React.FC<GoalFormFieldsProps> = ({ initialData, onS
           type="text"
           placeholder="np. Wakacje na Hawajach"
           {...register("name")}
-          className={errors.name ? "border-red-500" : ""}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.name ? "border-red-500" : ""}`}
         />
         {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
       </div>
@@ -94,18 +95,35 @@ export const GoalFormFields: React.FC<GoalFormFieldsProps> = ({ initialData, onS
           max="10000000"
           placeholder="0.00"
           {...register("target_amount", { valueAsNumber: true })}
-          className={errors.target_amount ? "border-red-500" : ""}
+          className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.target_amount ? "border-red-500" : ""}`}
         />
         {errors.target_amount && <p className="text-sm text-red-600">{errors.target_amount.message}</p>}
       </div>
 
       {/* Przyciski */}
       <div className="flex justify-end space-x-3 pt-4">
-        <Button type="button" variant="outline" onClick={() => reset()} disabled={isSubmitting}>
-          Wyczyść
+        <Button
+          type="button"
+          onClick={onCancel}
+          disabled={isSubmitting}
+          variant="outline"
+          className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+        >
+          Anuluj
         </Button>
-        <Button type="submit" disabled={isSubmitting || Object.keys(errors).length > 0} className="min-w-[100px]">
-          {isSubmitting ? "Zapisywanie..." : "Zapisz"}
+        <Button
+          type="submit"
+          disabled={isSubmitting || Object.keys(errors).length > 0}
+          className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
+        >
+          {isSubmitting ? (
+            <>
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              Zapisywanie...
+            </>
+          ) : (
+            "Zapisz"
+          )}
         </Button>
       </div>
     </form>

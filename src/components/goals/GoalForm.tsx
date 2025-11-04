@@ -27,7 +27,7 @@ export const GoalForm: React.FC<GoalFormProps> = ({ isOpen, mode, goal, onSave, 
         </DialogHeader>
 
         <div className="mt-4">
-          <GoalFormFields initialData={goal} onSubmit={onSave} isSubmitting={loading} />
+          <GoalFormFields initialData={goal} onSubmit={onSave} onCancel={onCancel} isSubmitting={loading} />
         </div>
       </DialogContent>
     </Dialog>
