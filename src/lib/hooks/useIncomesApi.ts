@@ -62,7 +62,8 @@ export const useIncomesApi = (): UseIncomesApiReturn => {
           page: query.page.toString(),
           limit: query.limit.toString(),
           sort: query.sort,
-          ...(query.month && { month: query.month }),
+          ...(query.year && { year: query.year.toString() }),
+          ...(query.month && { month: query.month.toString() }),
         });
 
         const response = await fetch(`/api/incomes?${params}`, {

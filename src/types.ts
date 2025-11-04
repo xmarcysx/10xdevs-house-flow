@@ -96,7 +96,8 @@ export interface GetExpensesQuery {
 export interface GetIncomesQuery {
   page: number;
   limit: number;
-  month?: string;
+  year?: number;
+  month?: number;
   sort: string;
 }
 

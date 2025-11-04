@@ -5,6 +5,7 @@ import type { IncomeFormData, IncomesFiltersData } from "../../types";
 import { IncomeModal } from "./IncomeModal";
 import { IncomesFilters } from "./IncomesFilters";
 import { IncomesTable } from "./IncomesTable";
+import { DeleteConfirmationDialog } from "./DeleteConfirmationDialog";
 import IncomesLayout from "./IncomesLayout";
 
 export const IncomesPage: React.FC = () => {
@@ -19,6 +20,13 @@ export const IncomesPage: React.FC = () => {
   }>({
     isOpen: false,
     mode: "add",
+  });
+
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    isOpen: boolean;
+    incomeId?: string;
+  }>({
+    isOpen: false,
   });
 
   // Hook API
@@ -39,6 +47,7 @@ export const IncomesPage: React.FC = () => {
     const query = {
       page: currentPage,
       limit: 10,
+      year: filters.year || undefined,
       month: filters.month || undefined,
       sort: "date DESC" as const,
     };
@@ -77,8 +86,22 @@ export const IncomesPage: React.FC = () => {
 
   // Obsługa usunięcia wpływu
   const handleDeleteIncome = (incomeId: string) => {
-    // TODO: Dodać potwierdzenie usunięcia
-    deleteIncome(incomeId).then(() => {
+    setDeleteDialogState({
+      isOpen: true,
+      incomeId,
+    });
+  };
+
+  // Obsługa potwierdzenia usunięcia wpływu
+  const handleConfirmDelete = async () => {
+    if (!deleteDialogState.incomeId) return;
+
+    try {
+      await deleteIncome(deleteDialogState.incomeId);
+
+      // Zamknij dialog
+      setDeleteDialogState({ isOpen: false });
+
       // Odśwież dane po usunięciu - wróć do pierwszej strony jeśli aktualna strona może być pusta
       const currentPageData = incomesData?.incomes || [];
       const shouldResetPage = currentPageData.length === 1 && currentPage > 1;
@@ -86,6 +109,7 @@ export const IncomesPage: React.FC = () => {
       const query = {
         page: shouldResetPage ? 1 : currentPage,
         limit: 10,
+        year: filters.year || undefined,
         month: filters.month || undefined,
         sort: "date DESC" as const,
       };
@@ -94,7 +118,15 @@ export const IncomesPage: React.FC = () => {
       if (shouldResetPage) {
         setCurrentPage(1);
       }
-    });
+    } catch (err) {
+      console.error("Delete income error:", err);
+      // Dialog zostanie zamknięty w catchu, ale możemy dodać obsługę błędów jeśli potrzeba
+    }
+  };
+
+  // Obsługa anulowania usunięcia wpływu
+  const handleCancelDelete = () => {
+    setDeleteDialogState({ isOpen: false });
   };
 
   // Obsługa zamknięcia modala
@@ -122,6 +154,7 @@ export const IncomesPage: React.FC = () => {
       const query = {
         page: modalState.mode === "add" ? 1 : currentPage, // Dla nowych wpływów przejdź do pierwszej strony
         limit: 10,
+        year: filters.year || undefined,
         month: filters.month || undefined,
         sort: "date DESC" as const,
       };
@@ -186,8 +219,8 @@ export const IncomesPage: React.FC = () => {
         </div>
       )}
 
-      {/* Filtry i sekcja tytułu - tylko gdy są dane */}
-      {incomesData && incomesData.incomes && incomesData.incomes.length > 0 && (
+      {/* Filtry i sekcja tytułu - gdy są dane lub gdy są wybrane filtry */}
+      {((incomesData && incomesData.incomes && incomesData.incomes.length > 0) || (filters.year || filters.month)) && (
         <>
           {/* Filtry */}
           <IncomesFilters filters={filters} onFiltersChange={handleFiltersChange} />
@@ -238,6 +271,14 @@ export const IncomesPage: React.FC = () => {
         onClose={handleCloseModal}
         isSubmitting={isSubmitting}
         serverError={modalState.serverError}
+      />
+
+      {/* Dialog potwierdzenia usunięcia */}
+      <DeleteConfirmationDialog
+        isOpen={deleteDialogState.isOpen}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        loading={isSubmitting}
       />
       </div>
     </IncomesLayout>

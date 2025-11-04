@@ -5,7 +5,8 @@ import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export interface IncomesFiltersData {
-  month?: string;
+  year?: number;
+  month?: number; // 1-12
 }
 
 interface IncomesFiltersProps {
@@ -14,31 +15,43 @@ interface IncomesFiltersProps {
 }
 
 export const IncomesFilters: React.FC<IncomesFiltersProps> = ({ filters, onFiltersChange }) => {
-  // Generuj opcje miesięcy - od bieżącego miesiąca wstecz przez ostatnie 24 miesiące
-  const generateMonthOptions = () => {
-    const options = [];
-    const currentDate = new Date();
+  // Opcje lat (2025-2030)
+  const yearOptions = [
+    { value: "2025", label: "2025" },
+    { value: "2026", label: "2026" },
+    { value: "2027", label: "2027" },
+    { value: "2028", label: "2028" },
+    { value: "2029", label: "2029" },
+    { value: "2030", label: "2030" },
+  ];
 
-    for (let i = 0; i < 24; i++) {
-      const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
-      const value = date.toISOString().slice(0, 7); // YYYY-MM format
-      const label = date.toLocaleDateString("pl-PL", {
-        year: "numeric",
-        month: "long",
-      });
+  // Opcje miesięcy (styczeń-grudzień)
+  const monthOptions = [
+    { value: "1", label: "Styczeń" },
+    { value: "2", label: "Luty" },
+    { value: "3", label: "Marzec" },
+    { value: "4", label: "Kwiecień" },
+    { value: "5", label: "Maj" },
+    { value: "6", label: "Czerwiec" },
+    { value: "7", label: "Lipiec" },
+    { value: "8", label: "Sierpień" },
+    { value: "9", label: "Wrzesień" },
+    { value: "10", label: "Październik" },
+    { value: "11", label: "Listopad" },
+    { value: "12", label: "Grudzień" },
+  ];
 
-      options.push({ value, label });
-    }
-
-    return options;
+  const handleYearChange = (value: string) => {
+    onFiltersChange({
+      ...filters,
+      year: value === "all" ? undefined : parseInt(value),
+    });
   };
-
-  const monthOptions = generateMonthOptions();
 
   const handleMonthChange = (value: string) => {
     onFiltersChange({
       ...filters,
-      month: value === "all" ? undefined : value,
+      month: value === "all" ? undefined : parseInt(value),
     });
   };
 
@@ -46,26 +59,46 @@ export const IncomesFilters: React.FC<IncomesFiltersProps> = ({ filters, onFilte
     onFiltersChange({});
   };
 
-  const hasActiveFilters = !!filters.month;
+  const hasActiveFilters = !!filters.year || !!filters.month;
 
   return (
     <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
       <div className="px-6 py-6">
-        <div className="flex justify-between items-center mb-4">
-          <div>
-            <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Filtry wpływów</h3>
-            <p className="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Znajdź wpływy z wybranego okresu</p>
-          </div>
-        </div>
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+          {/* Filtr roku */}
+          <div className="flex-1 min-w-0">
+            <Label htmlFor="year-filter" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Filtruj po roku
+            </Label>
+            <Select value={filters.year?.toString() || "all"} onValueChange={handleYearChange}>
+              <SelectTrigger
+                id="year-filter"
+                className="mt-1 bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm w-full"
+              >
+                <SelectValue placeholder="Wszystkie lata" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Wszystkie lata</SelectItem>
+                {yearOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Filtr miesiąca */}
           <div className="flex-1 min-w-0">
             <Label htmlFor="month-filter" className="text-sm font-medium text-gray-700 dark:text-gray-300">
               Filtruj po miesiącu
             </Label>
-            <Select value={filters.month || "all"} onValueChange={handleMonthChange}>
-              <SelectTrigger id="month-filter" className="mt-1">
-                <SelectValue placeholder="Wybierz miesiąc" />
+            <Select value={filters.month?.toString() || "all"} onValueChange={handleMonthChange}>
+              <SelectTrigger
+                id="month-filter"
+                className="mt-1 bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm w-full"
+              >
+                <SelectValue placeholder="Wszystkie miesiące" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Wszystkie miesiące</SelectItem>
@@ -96,8 +129,14 @@ export const IncomesFilters: React.FC<IncomesFiltersProps> = ({ filters, onFilte
         {hasActiveFilters && (
           <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
             Aktywne filtry:{" "}
+            {filters.year && (
+              <>
+                Rok: {filters.year}
+                {filters.month && "; "}
+              </>
+            )}
             {filters.month &&
-              `Miesiąc: ${new Date(filters.month + "-01").toLocaleDateString("pl-PL", { year: "numeric", month: "long" })}`}
+              `Miesiąc: ${monthOptions.find((m) => parseInt(m.value) === filters.month)?.label || filters.month}`}
           </div>
         )}
       </div>

@@ -9,11 +9,11 @@ export class IncomesService {
   /**
    * Pobiera paginowaną listę wpływów dla uwierzytelnionego użytkownika
    * @param userId ID użytkownika
-   * @param query Parametry zapytania zawierające page, limit, month i sort
+   * @param query Parametry zapytania zawierające page, limit, year, month i sort
    * @returns Obiekt zawierający dane wpływów i informacje o paginacji
    */
   async getIncomes(userId: string, query: GetIncomesQuery): Promise<{ data: IncomeDTO[]; pagination: PaginationDTO }> {
-    const { page, limit, month, sort } = query;
+    const { page, limit, year, month, sort } = query;
 
     // Oblicz offset dla paginacji
     const offset = (page - 1) * limit;
@@ -27,12 +27,25 @@ export class IncomesService {
       .select("id, amount, date, description, source, created_at")
       .eq("user_id", userId);
 
-    // Dodanie filtrowania po miesiącu jeśli podano
-    if (month) {
-      const startDate = `${month}-01`;
-      const endDate = new Date(parseInt(month.split("-")[0]), parseInt(month.split("-")[1]), 0)
-        .toISOString()
-        .split("T")[0]; // Ostatni dzień miesiąca
+    // Dodanie filtrowania po roku i/lub miesiącu jeśli podano
+    if (year || month) {
+      let startDate: string;
+      let endDate: string;
+
+      if (year && month) {
+        // Filtruj po konkretnym miesiącu roku
+        startDate = `${year}-${month.toString().padStart(2, '0')}-01`;
+        endDate = new Date(year, month, 0).toISOString().split("T")[0]; // Ostatni dzień miesiąca
+      } else if (year) {
+        // Filtruj po całym roku
+        startDate = `${year}-01-01`;
+        endDate = `${year}-12-31`;
+      } else {
+        // Tylko miesiąc - użyj bieżącego roku (fallback, choć nie powinno się zdarzyć)
+        const currentYear = new Date().getFullYear();
+        startDate = `${currentYear}-${month!.toString().padStart(2, '0')}-01`;
+        endDate = new Date(currentYear, month!, 0).toISOString().split("T")[0];
+      }
 
       incomesQuery = incomesQuery.gte("date", startDate).lte("date", endDate);
     }
@@ -49,12 +62,25 @@ export class IncomesService {
     // Przygotowanie zapytania do liczenia całkowitej liczby wyników
     let countQuery = this.supabase.from("incomes").select("*", { count: "exact", head: true }).eq("user_id", userId);
 
-    // Dodanie tego samego filtrowania po miesiącu dla liczenia
-    if (month) {
-      const startDate = `${month}-01`;
-      const endDate = new Date(parseInt(month.split("-")[0]), parseInt(month.split("-")[1]), 0)
-        .toISOString()
-        .split("T")[0];
+    // Dodanie tego samego filtrowania po roku i/lub miesiącu dla liczenia
+    if (year || month) {
+      let startDate: string;
+      let endDate: string;
+
+      if (year && month) {
+        // Filtruj po konkretnym miesiącu roku
+        startDate = `${year}-${month.toString().padStart(2, '0')}-01`;
+        endDate = new Date(year, month, 0).toISOString().split("T")[0]; // Ostatni dzień miesiąca
+      } else if (year) {
+        // Filtruj po całym roku
+        startDate = `${year}-01-01`;
+        endDate = `${year}-12-31`;
+      } else {
+        // Tylko miesiąc - użyj bieżącego roku (fallback, choć nie powinno się zdarzyć)
+        const currentYear = new Date().getFullYear();
+        startDate = `${currentYear}-${month!.toString().padStart(2, '0')}-01`;
+        endDate = new Date(currentYear, month!, 0).toISOString().split("T")[0];
+      }
 
       countQuery = countQuery.gte("date", startDate).lte("date", endDate);
     }
