@@ -11,13 +11,50 @@ import TrendsLineChart from "./dashboard/TrendsLineChart";
 const Dashboard: React.FC = () => {
   const { budgetData, goalsData, transactions, alerts, trendsData, loading, error } = useDashboardData();
 
+  // Add styles for animations
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .animation-delay-100 {
+        animation-delay: 0.1s;
+      }
+      .animation-delay-200 {
+        animation-delay: 0.2s;
+      }
+      .bg-clip-text {
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+      .text-transparent {
+        -webkit-text-fill-color: transparent;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="col-span-full flex items-center justify-center py-12">
+        <div className="col-span-full flex items-center justify-center py-20">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white mx-auto mb-4"></div>
-            <p className="text-gray-600 dark:text-gray-400">Ładowanie danych...</p>
+            <div className="relative mb-8">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 dark:border-blue-800"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 absolute top-0"></div>
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">
+              Ładowanie panelu głównego...
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              Przygotowujemy Twoje dane finansowe
+            </p>
+            <div className="flex justify-center gap-2 mt-6">
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-100"></div>
+              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-200"></div>
+            </div>
           </div>
         </div>
       </DashboardLayout>
@@ -27,18 +64,31 @@ const Dashboard: React.FC = () => {
   if (error) {
     return (
       <DashboardLayout>
-        <div className="col-span-full flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 max-w-md">
-              <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
-                Błąd podczas ładowania danych
-              </h3>
-              <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
+        <div className="col-span-full flex items-center justify-center py-20">
+          <div className="text-center max-w-lg">
+            <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-red-800 to-pink-800 dark:from-white dark:via-red-200 dark:to-pink-200 bg-clip-text text-transparent mb-4">
+              Błąd podczas ładowania danych
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg leading-relaxed">
+              {error}
+            </p>
+            <div className="flex gap-4 justify-center">
               <button
                 onClick={() => window.location.reload()}
-                className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
+                className="bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0"
               >
                 Spróbuj ponownie
+              </button>
+              <button
+                onClick={() => window.history.back()}
+                className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 border-0"
+              >
+                Wróć
               </button>
             </div>
           </div>
@@ -79,34 +129,32 @@ const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Budget Summary - zajmuje całą szerokość na mobile, połowę na tablet, 2/3 na desktop */}
-      <div className="col-span-1 md:col-span-2 lg:col-span-2">
+      {/* Podsumowanie budżetu - pełna szerokość */}
+      <div className="col-span-1 md:col-span-2 lg:col-span-2 h-full">
         <BudgetSummaryCard data={budgetData} />
       </div>
 
-      {/* Category Pie Chart - zajmuje całą szerokość na mobile, połowę na tablet, 1/3 na desktop */}
-      <div className="col-span-1 md:col-span-1 lg:col-span-1">
+      {/* Pierwszy rząd - dwa komponenty */}
+      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
         <CategoryPieChart data={budgetData?.category_breakdown || []} />
       </div>
 
-      {/* Trends Line Chart - zajmuje całą szerokość zawsze */}
-      <div className="col-span-1 md:col-span-2 lg:col-span-3">
-        <TrendsLineChart data={trendsData} />
+      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
+        <QuickActions />
       </div>
 
-      {/* Goals Summary - zajmuje całą szerokość na mobile, połowę na tablet, 2/3 na desktop */}
-      <div className="col-span-1 md:col-span-1 lg:col-span-2">
+      {/* Drugi rząd - dwa komponenty */}
+      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
         <GoalsSummary goals={goalsData} />
       </div>
 
-      {/* Recent Transactions - zajmuje całą szerokość na mobile, połowę na tablet, 2/3 na desktop */}
-      <div className="col-span-1 md:col-span-1 lg:col-span-2">
+      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
         <RecentTransactions transactions={transactions} />
       </div>
 
-      {/* Quick Actions - zajmuje całą szerokość zawsze (kompaktowy komponent) */}
-      <div className="col-span-1 md:col-span-2 lg:col-span-1">
-        <QuickActions />
+      {/* Trendy finansowe - pełna szerokość */}
+      <div className="col-span-1 md:col-span-2 lg:col-span-2 h-full">
+        <TrendsLineChart data={trendsData} />
       </div>
     </DashboardLayout>
   );

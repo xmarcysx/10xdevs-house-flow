@@ -20,27 +20,55 @@ const GoalItem: React.FC<{ goal: GoalDTO }> = ({ goal }) => {
 
   return (
     <div
-      className="p-4 bg-white dark:bg-gray-800 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"
+      className="p-5 bg-gradient-to-r from-white to-green-50/30 dark:from-gray-800 dark:to-green-900/10 border border-green-100 dark:border-green-800 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
       onClick={handleClick}
     >
-      <div className="flex items-center justify-between mb-2">
-        <h4 className="font-medium text-sm">{goal.name}</h4>
-        <span className="text-xs text-gray-500">
-          {goal.current_amount.toFixed(2)} / {goal.target_amount.toFixed(2)} zł
-        </span>
+      <div className="flex items-center justify-between mb-3">
+        <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors">{goal.name}</h4>
+        <div className="text-right">
+          <span className="text-sm font-bold text-gray-900 dark:text-white">
+            {goal.current_amount.toFixed(2)} zł
+          </span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 block">
+            z {goal.target_amount.toFixed(2)} zł
+          </span>
+        </div>
       </div>
 
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mb-2">
-        <div
-          className={`h-2 rounded-full transition-all duration-300 ${isCompleted ? "bg-green-500" : "bg-primary"}`}
-          style={{ width: `${progressPercentage}%` }}
-        ></div>
+      <div className="relative mb-3">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden shadow-inner">
+          <div
+            className={`h-full rounded-full transition-all duration-500 ease-out ${
+              isCompleted
+                ? "bg-gradient-to-r from-green-500 to-emerald-500 shadow-lg"
+                : "bg-gradient-to-r from-blue-500 to-indigo-500 shadow-md"
+            }`}
+            style={{ width: `${progressPercentage}%` }}
+          ></div>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-full animate-pulse"></div>
       </div>
 
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-gray-600 dark:text-gray-400">{progressPercentage.toFixed(1)}% ukończone</span>
-        {remainingAmount > 0 && <span className="text-gray-500">Pozostało: {remainingAmount.toFixed(2)} zł</span>}
-        {isCompleted && <span className="text-green-600 font-medium">Ukończone!</span>}
+      <div className="flex items-center justify-between text-sm">
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${isCompleted ? "bg-green-500 animate-pulse" : "bg-blue-500"}`}></div>
+          <span className="text-gray-600 dark:text-gray-400 font-medium">
+            {progressPercentage.toFixed(1)}% ukończone
+          </span>
+        </div>
+        {remainingAmount > 0 && (
+          <span className="text-orange-600 dark:text-orange-400 font-medium bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded-lg">
+            Pozostało: {remainingAmount.toFixed(2)} zł
+          </span>
+        )}
+        {isCompleted && (
+          <span className="text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-3 py-1 rounded-lg flex items-center gap-1">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+            </svg>
+            Ukończone!
+          </span>
+        )}
       </div>
     </div>
   );
@@ -50,15 +78,31 @@ const GoalsSummary: React.FC<GoalsSummaryProps> = ({ goals }) => {
   const topGoals = goals.slice(0, 3);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Cele oszczędnościowe</CardTitle>
+    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-green-50/50 dark:from-gray-800 dark:to-green-900/20">
+      <CardHeader className="pb-4">
+        <div className="relative">
+          <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
+            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          Cele oszczędnościowe
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {topGoals.length === 0 ? (
-          <div className="text-center py-8 text-gray-500 dark:text-gray-400">Brak celów do wyświetlenia</div>
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            Brak celów do wyświetlenia
+          </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {topGoals.map((goal) => (
               <GoalItem key={goal.id} goal={goal} />
             ))}
