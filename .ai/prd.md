@@ -13,7 +13,7 @@ Użytkownicy borykają się z trudnościami w śledzeniu domowego budżetu za po
 - Rejestrowanie wpływów: Dodanie wypłaty z kwotą, datą i opcjonalnym opisem. Możliwość edycji i usunięcia wypłat bez dodatkowych potwierdzeń.
 - Rejestrowanie wydatków: Dodanie, edycja i usunięcie wydatku z kwotą, datą, kategorią (predefiniowane: dom, apteka, środki czystości, przyjemności, rozrywka, ubrania, żywność, inne; plus własne kategorie per użytkownik) i opisem.
 - Przegląd listy wydatków: Lista z filtrem po miesiącu lub kategorii.
-- System kont użytkowników: Rejestracja i logowanie z walidacją email i hasła (wymagania: 8 znaków, wielkie i małe litery), opcjonalne przypomnienie hasła. Dane powiązane z użytkownikiem.
+- System kont użytkowników: Rejestracja i logowanie z walidacją imienia, nazwiska, email i hasła (wymagania: imię i nazwisko min. 2 znaki, hasło 8 znaków, wielkie i małe litery), opcjonalne przypomnienie hasła. Dane powiązane z użytkownikiem.
 - Widok „Budżet miesiąca”: Obliczenie suma wypłat minus suma wydatków równa pozostałej kwocie, procentowy podział wydatków po kategoriach (prosty wykres lub summary tekstowe).
 - Cele oszczędnościowe: Tworzenie celu z nazwą i kwotą docelową, dodawanie wpłat na cel, wyświetlanie progresu w procentach i pozostałej kwoty, automatyczna predykcja daty osiągnięcia na podstawie średniej z ostatnich miesięcy, liniowy wykres progresu z uproszczoną historią wpłat.
 - Interfejs raportowy: Widok miesięczny z listą wydatków i sumami per kategoria, widok celów z paskiem progresu liniowym.
@@ -35,12 +35,13 @@ Użytkownicy borykają się z trudnościami w śledzeniu domowego budżetu za po
 
 ## 5. Historyjki użytkowników
 
-US-001  
-Tytuł: Rejestracja nowego użytkownika  
-Opis: Jako nowy użytkownik, chcę się zarejestrować w aplikacji, aby móc bezpiecznie przechowywać swoje dane finansowe.  
+US-001
+Tytuł: Rejestracja nowego użytkownika
+Opis: Jako nowy użytkownik, chcę się zarejestrować w aplikacji, aby móc bezpiecznie przechowywać swoje dane finansowe.
 Kryteria akceptacji:
 
-- Formularz rejestracji wymaga email i hasła zgodnego z wymaganiami (8 znaków, wielkie i małe litery).
+- Formularz rejestracji wymaga imienia, nazwiska, email i hasła zgodnego z wymaganiami (8 znaków, wielkie i małe litery).
+- Imię i nazwisko są wymagane, minimum 2 znaki każda, tylko litery.
 - Po rejestracji użytkownik zostaje zalogowany automatycznie.
 - Email jest unikalny w systemie.
 - Testowalność: Weryfikacja przez próby rejestracji z nieprawidłowymi danymi.

@@ -135,6 +135,8 @@ export interface ExpensesTableData {
 // Register ViewModel types
 
 export interface RegisterFormData {
+  firstName: string; // Imię użytkownika
+  lastName: string; // Nazwisko użytkownika
   email: string; // Adres email użytkownika
   password: string; // Hasło użytkownika
   confirmPassword: string; // Potwierdzenie hasła

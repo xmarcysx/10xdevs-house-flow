@@ -6,10 +6,10 @@ export const prerender = false;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
   try {
-    const { email, password } = await request.json();
+    const { firstName, lastName, email, password } = await request.json();
 
     // Walidacja danych wejściowych
-    const validationResult = registerSchema.safeParse({ email, password, confirmPassword: password });
+    const validationResult = registerSchema.safeParse({ firstName, lastName, email, password, confirmPassword: password });
     if (!validationResult.success) {
       return new Response(
         JSON.stringify({
@@ -32,7 +32,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       password: validationResult.data.password,
       options: {
         data: {
-          // Możemy dodać dodatkowe dane użytkownika jeśli potrzebne
+          first_name: validationResult.data.firstName,
+          last_name: validationResult.data.lastName,
         }
       }
     });
@@ -54,6 +55,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
           .insert({
             id: data.user.id,
             email: data.user.email,
+            first_name: validationResult.data.firstName,
+            last_name: validationResult.data.lastName,
             password_hash: null, // Supabase Auth zarządza hasłami
           });
 

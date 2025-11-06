@@ -26,13 +26,15 @@ Widok powinien być dostępny pod ścieżką `/register` jako strona Astro w kat
 
 ### RegisterForm
 
-- **Opis komponentu**: Komponent React z formularzem rejestracyjnym, zawiera pola dla email, hasła i potwierdzenia hasła, przycisk submit oraz link do logowania. Obsługuje walidację po stronie klienta i integrację z Supabase Auth.
-- **Główne elementy**: Form z Shadcn/ui, Input dla email, Input dla password, Input dla confirmPassword, Button dla submit, Link do strony logowania, Toast dla komunikatów błędów/sukcesu.
+- **Opis komponentu**: Komponent React z formularzem rejestracyjnym, zawiera pola dla imienia, nazwiska, email, hasła i potwierdzenia hasła, przycisk submit oraz link do logowania. Obsługuje walidację po stronie klienta i integrację z Supabase Auth.
+- **Główne elementy**: Form z Shadcn/ui, Input dla firstName, Input dla lastName, Input dla email, Input dla password, Input dla confirmPassword, Button dla submit, Link do strony logowania, Toast dla komunikatów błędów/sukcesu.
 - **Obsługiwane interakcje**: onSubmit formularza (wysłanie danych rejestracji), onChange dla pól wejściowych (aktualizacja stanu), onClick dla linku logowania (nawigacja).
 - **Obsługiwana walidacja**:
   - Email: Wymagany, format email, unikalność sprawdzana przez Supabase.
   - Hasło: Wymagane, minimum 8 znaków, zawiera przynajmniej jedną wielką i jedną małą literę.
   - Potwierdzenie hasła: Wymagane, musi być identyczne z hasłem.
+  - Imię: Wymagane, minimum 2 znaki, tylko litery.
+  - Nazwisko: Wymagane, minimum 2 znaki, tylko litery.
   - Walidacja w czasie rzeczywistym po zmianie pól, wyświetlanie błędów pod polami.
 - **Typy**: RegisterFormData (ViewModel), MessageDTO (dla błędów), typy z Supabase Auth SDK.
 - **Propsy**: Brak, komponent jest samodzielny.
@@ -43,6 +45,8 @@ Widok powinien być dostępny pod ścieżką `/register` jako strona Astro w kat
   - email: string - Adres email użytkownika.
   - password: string - Hasło użytkownika.
   - confirmPassword: string - Potwierdzenie hasła.
+  - firstName: string - Imię użytkownika.
+  - lastName: string - Nazwisko użytkownika.
 - **MessageDTO**: Istniejący typ z types.ts, używany dla komunikatów błędów.
   - message: string - Treść komunikatu.
 - Dodatkowo, wykorzystane typy z Supabase Auth SDK, takie jak AuthResponse i AuthError.
@@ -57,7 +61,7 @@ Integracja odbywa się przez Supabase Auth SDK. Przy submit formularza wywoływa
 
 ## 8. Interakcje użytkownika
 
-- Użytkownik wypełnia pola email, password i confirmPassword.
+- Użytkownik wypełnia pola firstName, lastName, email, password i confirmPassword.
 - Po kliknięciu przycisku "Zarejestruj się" następuje walidacja i wysłanie danych.
 - W przypadku sukcesu: Wyświetlenie toastu sukcesu, automatyczne logowanie i przekierowanie do dashboardu.
 - W przypadku błędów: Wyświetlenie toastu z błędem lub błędów pod polami.
@@ -65,6 +69,8 @@ Integracja odbywa się przez Supabase Auth SDK. Przy submit formularza wywoływa
 
 ## 9. Warunki i walidacja
 
+- **Imię**: Sprawdzane minimum 2 znaki, tylko litery. Błędne dane powodują wyświetlenie komunikatu błędu.
+- **Nazwisko**: Sprawdzane minimum 2 znaki, tylko litery. Błędne dane powodują wyświetlenie komunikatu błędu.
 - **Email**: Sprawdzany format email i unikalność przez Supabase przy rejestracji. Błędne dane powodują wyświetlenie komunikatu błędu.
 - **Hasło**: Walidacja długości (min 8 znaków) i obecności wielkiej/małej litery przy pomocy regex. Niezgodność blokuje submit i wyświetla błąd.
 - **Potwierdzenie hasła**: Sprawdzane równość z hasłem. Błąd wyświetla komunikat "Hasła nie są identyczne".
@@ -81,7 +87,7 @@ Integracja odbywa się przez Supabase Auth SDK. Przy submit formularza wywoływa
 
 1. Utworzyć stronę Astro `src/pages/register.astro` z podstawowym layoutem i miejscem na RegisterForm.
 2. Zaimplementować komponent RegisterForm w `src/components/RegisterForm.tsx` z formularzem Shadcn/ui.
-3. Dodać pola wejściowe dla email, password, confirmPassword z walidacją.
+3. Dodać pola wejściowe dla firstName, lastName, email, password, confirmPassword z walidacją.
 4. Zaimplementować customowy hook useRegister dla obsługi rejestracji i logowania przez Supabase.
 5. Dodać obsługę submit formularza z wywołaniem hooka i nawigacją.
 6. Zintegrować toast dla komunikatów błędów i sukcesu.

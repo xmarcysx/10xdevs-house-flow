@@ -68,6 +68,8 @@ export const useRegister = (): UseRegisterReturn => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            firstName: data.firstName,
+            lastName: data.lastName,
             email: data.email,
             password: data.password,
           }),

@@ -19,7 +19,10 @@ const Navbar: React.FC = () => {
 
   // Przygotuj dane użytkownika dla wyświetlania
   const userEmail = user?.email || "";
-  const userInitials = userEmail ? userEmail.charAt(0).toUpperCase() : "?";
+  const firstName = user?.user_metadata?.first_name || "";
+  const lastName = user?.user_metadata?.last_name || "";
+  const displayName = firstName && lastName ? `${firstName} ${lastName}` : userEmail;
+  const userInitials = firstName ? firstName.charAt(0).toUpperCase() : userEmail ? userEmail.charAt(0).toUpperCase() : "?";
 
   // Sprawdź aktualną ścieżkę
   useEffect(() => {
@@ -102,7 +105,7 @@ const Navbar: React.FC = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="hidden sm:block text-left">
-                    <div className="text-sm font-semibold text-gray-900 dark:text-white">{userEmail}</div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white">{displayName}</div>
                   </div>
                   <svg
                     className={`w-4 h-4 text-gray-400 transition-all duration-300 ${isUserMenuOpen ? "rotate-180 text-blue-500" : ""}`}
@@ -118,7 +121,7 @@ const Navbar: React.FC = () => {
                 {isUserMenuOpen && (
                   <Card className="absolute right-0 mt-3 w-64 py-3 shadow-2xl border-0 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-2xl">
                     <div className="px-5 py-3 border-b border-gray-100 dark:border-gray-700">
-                      <div className="text-sm font-semibold text-gray-900 dark:text-white">{userEmail}</div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-white">{displayName}</div>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Zalogowany</div>
                     </div>
                     <div className="py-2">
