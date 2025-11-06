@@ -141,13 +141,21 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
 
         {/* View all transactions link */}
         {recentTransactions.length > 0 && (
-          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-4 mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <button
               onClick={() => (window.location.href = "/expenses")}
               className="w-full text-center py-3 px-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 rounded-xl border border-blue-200 dark:border-blue-800 transition-all duration-300 group"
             >
               <span className="text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300">
                 Zobacz wszystkie wydatki
+              </span>
+            </button>
+            <button
+              onClick={() => (window.location.href = "/incomes")}
+              className="w-full text-center py-3 px-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-blue-900/30 dark:hover:to-indigo-900/30 rounded-xl border border-blue-200 dark:border-blue-800 transition-all duration-300 group"
+            >
+              <span className="text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300">
+                Zobacz wszystkie dochody
               </span>
             </button>
           </div>
