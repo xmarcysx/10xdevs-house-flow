@@ -33,6 +33,7 @@ type IncomeFormValues = z.infer<typeof incomeFormSchema>;
 interface IncomeFormProps {
   initialData?: IncomeDTO;
   onSubmit: (data: IncomeFormData) => void;
+  onCancel: () => void;
   isSubmitting: boolean;
   serverError?: string;
 }
@@ -40,6 +41,7 @@ interface IncomeFormProps {
 export const IncomeForm: React.FC<IncomeFormProps> = ({
   initialData,
   onSubmit,
+  onCancel,
   isSubmitting,
   serverError
 }) => {
@@ -158,7 +160,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
       <div className="flex justify-end space-x-3 pt-4">
         <Button
           type="button"
-          onClick={() => reset()}
+          onClick={onCancel}
           disabled={isSubmitting}
           variant="outline"
           className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"

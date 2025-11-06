@@ -40,6 +40,7 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
         <IncomeForm
           initialData={income}
           onSubmit={onSubmit}
+          onCancel={onClose}
           isSubmitting={isSubmitting}
           serverError={serverError}
         />
