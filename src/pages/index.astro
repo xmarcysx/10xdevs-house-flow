@@ -1,15 +1,21 @@
 ---
-import Dashboard from "../components/Dashboard";
-import Navbar from "../components/Navbar";
+import App from "../components/App";
 import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout title="Dashboard - HouseFlow">
-  <div class="min-h-screen">
-    <!-- Navbar -->
-    <Navbar client:only="react" />
-
-    <!-- Dashboard zostanie zaimplementowany jako komponent React -->
-    <Dashboard client:only="react" />
-  </div>
+<Layout title="HouseFlow">
+  <App client:only="react" />
 </Layout>
+
+<!-- Catch-all redirect for SPA -->
+<script>
+  // If we're not on the root path and it's a client-side navigation,
+  // redirect to the root so React Router can handle it
+  if (
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/" &&
+    !window.location.pathname.startsWith("/api/")
+  ) {
+    window.history.replaceState(null, "", "/");
+  }
+</script>

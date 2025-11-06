@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/hooks/useAuth";
 import { useAuthState } from "../lib/hooks/useAuthState";
 import ThemeToggle from "./ThemeToggle";
@@ -13,8 +14,8 @@ interface NavItem {
 
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [currentPath, setCurrentPath] = useState("/");
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const location = useLocation();
   const { user, isLoading, isAuthenticated } = useAuthState();
   const { logout } = useAuth();
 
@@ -46,36 +47,12 @@ const Navbar: React.FC = () => {
   const displayName = firstName && lastName ? `${firstName} ${lastName}` : userEmail;
   const userInitials = firstName ? firstName.charAt(0).toUpperCase() : userEmail ? userEmail.charAt(0).toUpperCase() : "?";
 
-  // Sprawdź aktualną ścieżkę i pobierz dane profilu
+  // Pobierz dane profilu przy zmianie ścieżki lub autoryzacji
   useEffect(() => {
-    const updatePath = () => {
-      const newPath = window.location.pathname;
-      setCurrentPath(newPath);
-
-      // Odśwież dane profilu przy każdej zmianie ścieżki (np. po powrocie z ustawień)
-      if (isAuthenticated && user) {
-        fetchProfileData();
-      }
-    };
-
-    updatePath();
-
-    // Nasłuchuj zmian w historii przeglądarki
-    window.addEventListener("popstate", updatePath);
-
-    // Nasłuchuj zmian profilu (po zapisaniu ustawień)
-    const handleProfileUpdate = () => {
-      if (isAuthenticated && user) {
-        fetchProfileData();
-      }
-    };
-    window.addEventListener("profileUpdated", handleProfileUpdate);
-
-    return () => {
-      window.removeEventListener("popstate", updatePath);
-      window.removeEventListener("profileUpdated", handleProfileUpdate);
-    };
-  }, [isAuthenticated, user]);
+    if (isAuthenticated && user) {
+      fetchProfileData();
+    }
+  }, [location.pathname, isAuthenticated, user]);
 
   const navItems: NavItem[] = [
     { label: "Dashboard", href: "/" },
@@ -111,12 +88,12 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
               const isActive = item.href === "/reports"
-                ? currentPath.startsWith("/reports")
-                : currentPath === item.href;
+                ? location.pathname.startsWith("/reports")
+                : location.pathname === item.href;
               return (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  to={item.href}
                   className={`relative px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
                     isActive
                       ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg hover:shadow-xl"
@@ -124,7 +101,7 @@ const Navbar: React.FC = () => {
                   }`}
                 >
                   {item.label}
-                </a>
+                </Link>
               );
             })}
           </div>
@@ -167,12 +144,12 @@ const Navbar: React.FC = () => {
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Zalogowany</div>
                     </div>
                     <div className="py-2">
-                      <a
-                        href="/settings"
+                      <Link
+                        to="/settings"
                         className="block w-full text-left px-5 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium"
                       >
                         Ustawienia
-                      </a>
+                      </Link>
                       <button
                         onClick={() => logout()}
                         className="block w-full text-left px-5 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 font-medium rounded-b-2xl"

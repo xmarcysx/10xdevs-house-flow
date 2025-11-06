@@ -1,0 +1,10 @@
+---
+import App from "../components/App";
+import Layout from "../layouts/Layout.astro";
+
+const { slug } = Astro.params;
+---
+
+<Layout title="HouseFlow">
+  <App client:only="react" />
+</Layout>
