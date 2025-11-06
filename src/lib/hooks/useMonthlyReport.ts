@@ -16,7 +16,7 @@ export function useMonthlyReport(): UseMonthlyReportReturn {
   });
 
   const [reportData, setReportData] = useState<MonthlyReportDTO | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with loading true for initial load
   const [error, setError] = useState<string | null>(null);
 
   const fetchMonthlyReport = async (month: string) => {

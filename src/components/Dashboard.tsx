@@ -7,54 +7,15 @@ import GoalsSummary from "./dashboard/GoalsSummary";
 import QuickActions from "./dashboard/QuickActions";
 import RecentTransactions from "./dashboard/RecentTransactions";
 import TrendsLineChart from "./dashboard/TrendsLineChart";
+import LoadingComponent from "./LoadingComponent";
 
 const Dashboard: React.FC = () => {
   const { budgetData, goalsData, transactions, alerts, trendsData, loading, error } = useDashboardData();
 
-  // Add styles for animations
-  React.useEffect(() => {
-    const style = document.createElement("style");
-    style.textContent = `
-      .animation-delay-100 {
-        animation-delay: 0.1s;
-      }
-      .animation-delay-200 {
-        animation-delay: 0.2s;
-      }
-      .bg-clip-text {
-        -webkit-background-clip: text;
-        background-clip: text;
-      }
-      .text-transparent {
-        -webkit-text-fill-color: transparent;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
-
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="col-span-full flex items-center justify-center py-20">
-          <div className="flex flex-col items-center justify-center">
-            <div className="relative mb-8">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 dark:border-blue-800"></div>
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 absolute top-0"></div>
-            </div>
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">
-              Ładowanie panelu głównego...
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 text-lg">Przygotowujemy Twoje dane finansowe</p>
-            <div className="flex justify-center gap-2 mt-6">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-100"></div>
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce animation-delay-200"></div>
-            </div>
-          </div>
-        </div>
+        <LoadingComponent message="Ładowanie panelu głównego..." />
       </DashboardLayout>
     );
   }

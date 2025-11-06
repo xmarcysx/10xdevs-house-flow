@@ -5,6 +5,7 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "../ui/table"
 import { Button } from "../ui/button";
 import { ExpenseRow } from "./ExpenseRow";
 import { Pagination } from "../incomes/Pagination";
+import LoadingComponent from "../LoadingComponent";
 
 interface ExpensesTableProps {
   data: ExpensesTableData | null;
@@ -18,14 +19,7 @@ interface ExpensesTableProps {
 export const ExpensesTable: React.FC<ExpensesTableProps> = ({ data, onEdit, onDelete, onAdd, isLoading, onPageChange }) => {
   // Stan ładowania
   if (isLoading) {
-    return (
-      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
-        <div className="p-8 text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Ładowanie wydatków...</p>
-        </div>
-      </div>
-    );
+    return <LoadingComponent message="Ładowanie wydatków..." size="sm" className="col-span-full" />;
   }
 
   // Brak danych

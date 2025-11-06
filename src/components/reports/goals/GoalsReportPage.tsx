@@ -2,8 +2,8 @@ import React from "react";
 import { useGoalsReport } from "../../../lib/hooks/useGoalsReport";
 import ErrorState from "./ErrorState";
 import { GoalCard } from "./GoalCard";
-import LoadingState from "./LoadingState";
 import GoalsReportLayout from "./GoalsReportLayout";
+import LoadingComponent from "../../LoadingComponent";
 
 const GoalsReportPage: React.FC = () => {
   const { isLoading, error, goals, refetch } = useGoalsReport();
@@ -12,7 +12,7 @@ const GoalsReportPage: React.FC = () => {
   if (isLoading) {
     return (
       <GoalsReportLayout>
-        <LoadingState />
+        <LoadingComponent message="Ładowanie raportu celów..." size="md" />
       </GoalsReportLayout>
     );
   }

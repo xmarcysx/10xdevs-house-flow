@@ -5,6 +5,7 @@ import { ExpensesTable } from "./ExpensesTable";
 import { ExportButton } from "./ExportButton";
 import { MonthSelector } from "./MonthSelector";
 import MonthlyReportLayout from "./MonthlyReportLayout";
+import LoadingComponent from "../../LoadingComponent";
 
 const MonthlyReportPage: React.FC = () => {
   const { selectedMonth, setSelectedMonth, reportData, isLoading, error } = useMonthlyReport();
@@ -13,10 +14,7 @@ const MonthlyReportPage: React.FC = () => {
   if (isLoading) {
     return (
       <MonthlyReportLayout>
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-400">Ładowanie raportu...</p>
-        </div>
+        <LoadingComponent message="Ładowanie raportu..." size="md" />
       </MonthlyReportLayout>
     );
   }
