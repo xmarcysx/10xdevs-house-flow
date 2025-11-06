@@ -1,21 +1,24 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 
 const QuickActions: React.FC = () => {
+  const navigate = useNavigate();
+
   const handleAddExpense = () => {
     localStorage.setItem("openModal", "add");
-    window.location.href = "/expenses";
+    navigate("/expenses");
   };
 
   const handleAddIncome = () => {
     localStorage.setItem("openModal", "add");
-    window.location.href = "/incomes";
+    navigate("/incomes");
   };
 
   const handleAddGoal = () => {
     localStorage.setItem("openModal", "add");
-    window.location.href = "/goals";
+    navigate("/goals");
   };
 
   return (

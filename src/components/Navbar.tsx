@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../lib/hooks/useAuth";
 import { useAuthState } from "../lib/hooks/useAuthState";
 import ThemeToggle from "./ThemeToggle";
@@ -15,7 +15,7 @@ interface NavItem {
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const location = useLocation();
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const { user, isLoading, isAuthenticated } = useAuthState();
   const { logout } = useAuth();
 
@@ -52,7 +52,36 @@ const Navbar: React.FC = () => {
     if (isAuthenticated && user) {
       fetchProfileData();
     }
-  }, [location.pathname, isAuthenticated, user]);
+  }, [currentPath, isAuthenticated, user]);
+
+  // Aktualizuj currentPath przy zmianach URL (dla kompatybilności z React Router)
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+
+    // Nasłuchuj zmian historii przeglądarki
+    window.addEventListener('popstate', handleLocationChange);
+
+    // Sprawdź czy jesteśmy w kontekście React Router
+    if (typeof window !== 'undefined') {
+      // Próba aktualizacji przy każdej zmianie (dla React Router)
+      const interval = setInterval(() => {
+        if (window.location.pathname !== currentPath) {
+          setCurrentPath(window.location.pathname);
+        }
+      }, 100);
+
+      return () => {
+        window.removeEventListener('popstate', handleLocationChange);
+        clearInterval(interval);
+      };
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, [currentPath]);
 
   const navItems: NavItem[] = [
     { label: "Dashboard", href: "/" },
@@ -88,8 +117,8 @@ const Navbar: React.FC = () => {
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
               const isActive = item.href === "/reports"
-                ? location.pathname.startsWith("/reports")
-                : location.pathname === item.href;
+                ? currentPath.startsWith("/reports")
+                : currentPath === item.href;
               return (
                 <Link
                   key={item.label}
