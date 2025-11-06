@@ -142,6 +142,15 @@ export interface RegisterFormData {
   confirmPassword: string; // Potwierdzenie hasła
 }
 
+// Settings ViewModel types
+
+export interface SettingsFormData {
+  firstName: string; // Imię użytkownika
+  lastName: string; // Nazwisko użytkownika
+  avatar?: File | null; // Plik awatara (opcjonalny dla aktualizacji)
+  avatarUrl?: string; // Aktualny URL awatara (tylko do wyświetlenia)
+}
+
 // Login ViewModel types
 
 export interface LoginViewModel {

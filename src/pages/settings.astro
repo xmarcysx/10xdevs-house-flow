@@ -1,0 +1,13 @@
+---
+import SettingsPage from "../components/settings/SettingsPage";
+import Navbar from "../components/Navbar";
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Ustawienia - HouseFlow">
+  <!-- Navbar -->
+  <Navbar client:only="react" />
+
+  <!-- Settings Page -->
+  <SettingsPage client:only="react" />
+</Layout>

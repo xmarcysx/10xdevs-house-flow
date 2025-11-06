@@ -79,8 +79,30 @@ export const newPasswordSchema = z
     path: ["confirmPassword"],
   });
 
+// Schemat walidacji dla formularza ustawień
+export const settingsSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, "Imię jest wymagane")
+    .min(2, "Imię musi mieć przynajmniej 2 znaki")
+    .max(50, "Imię może mieć maksymalnie 50 znaków")
+    .regex(/^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]+$/, "Imię może zawierać tylko litery"),
+  lastName: z
+    .string()
+    .min(1, "Nazwisko jest wymagane")
+    .min(2, "Nazwisko musi mieć przynajmniej 2 znaki")
+    .max(50, "Nazwisko może mieć maksymalnie 50 znaków")
+    .regex(/^[a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\s]+$/, "Nazwisko może zawierać tylko litery"),
+  avatar: z
+    .union([z.instanceof(File), z.null()])
+    .optional()
+    .refine((file) => !file || file.size <= 5 * 1024 * 1024, "Rozmiar pliku nie może przekraczać 5MB")
+    .refine((file) => !file || ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type), "Dozwolone formaty: JPEG, PNG, WebP"),
+});
+
 // Typy wywnioskowane ze schematów
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+export type SettingsFormData = z.infer<typeof settingsSchema>;
 export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 export type NewPasswordFormData = z.infer<typeof newPasswordSchema>;

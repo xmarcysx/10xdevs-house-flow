@@ -13,7 +13,9 @@ Ta tabela będzie zarządzana przez Supabase Auth.
 | `password_hash` | `varchar(255)` | `NOT NULL`                              | Zahashowane hasło                  |
 | `first_name`    | `varchar(50)`  | `NULL`                                  | Imię użytkownika                   |
 | `last_name`     | `varchar(50)`  | `NULL`                                  | Nazwisko użytkownika               |
+| `avatar_url`    | `text`         | `NULL`                                  | URL do awatara użytkownika         |
 | `created_at`    | `timestamptz`  | `NOT NULL DEFAULT now()`                | Data utworzenia konta              |
+| `updated_at`    | `timestamptz`  | `NOT NULL DEFAULT now()`                | Data ostatniej aktualizacji        |
 
 ### Tabela: `categories`
 
@@ -186,6 +188,9 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+
 CREATE TRIGGER update_categories_updated_at BEFORE UPDATE ON categories
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
@@ -193,7 +198,7 @@ CREATE TRIGGER update_incomes_updated_at BEFORE UPDATE ON incomes
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_expenses_updated_at BEFORE UPDATE ON expenses
-FOR EACH ROW EXECUTE FUNCTION update_expenses_updated_at_column();
+FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
 CREATE TRIGGER update_goals_updated_at BEFORE UPDATE ON goals
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

@@ -14,8 +14,30 @@ interface NavItem {
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState("/");
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const { user, isLoading, isAuthenticated } = useAuthState();
   const { logout } = useAuth();
+
+  // Pobierz dane profilu (w tym URL awatara)
+  const fetchProfileData = async () => {
+    if (user && isAuthenticated) {
+      try {
+        const response = await fetch("/api/auth/profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setAvatarUrl(result.profile.avatarUrl || null);
+        }
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    }
+  };
 
   // Przygotuj dane użytkownika dla wyświetlania
   const userEmail = user?.email || "";
@@ -24,16 +46,36 @@ const Navbar: React.FC = () => {
   const displayName = firstName && lastName ? `${firstName} ${lastName}` : userEmail;
   const userInitials = firstName ? firstName.charAt(0).toUpperCase() : userEmail ? userEmail.charAt(0).toUpperCase() : "?";
 
-  // Sprawdź aktualną ścieżkę
+  // Sprawdź aktualną ścieżkę i pobierz dane profilu
   useEffect(() => {
-    const updatePath = () => setCurrentPath(window.location.pathname);
+    const updatePath = () => {
+      const newPath = window.location.pathname;
+      setCurrentPath(newPath);
+
+      // Odśwież dane profilu przy każdej zmianie ścieżki (np. po powrocie z ustawień)
+      if (isAuthenticated && user) {
+        fetchProfileData();
+      }
+    };
+
     updatePath();
 
     // Nasłuchuj zmian w historii przeglądarki
     window.addEventListener("popstate", updatePath);
 
-    return () => window.removeEventListener("popstate", updatePath);
-  }, []);
+    // Nasłuchuj zmian profilu (po zapisaniu ustawień)
+    const handleProfileUpdate = () => {
+      if (isAuthenticated && user) {
+        fetchProfileData();
+      }
+    };
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+
+    return () => {
+      window.removeEventListener("popstate", updatePath);
+      window.removeEventListener("profileUpdated", handleProfileUpdate);
+    };
+  }, [isAuthenticated, user]);
 
   const navItems: NavItem[] = [
     { label: "Dashboard", href: "/" },
@@ -99,7 +141,7 @@ const Navbar: React.FC = () => {
                   className="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-300 transform hover:scale-105"
                 >
                   <Avatar className="w-9 h-9 ring-2 ring-blue-500/20">
-                    <AvatarImage src={undefined} alt={userEmail} />
+                    <AvatarImage src={avatarUrl || undefined} alt={displayName} />
                     <AvatarFallback className="bg-gradient-to-br from-blue-600 to-indigo-600 text-white text-sm font-semibold">
                       {userInitials}
                     </AvatarFallback>
@@ -125,9 +167,12 @@ const Navbar: React.FC = () => {
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Zalogowany</div>
                     </div>
                     <div className="py-2">
-                      <button className="block w-full text-left px-5 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium">
+                      <a
+                        href="/settings"
+                        className="block w-full text-left px-5 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium"
+                      >
                         Ustawienia
-                      </button>
+                      </a>
                       <button
                         onClick={() => logout()}
                         className="block w-full text-left px-5 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 font-medium rounded-b-2xl"
