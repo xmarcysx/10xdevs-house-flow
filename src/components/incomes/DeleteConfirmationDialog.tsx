@@ -48,3 +48,4 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
     </Dialog>
   );
 };
+
