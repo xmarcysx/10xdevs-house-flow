@@ -9,7 +9,7 @@ interface BudgetSummaryCardProps {
 const BudgetSummaryCard: React.FC<BudgetSummaryCardProps> = ({ data }) => {
   if (!data) {
     return (
-      <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900/20">
+      <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-orange-50/50 dark:from-gray-800 dark:to-orange-900/20">
         <CardHeader className="pb-4">
           <div className="relative">
             <div className="w-16 h-16 bg-gradient-to-br from-gray-500 to-gray-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
@@ -32,7 +32,7 @@ const BudgetSummaryCard: React.FC<BudgetSummaryCardProps> = ({ data }) => {
   const isPositive = data.remaining >= 0;
 
   return (
-    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-blue-50/50 dark:from-gray-800 dark:to-blue-900/20">
+    <Card className="group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-orange-50/50 dark:from-gray-800 dark:to-orange-900/20">
       <CardHeader className="pb-4">
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">

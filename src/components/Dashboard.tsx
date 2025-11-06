@@ -130,30 +130,26 @@ const Dashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Podsumowanie budżetu - pełna szerokość */}
+      <div className="col-span-1 md:col-span-2 lg:col-span-2 h-full">
+        <QuickActions />
+      </div>
+
       <div className="col-span-1 md:col-span-2 lg:col-span-2 h-full">
         <BudgetSummaryCard data={budgetData} />
       </div>
 
-      {/* Pierwszy rząd - dwa komponenty */}
-      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
-        <CategoryPieChart data={budgetData?.category_breakdown || []} />
-      </div>
-
-      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
-        <QuickActions />
-      </div>
-
-      {/* Drugi rząd - dwa komponenty */}
       <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
         <GoalsSummary goals={goalsData} />
       </div>
 
       <div className="col-span-1 md:col-span-1 lg:col-span-1 h-full">
+        <CategoryPieChart data={budgetData?.category_breakdown || []} />
+      </div>
+
+      <div className="col-span-1 md:col-span-2 lg:col-span-2 h-full">
         <RecentTransactions transactions={transactions} />
       </div>
 
-      {/* Trendy finansowe - pełna szerokość */}
       <div className="col-span-1 md:col-span-2 lg:col-span-2 h-full">
         <TrendsLineChart data={trendsData} />
       </div>
