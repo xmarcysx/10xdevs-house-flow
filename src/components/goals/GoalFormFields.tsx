@@ -91,8 +91,6 @@ export const GoalFormFields: React.FC<GoalFormFieldsProps> = ({ initialData, onS
           id="target_amount"
           type="number"
           step="0.01"
-          min="0.01"
-          max="10000000"
           placeholder="0.00"
           {...register("target_amount", { valueAsNumber: true })}
           className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.target_amount ? "border-red-500" : ""}`}
