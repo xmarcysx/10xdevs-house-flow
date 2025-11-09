@@ -35,6 +35,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ category, onEdit, on
       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
         <div className="flex items-center justify-end space-x-2">
           <button
+            type="button"
             onClick={() => onEdit(category)}
             className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
             title={category.is_default ? "Kategorie domyślne można tylko edytować" : "Edytuj kategorię"}
@@ -49,6 +50,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ category, onEdit, on
             </svg>
           </button>
           <button
+            type="button"
             onClick={() => onDelete(category.id)}
             className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
             title={category.is_default ? "Nie można usunąć domyślnej kategorii" : "Usuń kategorię"}

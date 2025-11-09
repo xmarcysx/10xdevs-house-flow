@@ -1,0 +1,568 @@
+# Konfiguracja Testów E2E - Playwright
+
+## Przegląd
+
+HouseFlow używa **Playwright** do testów end-to-end (E2E), które symulują rzeczywiste interakcje użytkownika z aplikacją w przeglądarce. Playwright zapewnia niezawodne testy wieloprzeglądarkowe z bogatym API do automatyzacji.
+
+## Zainstalowane Pakiety
+
+```json
+{
+  "@playwright/test": "^1.x.x"
+}
+```
+
+## Konfiguracja
+
+### playwright.config.ts
+
+```typescript
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './e2e',                    // Katalog z testami E2E
+  fullyParallel: true,                 // Równoległe wykonywanie testów
+  forbidOnly: !!process.env.CI,       // Zabronienie test.only w CI
+  retries: process.env.CI ? 2 : 0,    // Retry tylko w CI
+  workers: process.env.CI ? 1 : undefined, // Liczba workerów
+  reporter: 'html',                   // Raporty HTML
+
+  use: {
+    baseURL: 'http://localhost:4321', // Bazowy URL aplikacji
+    trace: 'on-first-retry',          // Trace przy ponownych próbach
+  },
+
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'Mobile Chrome', use: { ...devices['Pixel 5'] } },
+    { name: 'Mobile Safari', use: { ...devices['iPhone 12'] } },
+  ],
+
+  webServer: {
+    command: 'npm run dev',           // Uruchomienie dev servera
+    url: 'http://localhost:4321',     // URL do sprawdzenia gotowości
+    reuseExistingServer: !process.env.CI, // Reuse serwera poza CI
+  },
+});
+```
+
+## Struktura Testów
+
+```
+e2e/
+├── auth.spec.ts          # Testy autentyfikacji (login/register)
+├── dashboard.spec.ts     # Testy dashboardu
+├── expenses.spec.ts      # Testy zarządzania wydatkami
+├── incomes.spec.ts       # Testy zarządzania dochodami
+├── goals.spec.ts         # Testy celów oszczędnościowych
+├── reports.spec.ts       # Testy raportów
+├── mobile.spec.ts        # Testy mobilne
+└── utils/
+    ├── auth.ts           # Helpery autentyfikacji
+    ├── data.ts           # Testowe dane
+    └── fixtures.ts       # Fixture setup
+```
+
+## Pisanie Testów
+
+### Podstawowy Test E2E
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('homepage loads correctly', async ({ page }) => {
+  // Przejdź na stronę główną
+  await page.goto('/');
+
+  // Sprawdź tytuł strony
+  await expect(page).toHaveTitle(/HouseFlow/);
+
+  // Sprawdź obecność kluczowych elementów
+  await expect(page.locator('text=Welcome to HouseFlow')).toBeVisible();
+});
+```
+
+### Test z Autentyfikacją
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test.describe('Authentication', () => {
+  test('user can login successfully', async ({ page }) => {
+    // Przejdź na stronę logowania
+    await page.goto('/login');
+
+    // Wypełnij formularz logowania
+    await page.fill('[name="email"]', 'test@example.com');
+    await page.fill('[name="password"]', 'password123');
+
+    // Kliknij przycisk logowania
+    await page.click('button[type="submit"]');
+
+    // Sprawdź przekierowanie na dashboard
+    await expect(page).toHaveURL('/');
+
+    // Sprawdź obecność elementu świadczącego o zalogowaniu
+    await expect(page.locator('text=Welcome back')).toBeVisible();
+  });
+
+  test('login fails with invalid credentials', async ({ page }) => {
+    await page.goto('/login');
+
+    await page.fill('[name="email"]', 'invalid@example.com');
+    await page.fill('[name="password"]', 'wrongpassword');
+
+    await page.click('button[type="submit"]');
+
+    // Sprawdź komunikat błędu
+    await expect(page.locator('text=Invalid credentials')).toBeVisible();
+  });
+});
+```
+
+### Testy Mobilne
+
+```typescript
+import { test, expect, devices } from '@playwright/test';
+
+test.use({ ...devices['iPhone 12'] });
+
+test('mobile navigation works', async ({ page }) => {
+  await page.goto('/');
+
+  // Sprawdź czy menu mobilne jest widoczne
+  const menuButton = page.locator('[data-testid="mobile-menu"]');
+  await expect(menuButton).toBeVisible();
+
+  // Otwórz menu
+  await menuButton.click();
+
+  // Sprawdź pozycje menu
+  await expect(page.locator('text=Dashboard')).toBeVisible();
+  await expect(page.locator('text=Expenses')).toBeVisible();
+  await expect(page.locator('text=Goals')).toBeVisible();
+});
+```
+
+### Testy z API Mocking
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('dashboard shows expense data', async ({ page }) => {
+  // Mock API response dla wydatków
+  await page.route('/api/expenses', async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify([
+        { id: 1, amount: 50, category: 'Food', description: 'Lunch' },
+        { id: 2, amount: 30, category: 'Transport', description: 'Bus ticket' },
+      ]),
+    });
+  });
+
+  await page.goto('/');
+
+  // Sprawdź czy dane są wyświetlane
+  await expect(page.locator('text=Lunch')).toBeVisible();
+  await expect(page.locator('text=$50.00')).toBeVisible();
+  await expect(page.locator('text=Bus ticket')).toBeVisible();
+  await expect(page.locator('text=$30.00')).toBeVisible();
+});
+```
+
+### Page Object Model
+
+```typescript
+// e2e/utils/pages/LoginPage.ts
+export class LoginPage {
+  constructor(private page: Page) {}
+
+  async goto() {
+    await this.page.goto('/login');
+  }
+
+  async login(email: string, password: string) {
+    await this.page.fill('[name="email"]', email);
+    await this.page.fill('[name="password"]', password);
+    await this.page.click('button[type="submit"]');
+  }
+
+  async getErrorMessage() {
+    return this.page.locator('.error-message').textContent();
+  }
+}
+
+// Użycie w teście
+import { LoginPage } from '../utils/pages/LoginPage';
+
+test('login with page object', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+
+  await loginPage.goto();
+  await loginPage.login('user@example.com', 'password');
+
+  await expect(page).toHaveURL('/');
+});
+```
+
+## Fixtures i Helpery
+
+### fixtures.ts
+
+```typescript
+import { test as base } from '@playwright/test';
+import { LoginPage } from './utils/pages/LoginPage';
+
+type TestFixtures = {
+  loginPage: LoginPage;
+  authenticatedPage: Page;
+};
+
+export const test = base.extend<TestFixtures>({
+  loginPage: async ({ page }, use) => {
+    const loginPage = new LoginPage(page);
+    await use(loginPage);
+  },
+
+  authenticatedPage: async ({ page }, use) => {
+    // Automatyczne logowanie przed testem
+    const loginPage = new LoginPage(page);
+    await loginPage.goto();
+    await loginPage.login('test@example.com', 'password123');
+    await use(page);
+  },
+});
+
+export { expect } from '@playwright/test';
+```
+
+### data.ts
+
+```typescript
+export const testData = {
+  users: {
+    validUser: {
+      email: 'test@example.com',
+      password: 'password123',
+      name: 'Test User',
+    },
+    invalidUser: {
+      email: 'invalid@example.com',
+      password: 'wrongpass',
+    },
+  },
+
+  expenses: {
+    food: { amount: 25.50, category: 'Food', description: 'Lunch at restaurant' },
+    transport: { amount: 15.00, category: 'Transport', description: 'Bus ticket' },
+    entertainment: { amount: 45.00, category: 'Entertainment', description: 'Movie tickets' },
+  },
+
+  goals: {
+    vacation: { name: 'Vacation Fund', targetAmount: 2000 },
+    emergency: { name: 'Emergency Fund', targetAmount: 5000 },
+  },
+};
+```
+
+## Uruchamianie Testów
+
+### Skrypty w package.json
+
+```json
+{
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:chromium": "playwright test --project=chromium",
+    "test:e2e:mobile": "playwright test --project='Mobile Chrome'",
+    "test:e2e:report": "playwright show-report"
+  }
+}
+```
+
+### Polecenia
+
+```bash
+# Uruchomienie wszystkich testów E2E
+npm run test:e2e
+
+# Uruchomienie z przeglądarką widoczną
+npm run test:e2e:headed
+
+# Debugowanie testów (z Playwright Inspector)
+npm run test:e2e:debug
+
+# Interaktywny tryb UI
+npm run test:e2e:ui
+
+# Tylko Chromium
+npm run test:e2e:chromium
+
+# Tylko mobilne
+npm run test:e2e:mobile
+
+# Wyświetlenie raportu
+npm run test:e2e:report
+
+# Uruchomienie konkretnego testu
+npx playwright test auth.spec.ts
+
+# Uruchomienie z tagami
+npx playwright test --grep "@smoke"
+```
+
+## Selektory i Lokalizatory
+
+### Rekomendowane Strategie
+
+```typescript
+// ✅ Najlepsze - semantic selectors
+await page.getByRole('button', { name: 'Save' }).click();
+await page.getByLabel('Email address').fill('user@example.com');
+await page.getByText('Welcome back').isVisible();
+
+// ✅ Dobre - data-testid attributes
+await page.locator('[data-testid="submit-button"]').click();
+
+// ⚠️ Ostrożnie - CSS selectors (mogą się zmienić)
+await page.locator('.submit-btn').click();
+
+// ❌ Unikaj - xpath (trudne w utrzymaniu)
+await page.locator('xpath=//button[text()="Save"]').click();
+```
+
+### Data Attributes
+
+Dodaj `data-testid` do komponentów dla stabilnych selektorów:
+
+```tsx
+// W komponencie
+<button data-testid="save-expense">Save Expense</button>
+
+// W teście
+await page.locator('[data-testid="save-expense"]').click();
+```
+
+## Obsługa Stanu Aplikacji
+
+### Test Isolation
+
+```typescript
+test.beforeEach(async ({ page }) => {
+  // Wyczyść localStorage przed każdym testem
+  await page.context().clearCookies();
+  await page.evaluate(() => localStorage.clear());
+
+  // Alternatywnie - reset bazy danych przez API
+  await page.request.post('/api/test/reset');
+});
+```
+
+### Database Seeding
+
+```typescript
+test('dashboard shows user expenses', async ({ page }) => {
+  // Seed test data
+  await page.request.post('/api/test/seed', {
+    data: {
+      expenses: [
+        { amount: 50, category: 'Food', description: 'Test expense' }
+      ]
+    }
+  });
+
+  await page.goto('/');
+  await expect(page.locator('text=Test expense')).toBeVisible();
+});
+```
+
+## Visual Testing
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+test('homepage visual test', async ({ page }) => {
+  await page.goto('/');
+
+  // Zrób screenshot i porównaj z baseline
+  await expect(page).toHaveScreenshot('homepage.png', {
+    fullPage: true,
+    threshold: 0.1, // 10% tolerancji różnic
+  });
+});
+```
+
+## CI/CD Integration
+
+### GitHub Actions
+
+```yaml
+name: E2E Tests
+on: [push, pull_request]
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 30
+```
+
+## Debugging
+
+### Playwright Inspector
+
+```bash
+# Uruchom test z debuggerem
+npm run test:e2e:debug
+
+# Alternatywnie - dodaj pause() w teście
+test('debug test', async ({ page }) => {
+  await page.goto('/');
+  await page.pause(); // Otwiera Playwright Inspector
+});
+```
+
+### Trace Viewer
+
+```bash
+# Uruchom test z trace
+npx playwright test --trace on
+
+# Obejrzyj trace
+npx playwright show-trace test-results/trace.zip
+```
+
+### Slow Motion
+
+```typescript
+// W playwright.config.ts
+use: {
+  launchOptions: {
+    slowMo: 1000, // 1 sekunda opóźnienia między akcjami
+  },
+},
+```
+
+## Najlepsze Praktyki
+
+### 1. Testuj Rzeczywiste Scenariusze
+
+```typescript
+// ✅ Dobrze - testuj pełny flow
+test('user can create and view expense', async ({ page }) => {
+  await loginUser(page);
+  await navigateToExpenses(page);
+  await createExpense(page, testData.expenses.food);
+  await expect(page.locator(`text=${testData.expenses.food.description}`)).toBeVisible();
+});
+
+// ❌ Źle - testuj pojedyncze komponenty (to jest rola Vitest)
+test('expense form validation', async ({ page }) => {
+  // Izolowane testowanie komponentu powinno być w Vitest
+});
+```
+
+### 2. Unikaj Flaky Tests
+
+```typescript
+// ✅ Dobrze - czekaj na konkretne warunki
+await expect(page.locator('.loading')).toBeHidden();
+await expect(page.locator('text=Data loaded')).toBeVisible();
+
+// ❌ Źle - arbitralne czekanie
+await page.waitForTimeout(5000); // Nigdy nie rób tego!
+```
+
+### 3. Używaj Sensownych Timeoutów
+
+```typescript
+// ✅ Dobrze - dostosuj timeout dla wolnych operacji
+await expect(page.locator('.slow-api-result')).toBeVisible({ timeout: 10000 });
+
+// ❌ Ūle - globalne zwiększanie timeoutów
+test.setTimeout(120000); // Zbyt długi timeout
+```
+
+### 4. Parallel Execution
+
+```typescript
+// ✅ Dobrze - niezależne testy mogą być paralelne
+test.describe.parallel('User Management', () => {
+  test('create user', async ({ page }) => { /* ... */ });
+  test('delete user', async ({ page }) => { /* ... */ });
+});
+
+// ❌ Źle - testy zależne od siebie
+test('create user', async ({ page }) => { /* tworzy usera */ });
+test('delete user', async ({ page }) => { /* zakłada że user istnieje */ });
+```
+
+### 5. Mobile-First Testing
+
+```typescript
+test.describe('Mobile Responsiveness', () => {
+  test.use({ ...devices['iPhone 12'] });
+
+  test('navigation collapses on mobile', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('[data-testid="mobile-menu"]')).toBeVisible();
+    await expect(page.locator('[data-testid="desktop-nav"]')).toBeHidden();
+  });
+});
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Testy działają lokalnie, ale nie w CI**
+   - Sprawdź `baseURL` w konfiguracji
+   - Upewnij się, że serwer jest gotowy przed testami
+   - Sprawdź zmienne środowiskowe
+
+2. **Flaky tests (niestabilne)**
+   - Dodaj odpowiednie `await expect().toBeVisible()`
+   - Unikaj `waitForTimeout()`
+   - Sprawdź czy elementy są unikalnie identyfikowalne
+
+3. **Slow tests**
+   - Uruchamiaj testy paralelnie (`fullyParallel: true`)
+   - Użyj `reuseExistingServer` w konfiguracji
+   - Mockuj wolne API calls
+
+4. **Element not found errors**
+   - Upewnij się, że strona jest w pełni załadowana
+   - Sprawdź czy selektory są poprawne
+   - Dodaj `data-testid` attributes do komponentów
+
+5. **Authentication issues**
+   - Użyj fixtures do automatycznego logowania
+   - Sprawdź czy cookies są prawidłowo obsługiwane
+   - Rozważ API login zamiast UI login dla prędkości

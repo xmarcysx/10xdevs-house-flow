@@ -16,6 +16,15 @@ The app solves the problem of users struggling to track household budgets using 
 - **Tailwind 4** - For convenient application styling
 - **Shadcn/ui** - Provides a library of accessible React components for UI foundation
 
+### Testing
+
+- **Vitest** - Modern test framework for unit and integration testing
+- **@testing-library/react** - Testing utilities for React components
+- **@testing-library/jest-dom** - Custom Jest matchers for DOM elements
+- **@testing-library/user-event** - Utilities for simulating user interactions
+- **jsdom** - DOM environment for testing
+- **@vitest/browser-playwright** - End-to-end testing with Playwright integration
+
 ### Backend
 
 - **Supabase** - Comprehensive backend solution providing:

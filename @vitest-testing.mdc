@@ -1,0 +1,372 @@
+# Konfiguracja Testów Jednostkowych - Vitest
+
+## Przegląd
+
+HouseFlow używa **Vitest** jako frameworka do testów jednostkowych i integracyjnych. Vitest zapewnia szybkie wykonywanie testów z natywną obsługą TypeScript i ES modules.
+
+## Zainstalowane Pakiety
+
+```json
+{
+  "vitest": "^4.0.4",
+  "@testing-library/react": "^16.3.0",
+  "@testing-library/jest-dom": "^6.9.1",
+  "@testing-library/user-event": "^14.6.1",
+  "jsdom": "^27.0.1"
+}
+```
+
+## Konfiguracja
+
+### vitest.config.ts
+
+```typescript
+import react from "@vitejs/plugin-react";
+import { defineConfig } from "vitest/config";
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    globals: true,           // Używa globalnych funkcji testowych (describe, it, expect)
+    environment: "jsdom",    // Środowisko DOM dla testów komponentów React
+    setupFiles: ["./src/test/setup.ts"], // Plik konfiguracyjny setup
+  },
+  resolve: {
+    alias: {
+      "@": "/src",           // Alias dla ścieżek importów
+    },
+  },
+});
+```
+
+### src/test/setup.ts
+
+```typescript
+import "@testing-library/jest-dom";
+
+// Mock window.matchMedia
+Object.defineProperty(window, "matchMedia", {
+  writable: true,
+  value: vi.fn().mockImplementation((query) => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
+// Mock ResizeObserver
+global.ResizeObserver = class ResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
+// Mock window.location
+Object.defineProperty(window, "location", {
+  value: {
+    href: "http://localhost:3000",
+    pathname: "/",
+    search: "",
+    hash: "",
+    hostname: "localhost",
+    port: "3000",
+    protocol: "http:",
+    assign: vi.fn(),
+    replace: vi.fn(),
+    reload: vi.fn(),
+  },
+  writable: true,
+});
+```
+
+## Struktura Testów
+
+```
+src/
+├── components/
+│   ├── Button.tsx
+│   └── Button.test.tsx        # Testy komponentu Button
+├── lib/
+│   ├── utils.ts
+│   └── utils.test.ts          # Testy funkcji util
+├── services/
+│   ├── api.service.ts
+│   └── api.service.test.ts    # Testy serwisu API
+└── test/
+    └── setup.ts               # Konfiguracja globalna testów
+```
+
+## Pisanie Testów
+
+### Testy Komponentów React
+
+```typescript
+import { render, screen } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { Button } from "./Button";
+
+describe("Button", () => {
+  it("renders with correct text", () => {
+    render(<Button>Click me</Button>);
+
+    expect(screen.getByRole("button", { name: /click me/i })).toBeInTheDocument();
+  });
+
+  it("calls onClick when clicked", async () => {
+    const handleClick = vi.fn();
+    const user = userEvent.setup();
+
+    render(<Button onClick={handleClick}>Click me</Button>);
+
+    await user.click(screen.getByRole("button", { name: /click me/i }));
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+### Testy Hooków
+
+```typescript
+import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect } from "vitest";
+import { useCounter } from "./useCounter";
+
+describe("useCounter", () => {
+  it("should increment counter", () => {
+    const { result } = renderHook(() => useCounter());
+
+    act(() => {
+      result.current.increment();
+    });
+
+    expect(result.current.count).toBe(1);
+  });
+});
+```
+
+### Testy Serwisów
+
+```typescript
+import { describe, it, expect, vi } from "vitest";
+import { apiService } from "./api.service";
+
+// Mock fetch API
+global.fetch = vi.fn();
+
+describe("apiService", () => {
+  it("fetches data successfully", async () => {
+    const mockData = { id: 1, name: "Test" };
+    (global.fetch as any).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockData),
+    });
+
+    const result = await apiService.getData();
+
+    expect(result).toEqual(mockData);
+    expect(global.fetch).toHaveBeenCalledWith("/api/data");
+  });
+});
+```
+
+## Uruchamianie Testów
+
+### Skrypty w package.json
+
+```json
+{
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+### Polecenia
+
+```bash
+# Uruchomienie testów w trybie watch (domyślnie)
+npm run test
+
+# Jednorazowe uruchomienie wszystkich testów
+npm run test:run
+
+# Uruchomienie testów z pokryciem kodu
+npm run test:coverage
+
+# Uruchomienie konkretnego pliku testowego
+npm run test Button.test.tsx
+
+# Uruchomienie testów dla konkretnego wzorca
+npm run test utils
+```
+
+## Mockowanie
+
+### Mockowanie Modułów
+
+```typescript
+import { vi } from "vitest";
+
+// Mock całego modułu
+vi.mock("./api", () => ({
+  fetchData: vi.fn(),
+}));
+
+// Mock tylko jednej funkcji
+vi.mock("./utils", async () => {
+  const actual = await vi.importActual("./utils");
+  return {
+    ...actual,
+    formatDate: vi.fn(),
+  };
+});
+```
+
+### Mockowanie API Calls
+
+```typescript
+import { describe, it, expect, vi } from "vitest";
+
+describe("API Integration", () => {
+  it("handles successful response", async () => {
+    // Mock Supabase client
+    const mockSupabase = {
+      from: vi.fn(() => ({
+        select: vi.fn().mockResolvedValue({
+          data: [{ id: 1, name: "Test" }],
+          error: null,
+        }),
+      })),
+    };
+
+    vi.mock("@/db/supabase", () => ({
+      supabase: mockSupabase,
+    }));
+
+    const result = await getExpenses();
+    expect(result).toEqual([{ id: 1, name: "Test" }]);
+  });
+});
+```
+
+## Najlepsze Praktyki
+
+### 1. Testuj Zachowanie, Nie Implementację
+
+```typescript
+// ✅ Dobrze - testuj widoczny efekt
+it("shows error message when form is invalid", () => {
+  render(<LoginForm />);
+  expect(screen.getByText("Invalid credentials")).toBeInTheDocument();
+});
+
+// ❌ Źle - testuj wewnętrzną implementację
+it("calls validateForm function", () => {
+  const spy = vi.spyOn(formUtils, "validateForm");
+  render(<LoginForm />);
+  expect(spy).toHaveBeenCalled();
+});
+```
+
+### 2. Używaj Opisu Testing Library
+
+```typescript
+// ✅ Dobrze - opisowe selektory
+expect(screen.getByRole("button", { name: /save/i })).toBeEnabled();
+
+// ❌ Źle - wrażliwe na zmiany CSS
+expect(container.querySelector(".save-button")).toBeEnabled();
+```
+
+### 3. Izoluj Testy
+
+```typescript
+// ✅ Dobrze - cleanup po każdym teście
+import { cleanup } from "@testing-library/react";
+
+afterEach(() => {
+  cleanup();
+  vi.clearAllMocks();
+});
+
+// ✅ Dobrze - unikalne dane testowe
+describe("ExpenseForm", () => {
+  it("saves expense with unique data", () => {
+    const uniqueExpense = { amount: Math.random(), description: `Test ${Date.now()}` };
+    // ... test logic
+  });
+});
+```
+
+### 4. Testuj Error Cases
+
+```typescript
+it("handles network errors gracefully", async () => {
+  // Mock failed API call
+  global.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
+
+  render(<ExpenseForm />);
+
+  await userEvent.click(screen.getByRole("button", { name: /save/i }));
+
+  expect(screen.getByText("Failed to save expense")).toBeInTheDocument();
+});
+```
+
+## Coverage
+
+Vitest obsługuje pokrycie kodu przez `v8` lub `istanbul`. Aby zobaczyć pokrycie:
+
+```bash
+npm run test:coverage
+```
+
+To wygeneruje raport w folderze `coverage/` z HTML i JSON plikami.
+
+## CI/CD Integration
+
+Przykład konfiguracji GitHub Actions:
+
+```yaml
+name: Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "22.14.0"
+      - run: npm ci
+      - run: npm run test:run
+      - run: npm run test:coverage
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **ReferenceError: window is not defined**
+   - Upewnij się, że `environment: "jsdom"` jest ustawione w konfiguracji
+
+2. **Module not found errors**
+   - Sprawdź aliasy w `vitest.config.ts`
+   - Upewnij się, że ścieżki są poprawne
+
+3. **Async tests timeout**
+   - Użyj `await` dla wszystkich asynchronicznych operacji
+   - Zwiększ timeout jeśli potrzeba: `it("test", async () => {...}, 10000)`
+
+4. **Mocking issues**
+   - Importuj mocks przed modułami, które mockujesz
+   - Używaj `vi.clearAllMocks()` w `afterEach`
