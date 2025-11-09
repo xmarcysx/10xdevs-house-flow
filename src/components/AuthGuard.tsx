@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuthState } from "../lib/hooks/useAuthState";
 
 interface AuthGuardProps {
@@ -9,6 +9,13 @@ interface AuthGuardProps {
 const AuthGuard: React.FC<AuthGuardProps> = ({ children, fallback }) => {
   const { isLoading, isAuthenticated } = useAuthState();
 
+  // Przekieruj niezalogowanych użytkowników na stronę gościa
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      window.location.href = "/guest";
+    }
+  }, [isLoading, isAuthenticated]);
+
   // Pokaż fallback podczas ładowania
   if (isLoading) {
     return fallback ? <>{fallback}</> : (
@@ -18,7 +25,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children, fallback }) => {
     );
   }
 
-  // Jeśli użytkownik nie jest zalogowany, nie renderuj children
+  // Jeśli użytkownik nie jest zalogowany, nie renderuj children (przekierowanie już zostało wykonane)
   if (!isAuthenticated) {
     return null;
   }
