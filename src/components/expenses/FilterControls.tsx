@@ -28,7 +28,7 @@ export const FilterControls: React.FC<FilterControlsProps> = ({
       const value = date.toISOString().slice(0, 7); // YYYY-MM format
       const label = date.toLocaleDateString("pl-PL", {
         year: "numeric",
-        month: "long",
+        month: "short",
       });
 
       options.push({ value, label });
@@ -110,7 +110,7 @@ export const FilterControls: React.FC<FilterControlsProps> = ({
         <div className="mt-3 text-sm text-gray-600 dark:text-gray-400">
           Aktywne filtry:{" "}
           {currentMonth &&
-            `Miesiąc: ${new Date(currentMonth + "-01").toLocaleDateString("pl-PL", { year: "numeric", month: "long" })}`}
+            `Miesiąc: ${new Date(currentMonth + "-01").toLocaleDateString("pl-PL", { year: "numeric", month: "short" })}`}
           {currentMonth && currentCategoryId && "; "}
           {currentCategoryId &&
             `Kategoria: ${categories.find((cat) => cat.id === currentCategoryId)?.name || currentCategoryId}`}

@@ -93,3 +93,4 @@ describe("Button", () => {
     expect(link).toHaveClass("bg-primary", "text-primary-foreground");
   });
 });
+

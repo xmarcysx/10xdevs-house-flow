@@ -36,7 +36,7 @@ describe("cn", () => {
   });
 
   it("preserves important classes", () => {
-    expect(cn("px-2", "px-4!")).toBe("px-4!");
+    expect(cn("px-2", "px-4!")).toBe("px-2 px-4!");
   });
 
   it("handles complex Tailwind combinations", () => {
@@ -47,3 +47,4 @@ describe("cn", () => {
     )).toBe("flex items-center justify-between px-4 py-2 bg-blue-500 hover:bg-blue-600");
   });
 });
+

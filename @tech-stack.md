@@ -67,3 +67,4 @@ e2e/                    # Testy end-to-end (Playwright)
 - `npm run test:e2e` - Uruchomienie testów E2E (Playwright)
 - `npm run lint` - Sprawdzanie jakości kodu przez ESLint
 - `npm run format` - Formatowanie kodu przez Prettier
+
