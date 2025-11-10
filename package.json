@@ -7,6 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "dev:e2e": "astro dev --mode test",
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
