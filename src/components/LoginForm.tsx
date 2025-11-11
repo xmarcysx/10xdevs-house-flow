@@ -71,6 +71,7 @@ const LoginForm: React.FC = () => {
               {...register("email")}
               type="email"
               id="email"
+              data-test-id="login-email-input"
               placeholder="twoj@email.com"
               disabled={isLoading || isSubmitting}
               className={`h-12 rounded-xl border-2 transition-all duration-200 ${
@@ -81,7 +82,7 @@ const LoginForm: React.FC = () => {
               autoComplete="email"
             />
             {errors.email && (
-              <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+              <p data-test-id="login-email-error" className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                 </svg>
@@ -102,6 +103,7 @@ const LoginForm: React.FC = () => {
               {...register("password")}
               type="password"
               id="password"
+              data-test-id="login-password-input"
               placeholder="Wprowadź hasło"
               disabled={isLoading || isSubmitting}
               className={`h-12 rounded-xl border-2 transition-all duration-200 ${
@@ -112,7 +114,7 @@ const LoginForm: React.FC = () => {
               autoComplete="current-password"
             />
             {errors.password && (
-              <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+              <p data-test-id="login-password-error" className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                 </svg>
@@ -123,7 +125,7 @@ const LoginForm: React.FC = () => {
 
           {/* Błędy API */}
           {apiError && (
-            <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 animate-pulse">
+            <div data-test-id="login-api-error" className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 animate-pulse">
               <p className="text-sm text-red-800 dark:text-red-200 flex items-center gap-2">
                 <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
@@ -136,6 +138,7 @@ const LoginForm: React.FC = () => {
           {/* Przycisk Submit */}
           <Button
             type="submit"
+            data-test-id="login-submit-button"
             className="w-full h-12 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             disabled={isLoading || isSubmitting}
           >

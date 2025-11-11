@@ -22,7 +22,15 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+
+    /* Dodaj parametr e2e=true do wszystkich URL dla ominięcia autentyfikacji */
+    launchOptions: {
+      args: process.env.CI ? ['--no-sandbox', '--disable-setuid-sandbox'] : [],
+    },
   },
+
+  /* Dodaj globalną konfigurację dla testów E2E */
+  globalSetup: './e2e/global-setup.ts',
 
   /* Configure projects for major browsers */
   projects: [

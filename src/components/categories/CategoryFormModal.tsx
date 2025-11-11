@@ -102,16 +102,17 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               {...register("name")}
               type="text"
               id="name"
+              data-test-id="category-name-input"
               placeholder="np. Jedzenie, Transport, Rozrywka"
               disabled={loading || isSubmitting}
               maxLength={100}
               className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.name ? "border-red-500" : ""}`}
             />
-            {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
+            {errors.name && <p data-test-id="category-name-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
           </div>
 
           {serverError && (
-            <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-3">
+            <div data-test-id="category-server-error" className="rounded-md bg-red-50 dark:bg-red-900/20 p-3">
               <p className="text-sm text-red-800 dark:text-red-200">{serverError}</p>
             </div>
           )}
@@ -122,6 +123,7 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               onClick={handleCancel}
               disabled={loading || isSubmitting}
               variant="outline"
+              data-test-id="cancel-category-button"
               className="px-6 py-3 border-2 border-gray-300 hover:border-indigo-500 text-gray-700 hover:text-indigo-600 dark:border-gray-600 dark:text-gray-300 dark:hover:text-indigo-400 dark:hover:border-indigo-400 font-semibold rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
             >
               Anuluj
@@ -129,6 +131,7 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
             <Button
               type="submit"
               disabled={loading || isSubmitting}
+              data-test-id={mode === "create" ? "submit-add-category-button" : "submit-edit-category-button"}
               className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
             >
               {loading || isSubmitting ? (

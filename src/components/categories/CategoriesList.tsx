@@ -49,6 +49,7 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({
           <div className="mt-6">
             <Button
               onClick={onAdd}
+              data-test-id="add-first-category-button"
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0"
             >
               <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -81,6 +82,7 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({
             <div className="flex-shrink-0">
               <button
                 onClick={() => onAdd()}
+                data-test-id="add-category-button"
                 className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 border-0 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg className="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,10 +96,10 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({
       </div>
 
       {/* Sekcja tabeli */}
-      <div className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+      <div data-test-id="categories-table-container" className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
         <div className="overflow-x-auto">
           <div className="mx-6">
-            <Table>
+            <Table data-test-id="categories-table">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-full px-6 py-4">Nazwa kategorii</TableHead>

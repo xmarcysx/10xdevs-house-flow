@@ -123,6 +123,7 @@ const Navbar: React.FC = () => {
                 <Link
                   key={item.label}
                   to={item.href}
+                  data-test-id={`nav-${item.label.toLowerCase()}`}
                   className={`relative px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 transform hover:scale-105 ${
                     isActive
                       ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg hover:shadow-xl"
