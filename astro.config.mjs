@@ -32,13 +32,14 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
-      exclude: ["react-dom/server"],
+      // exclude: ["react-dom/server"], // Removed for React 19 compatibility
     },
   },
   adapter: cloudflare({
     platformProxy: {
       // Enable platform proxy to access Node.js globals
-      persist: true,
+      persist: false,
     },
+    compatibilityFlags: ["nodejs_compat", "nodejs_compat_populate_process_env"],
   }),
 });
