@@ -15,7 +15,7 @@ interface NavItem {
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [currentPath, setCurrentPath] = useState(window.location.hash.replace('#', '') || '/');
+  const [currentPath, setCurrentPath] = useState(window.location.hash.replace("#", "") || "/");
   const { user, isLoading, isAuthenticated } = useAuthState();
   const { logout } = useAuth();
 
@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
   // Aktualizuj currentPath przy zmianach URL (dla kompatybilności z React Router)
   useEffect(() => {
     const handleLocationChange = () => {
-      const newPath = window.location.hash.replace('#', '') || '/';
+      const newPath = window.location.hash.replace("#", "") || "/";
       setCurrentPath(newPath);
     };
 
@@ -73,7 +73,7 @@ const Navbar: React.FC = () => {
     if (typeof window !== "undefined") {
       // Próba aktualizacji przy każdej zmianie (dla React Router)
       const interval = setInterval(() => {
-        const newPath = window.location.hash.replace('#', '') || '/';
+        const newPath = window.location.hash.replace("#", "") || "/";
         if (newPath !== currentPath) {
           setCurrentPath(newPath);
         }
@@ -110,7 +110,7 @@ const Navbar: React.FC = () => {
             <div className="flex items-center space-x-3 group">
               <div className="relative">
                 <img
-                  src="/src/assets/logo.png"
+                  src="/logo.png"
                   alt="HouseFlow Logo"
                   className="h-10 w-10 md:h-12 md:w-12 rounded-xl shadow-lg group-hover:shadow-xl"
                 />

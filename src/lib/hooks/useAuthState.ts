@@ -10,43 +10,28 @@ export const useAuthState = (): AuthState => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Nasłuchuj zmian stanu autentyfikacji - to bezpieczniejsze podejście
+    // Timeout fallback - jeśli onAuthStateChange nie wywoła się w ciągu 10 sekund, ustaw loading na false
+    const timeoutId = setTimeout(() => {
+      console.warn("Auth initialization timeout - setting loading to false");
+      setIsLoading(false);
+    }, 10000);
+
+    // Użyj tylko onAuthStateChange - Supabase sam zarządza inicjalizacją
     const {
       data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    } = supabaseClient.auth.onAuthStateChange((event, session) => {
       console.log("Auth state change:", event, !!session, session?.user?.email);
 
-      // Dla bezpiecznego pobierania danych użytkownika, używamy getUser() zamiast polegać tylko na sesji
-      if (session?.access_token) {
-        try {
-          const { data: userData, error: userError } = await supabaseClient.auth.getUser();
-          if (userError) {
-            console.error("Error getting user:", userError);
-            setSession(null);
-            setUser(null);
-            setIsAuthenticated(false);
-          } else {
-            setSession(session);
-            setUser(userData.user);
-            setIsAuthenticated(!!userData.user);
-          }
-        } catch (error) {
-          console.error("Error in getUser:", error);
-          setSession(null);
-          setUser(null);
-          setIsAuthenticated(false);
-        }
-      } else {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setIsAuthenticated(!!session);
-      }
+      clearTimeout(timeoutId); // Anuluj timeout gdy dostaniemy odpowiedź
 
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsAuthenticated(!!session);
       setIsLoading(false);
     });
 
-    // Cleanup subscription
     return () => {
+      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, []);
