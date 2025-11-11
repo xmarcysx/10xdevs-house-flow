@@ -20,6 +20,10 @@ jobs:
         run: npm run lint:ci
       - name: Run unit tests
         run: npm run test:run
+      - name: Update wrangler.toml with KV namespace
+        run: |
+          # Use the KV namespace ID that was created locally
+          sed -i 's/your-session-kv-id/175903cc42014f8a9760c1b92f004591/' wrangler.toml
       - name: Build for production
         run: npm run build
         env:
@@ -41,6 +45,7 @@ jobs:
           fi
           echo "✅ All Cloudflare secrets are configured"
           echo "🔍 CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}"
+          echo "🔍 KV_NAMESPACE_ID: $KV_NAMESPACE_ID"
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:

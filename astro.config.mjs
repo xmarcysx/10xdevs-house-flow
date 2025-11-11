@@ -13,9 +13,23 @@ export default defineConfig({
     plugins: [tailwindcss()],
     define: {
       global: "globalThis",
-      // Define MessageChannel as undefined to prevent React from using it during build
-      MessageChannel: "undefined",
-      "globalThis.MessageChannel": "undefined",
+    },
+    build: {
+      rollupOptions: {
+        output: {
+          banner: `
+            // MessageChannel polyfill for Cloudflare Workers
+            if (typeof MessageChannel === 'undefined') {
+              globalThis.MessageChannel = function() {
+                return {
+                  port1: { postMessage: function() {}, addEventListener: function() {}, removeEventListener: function() {}, close: function() {} },
+                  port2: { postMessage: function() {}, addEventListener: function() {}, removeEventListener: function() {}, close: function() {} }
+                };
+              };
+            }
+          `,
+        },
+      },
     },
     optimizeDeps: {
       exclude: ["react-dom/server"],
