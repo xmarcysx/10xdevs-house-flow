@@ -36,10 +36,6 @@ export default defineConfig({
     },
   },
   adapter: cloudflare({
-    platformProxy: {
-      // Enable platform proxy to access Node.js globals
-      persist: false,
-    },
-    compatibilityFlags: ["nodejs_compat", "nodejs_compat_populate_process_env"],
+    compatibilityFlags: ["nodejs_compat"],
   }),
 });
