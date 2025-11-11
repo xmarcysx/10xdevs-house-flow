@@ -1,0 +1,13 @@
+
+            // MessageChannel polyfill for Cloudflare Workers
+            if (typeof MessageChannel === 'undefined') {
+              globalThis.MessageChannel = function() {
+                return {
+                  port1: { postMessage: function() {}, addEventListener: function() {}, removeEventListener: function() {}, close: function() {} },
+                  port2: { postMessage: function() {}, addEventListener: function() {}, removeEventListener: function() {}, close: function() {} }
+                };
+              };
+            }
+          
+export { a as page } from '../chunks/image-endpoint_DrDcF4G5.mjs';
+export { r as renderers } from '../chunks/_@astro-renderers_BVqCE940.mjs';
