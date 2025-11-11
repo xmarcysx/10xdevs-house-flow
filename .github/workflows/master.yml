@@ -40,6 +40,7 @@ jobs:
             exit 1
           fi
           echo "✅ All Cloudflare secrets are configured"
+          echo "🔍 CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}"
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
