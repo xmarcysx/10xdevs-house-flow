@@ -1,1 +1,0 @@
-import{j as r}from"./jsx-runtime.D_zvdyIk.js";import"./index.DUwX4xZl.js";const o=({progress:s,className:a=""})=>{const t=Math.min(Math.max(s,0),100);return r.jsx("div",{className:`w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 ${a}`,children:r.jsx("div",{className:"bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out",style:{width:`${t}%`}})})};export{o as P};
