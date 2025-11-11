@@ -1,17 +1,7 @@
-
-            // MessageChannel polyfill for Cloudflare Workers
-            if (typeof MessageChannel === 'undefined') {
-              globalThis.MessageChannel = function() {
-                return {
-                  port1: { postMessage: function() {}, addEventListener: function() {}, removeEventListener: function() {}, close: function() {} },
-                  port2: { postMessage: function() {}, addEventListener: function() {}, removeEventListener: function() {}, close: function() {} }
-                };
-              };
-            }
-          
-import { r as renderers } from './chunks/_@astro-renderers_BVqCE940.mjs';
-import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter_BZgs3HxN.mjs';
-import { manifest } from './manifest_CI68-4AJ.mjs';
+globalThis.process ??= {}; globalThis.process.env ??= {};
+import { r as renderers } from './chunks/_@astro-renderers_B70jUmW-.mjs';
+import { c as createExports, s as serverEntrypointModule } from './chunks/_@astrojs-ssr-adapter_CttULl05.mjs';
+import { manifest } from './manifest_Cx1QZxl8.mjs';
 
 const serverIslandMap = new Map();;
 
