@@ -34,7 +34,7 @@ test.describe("Zarządzanie wpływami", () => {
 
     // 3. Dodaj nowy wpływ
     // Kliknij przycisk "Dodaj wpływ"
-    await page.locator('button:has-text("Dodaj pierwszy wpływ")').click();
+    await page.locator('button:has-text("Dodaj wpływ")').click();
 
     // Wypełnij formularz danymi testowymi
     await page.locator("#amount").fill("1000");
