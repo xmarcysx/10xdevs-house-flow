@@ -7,6 +7,7 @@ import {
 } from "../../lib/validation/goals.validation";
 import { GoalsService } from "../../services/goals.service";
 import type { MessageDTO } from "../../types";
+import { requireAuth } from "../../lib/api-helpers";
 
 /**
  * GET /api/goals
@@ -14,6 +15,11 @@ import type { MessageDTO } from "../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz parametry query z URL
     const url = new URL(context.request.url);
     const queryParams = url.searchParams;
@@ -34,7 +40,7 @@ export const GET: APIRoute = async (context) => {
     const goalsService = new GoalsService(context.locals.supabase);
 
     // Pobierz cele używając ID aktualnie zalogowanego użytkownika
-    const result = await goalsService.getGoals(context.locals.user.id, query);
+    const result = await goalsService.getGoals(user.id, query);
 
     // Zwróć cele z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -58,6 +64,11 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Parsuj ciało żądania JSON
     let requestBody: unknown;
     try {
@@ -91,7 +102,7 @@ export const POST: APIRoute = async (context) => {
     const goalsService = new GoalsService(context.locals.supabase);
 
     // Utwórz cel używając ID aktualnie zalogowanego użytkownika
-    const goal = await goalsService.create(command, context.locals.user.id);
+    const goal = await goalsService.create(command, user.id);
 
     // Zwróć utworzony cel z kodem 201
     return new Response(JSON.stringify(goal), {

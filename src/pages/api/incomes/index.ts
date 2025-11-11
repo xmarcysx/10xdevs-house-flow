@@ -7,6 +7,7 @@ import {
 } from "../../../lib/validation/incomes.validation";
 import { IncomesService } from "../../../services/incomes.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * GET /api/incomes
@@ -14,6 +15,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz parametry query z URL
     const url = new URL(context.request.url);
     const queryParams = url.searchParams;
@@ -34,7 +40,7 @@ export const GET: APIRoute = async (context) => {
     const incomesService = new IncomesService(context.locals.supabase);
 
     // Pobierz wpływy używając ID aktualnie zalogowanego użytkownika
-    const result = await incomesService.getIncomes(context.locals.user.id, query);
+    const result = await incomesService.getIncomes(user.id, query);
 
     // Zwróć wpływy z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -58,6 +64,11 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Parsuj ciało żądania JSON
     let requestBody: unknown;
     try {
@@ -91,7 +102,7 @@ export const POST: APIRoute = async (context) => {
     const incomesService = new IncomesService(context.locals.supabase);
 
     // Utwórz wpływ używając ID aktualnie zalogowanego użytkownika
-    const income = await incomesService.create(command, context.locals.user.id);
+    const income = await incomesService.create(command, user.id);
 
     // Zwróć utworzony wpływ z kodem 201
     return new Response(JSON.stringify(income), {

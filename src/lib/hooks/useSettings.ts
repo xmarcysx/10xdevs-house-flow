@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import type { SettingsFormData } from "../../types";
 import { supabaseClient } from "../../db/supabase.client";
+import type { SettingsFormData } from "../../types";
 
 // Mapowanie błędów na polskie komunikaty
 const errorTranslations: Record<string, string> = {
@@ -116,35 +116,59 @@ export const useSettings = (): UseSettingsReturn => {
         });
 
         const result = await response.json();
-
+        console.log(result);
         if (!response.ok) {
           throw new Error(translateError(result.error) || "Wystąpił błąd podczas aktualizacji profilu");
         }
 
-        // Aktualizuj lokalny stan profilu
+        console.log("Setting profile...");
+        // Aktualizuj lokalny stan profilu PRZED innymi operacjami
         setProfile({
           firstName: result.profile.firstName,
           lastName: result.profile.lastName,
           avatarUrl: result.profile.avatarUrl,
         });
+        console.log("Profile set successfully");
 
+        console.log("Refreshing session...");
         // Odśwież sesję, żeby navbar mógł pobrać zaktualizowane dane
-        await supabaseClient.auth.refreshSession();
+        try {
+          // Dodaj timeout na wypadek nieskończonej pętli
+          const refreshPromise = supabaseClient.auth.refreshSession();
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error("Session refresh timeout")), 5000)
+          );
 
+          await Promise.race([refreshPromise, timeoutPromise]);
+          console.log("Session refreshed");
+        } catch (sessionError) {
+          console.warn("Session refresh failed or timed out:", sessionError);
+          // Kontynuuj mimo błędu odświeżania sesji
+        }
+
+        console.log("Sending navbar event...");
         // Wyślij event do Navbar, żeby odświeżył dane profilu
         window.localStorage.setItem("profileUpdated", Date.now().toString());
         window.dispatchEvent(new Event("profileUpdated"));
+        console.log("Navbar event sent");
 
+        console.log("Showing success toast...");
         toast.success("Profil został zaktualizowany pomyślnie!");
 
-        // Przekierowanie do dashboard
-        window.location.href = "/";
+        // Resetuj stan przed przekierowaniem
+        setIsSubmitting(false);
+
+        // Opóźnij przekierowanie, żeby dać czas na aktualizację stanu
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 100);
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas aktualizacji profilu";
         handleApiError(err, errorMessage);
         toast.error(errorMessage);
         throw err;
       } finally {
+        // Dodatkowo upewnij się, że stan zostanie zresetowany (na wypadek błędu)
         setIsSubmitting(false);
       }
     },

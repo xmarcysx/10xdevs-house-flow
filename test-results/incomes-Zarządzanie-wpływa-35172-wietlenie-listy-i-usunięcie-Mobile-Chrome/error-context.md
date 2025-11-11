@@ -1,0 +1,66 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - heading "Wpływy HouseFlow" [level=1] [ref=e9]
+      - paragraph [ref=e10]: Zarządzaj swoimi źródłami dochodów i śledź swoje wpływy.
+    - generic [ref=e12]:
+      - generic [ref=e15]:
+        - generic [ref=e16]:
+          - generic [ref=e17]: Filtruj po roku
+          - combobox "Filtruj po roku" [ref=e18]:
+            - generic: Wszystkie lata
+            - img
+        - generic [ref=e19]:
+          - generic [ref=e20]: Filtruj po miesiącu
+          - combobox "Filtruj po miesiącu" [ref=e21]:
+            - generic: Wszystkie miesiące
+            - img
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - heading "Lista wpływów" [level=3] [ref=e26]
+          - paragraph [ref=e27]: Zarządzaj swoimi źródłami dochodów
+        - button "Dodaj wpływ" [ref=e29]:
+          - img [ref=e30]
+          - text: Dodaj wpływ
+      - table [ref=e36]:
+        - rowgroup [ref=e37]:
+          - row "Data Kwota Opis Źródło Akcje" [ref=e38]:
+            - cell "Data" [ref=e39]
+            - cell "Kwota" [ref=e40]
+            - cell "Opis" [ref=e41]
+            - cell "Źródło" [ref=e42]
+            - cell "Akcje" [ref=e43]
+        - rowgroup [ref=e44]:
+          - row "11 lis 2025 1000,00 zł wpływ testowy pensja testowa" [ref=e45]:
+            - cell "11 lis 2025" [ref=e46]
+            - cell "1000,00 zł" [ref=e47]
+            - cell "wpływ testowy" [ref=e48]:
+              - generic "wpływ testowy" [ref=e49]
+            - cell "pensja testowa" [ref=e50]
+            - cell [ref=e51]:
+              - generic [ref=e52]:
+                - button "Edytuj" [ref=e53]:
+                  - img [ref=e54]
+                - button "Usuń" [ref=e56]:
+                  - img [ref=e57]
+  - generic:
+    - region "Notifications alt+T"
+  - generic [ref=e61]:
+    - button "Menu" [ref=e62]:
+      - img [ref=e64]
+      - generic: Menu
+    - button "Inspect" [ref=e68]:
+      - img [ref=e70]
+      - generic: Inspect
+    - button "Audit" [ref=e72]:
+      - generic [ref=e73]:
+        - img [ref=e74]
+        - img [ref=e77]
+      - generic: Audit
+    - button "Settings" [ref=e80]:
+      - img [ref=e82]
+      - generic: Settings
+```

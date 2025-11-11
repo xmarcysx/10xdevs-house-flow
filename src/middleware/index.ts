@@ -33,38 +33,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return next();
   }
 
-  // For API routes, check authentication
+  // For API routes, authentication is handled by individual endpoints
+  // This prevents the ResponseSentError when Supabase tries to set cookies
   if (context.url.pathname.startsWith("/api/")) {
-    try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const user = session?.user ?? null;
-
-      if (user) {
-        context.locals.user = {
-          email: user.email,
-          id: user.id,
-        };
-      } else {
-        // Return 401 for API routes without authentication
-        return new Response(JSON.stringify({ error: "Unauthorized" }), {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-    } catch (error) {
-      console.error("Auth error in middleware:", error);
-      return new Response(JSON.stringify({ error: "Authentication error" }), {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-  } else {
-    // For pages, let them render and handle auth on client side
-    // This prevents redirect loops and auth errors on page load
     return next();
   }
 
+  // For pages, let them render and handle auth on client side
+  // This prevents redirect loops and auth errors on page load
   return next();
 });

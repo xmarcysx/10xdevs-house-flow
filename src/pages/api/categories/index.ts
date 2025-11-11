@@ -7,6 +7,7 @@ import {
 } from "../../../lib/validation/categories.validation";
 import { CategoriesService } from "../../../services/categories.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * GET /api/categories
@@ -14,6 +15,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz parametry query z URL
     const url = new URL(context.request.url);
     const queryParams = url.searchParams;
@@ -34,7 +40,7 @@ export const GET: APIRoute = async (context) => {
     const categoriesService = new CategoriesService(context.locals.supabase);
 
     // Pobierz kategorie używając ID aktualnie zalogowanego użytkownika
-    const result = await categoriesService.getCategories(context.locals.user.id, query);
+    const result = await categoriesService.getCategories(user.id, query);
 
     // Zwróć kategorie z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -61,6 +67,11 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Parsuj ciało żądania JSON
     let requestBody: unknown;
     try {
@@ -93,7 +104,7 @@ export const POST: APIRoute = async (context) => {
     const categoriesService = new CategoriesService(context.locals.supabase);
 
     // Utwórz kategorię używając ID aktualnie zalogowanego użytkownika
-    const category = await categoriesService.create(command, context.locals.user.id);
+    const category = await categoriesService.create(command, user.id);
 
     // Zwróć utworzoną kategorię z kodem 201
     return new Response(JSON.stringify(category), {

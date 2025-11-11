@@ -7,6 +7,7 @@ import {
 } from "../../../lib/validation/expenses.validation";
 import { ExpensesService } from "../../../services/expenses.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * GET /api/expenses
@@ -14,6 +15,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz parametry query z URL
     const url = new URL(context.request.url);
     const queryParams = url.searchParams;
@@ -34,7 +40,7 @@ export const GET: APIRoute = async (context) => {
     const expensesService = new ExpensesService(context.locals.supabase);
 
     // Pobierz wydatki używając ID aktualnie zalogowanego użytkownika
-    const result = await expensesService.getExpenses(context.locals.user.id, query);
+    const result = await expensesService.getExpenses(user.id, query);
 
     // Zwróć wydatki z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -61,6 +67,11 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Parsuj ciało żądania JSON
     let requestBody: unknown;
     try {
@@ -94,7 +105,7 @@ export const POST: APIRoute = async (context) => {
     const expensesService = new ExpensesService(context.locals.supabase);
 
     // Utwórz wydatek używając ID aktualnie zalogowanego użytkownika
-    const expense = await expensesService.create(command, context.locals.user.id);
+    const expense = await expensesService.create(command, user.id);
 
     // Zwróć utworzony wydatek z kodem 201
     return new Response(JSON.stringify(expense), {
