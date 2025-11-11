@@ -13,6 +13,12 @@ export default defineConfig({
     plugins: [tailwindcss()],
     define: {
       global: "globalThis",
+      // Define MessageChannel as undefined to prevent React from using it during build
+      MessageChannel: "undefined",
+      "globalThis.MessageChannel": "undefined",
+    },
+    optimizeDeps: {
+      exclude: ["react-dom/server"],
     },
   },
   adapter: cloudflare({
