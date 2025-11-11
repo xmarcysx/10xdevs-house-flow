@@ -948,7 +948,7 @@ globalThis.process = process_default;
 // _worker.js/index.js
 import { r as renderers } from "./chunks/_@astro-renderers_B70jUmW-.mjs";
 import { c as createExports, s as serverEntrypointModule } from "./chunks/_@astrojs-ssr-adapter_CttULl05.mjs";
-import { manifest } from "./manifest_Cx1QZxl8.mjs";
+import { manifest } from "./manifest_CeiZKZIM.mjs";
 globalThis.process ??= {};
 globalThis.process.env ??= {};
 var serverIslandMap = /* @__PURE__ */ new Map();
@@ -1044,4 +1044,4 @@ export {
   __astrojsSsrVirtualEntry as default,
   pageMap
 };
-//# sourceMappingURL=bundledWorker-0.9888018740171218.mjs.map
+//# sourceMappingURL=bundledWorker-0.46467884886571453.mjs.map
