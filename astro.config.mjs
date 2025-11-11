@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 
-import node from "@astrojs/node";
+import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -9,11 +9,8 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   output: "server", // Server-side rendering for API routes
   integrations: [react()],
-  server: { port: 4321 }, // Default Astro port
   vite: {
     plugins: [tailwindcss()],
   },
-  adapter: node({
-    mode: "standalone",
-  }),
+  adapter: cloudflare(),
 });
