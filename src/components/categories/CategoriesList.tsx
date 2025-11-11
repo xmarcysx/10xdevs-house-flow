@@ -96,7 +96,10 @@ export const CategoriesList: React.FC<CategoriesListProps> = ({
       </div>
 
       {/* Sekcja tabeli */}
-      <div data-test-id="categories-table-container" className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50">
+      <div
+        data-test-id="categories-table-container"
+        className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 backdrop-blur-sm shadow-xl rounded-2xl overflow-hidden border border-white/20 dark:border-gray-700/50"
+      >
         <div className="overflow-x-auto">
           <div className="mx-6">
             <Table data-test-id="categories-table">

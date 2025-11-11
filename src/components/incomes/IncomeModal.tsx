@@ -21,7 +21,7 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
   onSubmit,
   onClose,
   isSubmitting,
-  serverError
+  serverError,
 }) => {
   const title = mode === "add" ? "Dodaj wpływ" : "Edytuj wpływ";
   const description =

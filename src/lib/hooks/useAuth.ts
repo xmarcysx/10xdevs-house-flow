@@ -106,40 +106,37 @@ export const useAuth = (): UseAuthReturn => {
     [handleApiError]
   );
 
-  const logout = useCallback(
-    async (): Promise<void> => {
-      try {
-        setIsLoading(true);
-        setError(null);
+  const logout = useCallback(async (): Promise<void> => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-        const response = await fetch("/api/auth/logout", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (!response.ok) {
-          throw new Error(translateError(result.error) || "Wystąpił błąd podczas wylogowywania");
-        }
-
-        toast.success("Wylogowano pomyślnie!");
-
-        // Przekierowanie na stronę powitalną
-        window.location.href = "/guest";
-      } catch (err) {
-        const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas wylogowywania";
-        handleApiError(err, errorMessage);
-        toast.error(errorMessage);
-        throw err;
-      } finally {
-        setIsLoading(false);
+      if (!response.ok) {
+        throw new Error(translateError(result.error) || "Wystąpił błąd podczas wylogowywania");
       }
-    },
-    [handleApiError]
-  );
+
+      toast.success("Wylogowano pomyślnie!");
+
+      // Przekierowanie na stronę powitalną
+      window.location.href = "/guest";
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Wystąpił błąd podczas wylogowywania";
+      handleApiError(err, errorMessage);
+      toast.error(errorMessage);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [handleApiError]);
 
   const resetPassword = useCallback(
     async (email: string): Promise<void> => {

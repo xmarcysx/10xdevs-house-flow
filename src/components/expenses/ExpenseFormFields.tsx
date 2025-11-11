@@ -132,8 +132,14 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
         <Label htmlFor="category_id" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Kategoria *
         </Label>
-        <Select value={watch("category_id")} onValueChange={(value) => setValue("category_id", value)} disabled={isSubmitting}>
-          <SelectTrigger className={`w-full bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.category_id ? "border-red-500" : ""}`}>
+        <Select
+          value={watch("category_id")}
+          onValueChange={(value) => setValue("category_id", value)}
+          disabled={isSubmitting}
+        >
+          <SelectTrigger
+            className={`w-full bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.category_id ? "border-red-500" : ""}`}
+          >
             <SelectValue placeholder="Wybierz kategorię" />
           </SelectTrigger>
           <SelectContent>
@@ -144,13 +150,13 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
                 </SelectItem>
               ))
             ) : (
-              <div className="p-2 text-sm text-gray-500">
-                Brak dostępnych kategorii
-              </div>
+              <div className="p-2 text-sm text-gray-500">Brak dostępnych kategorii</div>
             )}
           </SelectContent>
         </Select>
-        {errors.category_id && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.category_id.message}</p>}
+        {errors.category_id && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.category_id.message}</p>
+        )}
       </div>
 
       <div>
@@ -166,7 +172,9 @@ export const ExpenseFormFields: React.FC<ExpenseFormFieldsProps> = ({
           maxLength={1000}
           className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-red-500 dark:focus:border-red-400 shadow-sm ${errors.description ? "border-red-500" : ""}`}
         />
-        {errors.description && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>}
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
+        )}
       </div>
 
       {/* Błąd serwera */}

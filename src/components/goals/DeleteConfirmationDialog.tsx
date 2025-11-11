@@ -26,7 +26,8 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
         <DialogHeader>
           <DialogTitle>Potwierdź usunięcie</DialogTitle>
           <DialogDescription>
-            Czy na pewno chcesz usunąć {isGoal ? "ten cel oszczędnościowy" : "tę wpłatę"}? Tej operacji nie można cofnąć.
+            Czy na pewno chcesz usunąć {isGoal ? "ten cel oszczędnościowy" : "tę wpłatę"}? Tej operacji nie można
+            cofnąć.
           </DialogDescription>
         </DialogHeader>
 
@@ -34,8 +35,7 @@ export const DeleteConfirmationDialog: React.FC<DeleteConfirmationDialogProps> =
           <p className="text-sm text-gray-600 dark:text-gray-400">
             {isGoal
               ? "Po usunięciu celu zostanie on trwale usunięty z systemu wraz ze wszystkimi wpłatami i nie będzie można go odzyskać."
-              : "Po usunięciu wpłaty zostanie ona trwale usunięta z systemu i nie będzie można jej odzyskać."
-            }
+              : "Po usunięciu wpłaty zostanie ona trwale usunięta z systemu i nie będzie można jej odzyskać."}
           </p>
         </div>
 

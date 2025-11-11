@@ -1,15 +1,15 @@
-import * as React from "react"
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
-import { cn } from "@/lib/utils"
-import { CalendarIcon } from "lucide-react"
+import * as React from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { cn } from "@/lib/utils";
+import { CalendarIcon } from "lucide-react";
 
 interface MonthPickerProps {
-  selected?: Date
-  onChange: (date: Date | null) => void
-  placeholder?: string
-  className?: string
-  disabled?: boolean
+  selected?: Date;
+  onChange: (date: Date | null) => void;
+  placeholder?: string;
+  className?: string;
+  disabled?: boolean;
 }
 
 function MonthPicker({
@@ -50,21 +50,21 @@ function MonthPicker({
           cn(
             "hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-700 dark:text-gray-300",
             date.getMonth() === selected?.getMonth() &&
-            date.getFullYear() === selected?.getFullYear() &&
-            "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold"
+              date.getFullYear() === selected?.getFullYear() &&
+              "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold"
           )
         }
         yearClassName={(date) =>
           cn(
             "hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-700 dark:text-gray-300",
             date.getFullYear() === selected?.getFullYear() &&
-            "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold"
+              "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold"
           )
         }
       />
       <CalendarIcon className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 pointer-events-none opacity-50" />
     </div>
-  )
+  );
 }
 
-export { MonthPicker }
+export { MonthPicker };

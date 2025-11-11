@@ -108,7 +108,11 @@ export const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
               maxLength={100}
               className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.name ? "border-red-500" : ""}`}
             />
-            {errors.name && <p data-test-id="category-name-error" className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>}
+            {errors.name && (
+              <p data-test-id="category-name-error" className="mt-1 text-sm text-red-600 dark:text-red-400">
+                {errors.name.message}
+              </p>
+            )}
           </div>
 
           {serverError && (

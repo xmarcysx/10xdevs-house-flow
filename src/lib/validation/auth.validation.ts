@@ -7,10 +7,7 @@ export const loginSchema = z.object({
     .min(1, "Adres email jest wymagany")
     .email("Podaj prawidłowy adres email")
     .max(254, "Adres email może mieć maksymalnie 254 znaki"),
-  password: z
-    .string()
-    .min(1, "Hasło jest wymagane")
-    .max(128, "Hasło może mieć maksymalnie 128 znaków"),
+  password: z.string().min(1, "Hasło jest wymagane").max(128, "Hasło może mieć maksymalnie 128 znaków"),
 });
 
 // Schemat walidacji dla formularza rejestracji
@@ -37,13 +34,8 @@ export const registerSchema = z
       .string()
       .min(8, "Hasło musi mieć przynajmniej 8 znaków")
       .max(128, "Hasło może mieć maksymalnie 128 znaków")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])/,
-        "Hasło musi zawierać przynajmniej jedną małą i jedną wielką literę"
-      ),
-    confirmPassword: z
-      .string()
-      .min(1, "Potwierdzenie hasła jest wymagane"),
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])/, "Hasło musi zawierać przynajmniej jedną małą i jedną wielką literę"),
+    confirmPassword: z.string().min(1, "Potwierdzenie hasła jest wymagane"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Hasła nie są identyczne",
@@ -66,13 +58,8 @@ export const newPasswordSchema = z
       .string()
       .min(8, "Hasło musi mieć przynajmniej 8 znaków")
       .max(128, "Hasło może mieć maksymalnie 128 znaków")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])/,
-        "Hasło musi zawierać przynajmniej jedną małą i jedną wielką literę"
-      ),
-    confirmPassword: z
-      .string()
-      .min(1, "Potwierdzenie hasła jest wymagane"),
+      .regex(/^(?=.*[a-z])(?=.*[A-Z])/, "Hasło musi zawierać przynajmniej jedną małą i jedną wielką literę"),
+    confirmPassword: z.string().min(1, "Potwierdzenie hasła jest wymagane"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Hasła nie są identyczne",
@@ -97,7 +84,10 @@ export const settingsSchema = z.object({
     .union([z.instanceof(File), z.null()])
     .optional()
     .refine((file) => !file || file.size <= 5 * 1024 * 1024, "Rozmiar pliku nie może przekraczać 5MB")
-    .refine((file) => !file || ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type), "Dozwolone formaty: JPEG, PNG, WebP"),
+    .refine(
+      (file) => !file || ["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(file.type),
+      "Dozwolone formaty: JPEG, PNG, WebP"
+    ),
 });
 
 // Typy wywnioskowane ze schematów

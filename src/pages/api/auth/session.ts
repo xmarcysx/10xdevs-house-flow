@@ -10,7 +10,10 @@ export const GET: APIRoute = async ({ cookies, request }) => {
       headers: request.headers,
     });
 
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
 
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {

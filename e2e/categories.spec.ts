@@ -1,20 +1,20 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
 /**
  * Testy zarządzania kategoriami w aplikacji HouseFlow
  */
-test.describe('Zarządzanie kategoriami', () => {
-  test('Powinien umożliwić dodanie nowej kategorii, wyświetlenie listy i usunięcie', async ({ page }) => {
+test.describe("Zarządzanie kategoriami", () => {
+  test("Powinien umożliwić dodanie nowej kategorii, wyświetlenie listy i usunięcie", async ({ page }) => {
     // Sprawdź czy zmienne środowiskowe są dostępne
     const testEmail = process.env.E2E_USERNAME;
     const testPassword = process.env.E2E_PASSWORD;
 
     if (!testEmail || !testPassword) {
-      throw new Error('Brak wymaganych zmiennych środowiskowych E2E_USERNAME lub E2E_PASSWORD');
+      throw new Error("Brak wymaganych zmiennych środowiskowych E2E_USERNAME lub E2E_PASSWORD");
     }
 
     // 1. Zaloguj się do systemu
-    await page.goto('/login');
+    await page.goto("/login");
 
     // Wypełnij formularz danymi testowymi
     await page.locator('input[type="email"]').fill(testEmail);
@@ -24,10 +24,10 @@ test.describe('Zarządzanie kategoriami', () => {
     await page.locator('button:has-text("Zaloguj się")').click();
 
     // Sprawdź czy logowanie było pomyślne
-    await page.waitForURL((url) => !url.pathname.includes('/login'), { timeout: 10000 });
+    await page.waitForURL((url) => !url.pathname.includes("/login"), { timeout: 10000 });
 
     // 2. Przejdź do strony kategorii
-    await page.goto('/categories');
+    await page.goto("/categories");
 
     // Sprawdź czy jesteśmy na stronie kategorii
     await expect(page).toHaveURL(/.*categories/);
@@ -37,7 +37,7 @@ test.describe('Zarządzanie kategoriami', () => {
     await page.locator('[data-test-id="add-category-button"]').click();
 
     // Wypełnij nazwę kategorii
-    await page.locator('[data-test-id="category-name-input"]').fill('kategoria testowa');
+    await page.locator('[data-test-id="category-name-input"]').fill("kategoria testowa");
 
     // Kliknij przycisk "Dodaj kategorię" w modalu
     await page.locator('[data-test-id="submit-add-category-button"]').click();
@@ -49,7 +49,7 @@ test.describe('Zarządzanie kategoriami', () => {
     await expect(page.locator('[data-test-id="category-row-kategoria-testowa"]')).toBeVisible();
 
     // Sprawdź czy nazwa kategorii jest wyświetlana
-    await expect(page.locator('[data-test-id="category-name-kategoria-testowa"]')).toHaveText('kategoria testowa');
+    await expect(page.locator('[data-test-id="category-name-kategoria-testowa"]')).toHaveText("kategoria testowa");
 
     // 5. Usuń dodaną kategorię
     // Znajdź przycisk usunięcia dla kategorii "kategoria testowa"

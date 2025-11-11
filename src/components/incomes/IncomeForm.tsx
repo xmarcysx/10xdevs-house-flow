@@ -43,7 +43,7 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
   onSubmit,
   onCancel,
   isSubmitting,
-  serverError
+  serverError,
 }) => {
   const {
     register,
@@ -132,7 +132,9 @@ export const IncomeForm: React.FC<IncomeFormProps> = ({
           maxLength={500}
           className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.description ? "border-red-500" : ""}`}
         />
-        {errors.description && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>}
+        {errors.description && (
+          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.description.message}</p>
+        )}
       </div>
 
       <div>

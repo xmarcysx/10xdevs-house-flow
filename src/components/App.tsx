@@ -1,19 +1,19 @@
-import React from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
-import AuthGuard from './AuthGuard';
-import Navbar from './Navbar';
+import React from "react";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import AuthGuard from "./AuthGuard";
+import Navbar from "./Navbar";
 
 // Import page components
-import Dashboard from './Dashboard';
-import { ExpensesPage } from './expenses/ExpensesPage';
-import { IncomesPage } from './incomes/IncomesPage';
-import { GoalsPage } from './goals/GoalsPage';
-import ReportsPage from './reports/ReportsPage';
-import { CategoriesPage } from './categories/CategoriesPage';
-import SettingsPage from './settings/SettingsPage';
-import LoginForm from './LoginForm';
-import RegisterForm from './RegisterForm';
-import ResetPasswordForm from './ResetPasswordForm';
+import Dashboard from "./Dashboard";
+import { ExpensesPage } from "./expenses/ExpensesPage";
+import { IncomesPage } from "./incomes/IncomesPage";
+import { GoalsPage } from "./goals/GoalsPage";
+import ReportsPage from "./reports/ReportsPage";
+import { CategoriesPage } from "./categories/CategoriesPage";
+import SettingsPage from "./settings/SettingsPage";
+import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
+import ResetPasswordForm from "./ResetPasswordForm";
 
 const AuthLayout: React.FC<{ children: React.ReactNode; title: string }> = ({ children, title }) => (
   <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -32,9 +32,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode; title: string }> = ({ ch
           </a>
         </p>
       </div>
-      <div className="transform hover:scale-105 transition-all duration-300">
-        {children}
-      </div>
+      <div className="transform hover:scale-105 transition-all duration-300">{children}</div>
     </div>
   </div>
 );
@@ -51,86 +49,122 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         {/* Public auth routes */}
-        <Route path="/login" element={
-          <AuthLayout title="Zaloguj się">
-            <LoginForm />
-          </AuthLayout>
-        } />
-        <Route path="/register" element={
-          <AuthLayout title="Utwórz konto">
-            <RegisterForm />
-          </AuthLayout>
-        } />
-        <Route path="/reset-password" element={
-          <AuthLayout title="Resetuj hasło">
-            <ResetPasswordForm />
-          </AuthLayout>
-        } />
+        <Route
+          path="/login"
+          element={
+            <AuthLayout title="Zaloguj się">
+              <LoginForm />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <AuthLayout title="Utwórz konto">
+              <RegisterForm />
+            </AuthLayout>
+          }
+        />
+        <Route
+          path="/reset-password"
+          element={
+            <AuthLayout title="Resetuj hasło">
+              <ResetPasswordForm />
+            </AuthLayout>
+          }
+        />
 
         {/* Protected routes */}
-        <Route path="/" element={
-          <AuthGuard>
-            <MainLayout>
-              <Dashboard />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/expenses" element={
-          <AuthGuard>
-            <MainLayout>
-              <ExpensesPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/incomes" element={
-          <AuthGuard>
-            <MainLayout>
-              <IncomesPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/goals" element={
-          <AuthGuard>
-            <MainLayout>
-              <GoalsPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/reports" element={
-          <AuthGuard>
-            <MainLayout>
-              <ReportsPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/reports/goals" element={
-          <AuthGuard>
-            <MainLayout>
-              <ReportsPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/reports/monthly" element={
-          <AuthGuard>
-            <MainLayout>
-              <ReportsPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/categories" element={
-          <AuthGuard>
-            <MainLayout>
-              <CategoriesPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
-        <Route path="/settings" element={
-          <AuthGuard>
-            <MainLayout>
-              <SettingsPage />
-            </MainLayout>
-          </AuthGuard>
-        } />
+        <Route
+          path="/"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <Dashboard />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/expenses"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <ExpensesPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/incomes"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <IncomesPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/goals"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <GoalsPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/reports"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <ReportsPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/reports/goals"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <ReportsPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/reports/monthly"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <ReportsPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <CategoriesPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <AuthGuard>
+              <MainLayout>
+                <SettingsPage />
+              </MainLayout>
+            </AuthGuard>
+          }
+        />
       </Routes>
     </Router>
   );

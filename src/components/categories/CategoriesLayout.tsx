@@ -26,9 +26,7 @@ const CategoriesLayout: React.FC<CategoriesLayoutProps> = ({ children }) => {
         </div>
 
         {/* Categories Content */}
-        <div className="max-w-6xl mx-auto">
-          {children}
-        </div>
+        <div className="max-w-6xl mx-auto">{children}</div>
       </div>
 
       <style>{`

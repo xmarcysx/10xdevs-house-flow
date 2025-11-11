@@ -3,7 +3,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import type { GoalDTO, GoalContributionDTO, CreateGoalContributionCommand, UpdateGoalContributionCommand } from "../../types";
+import type {
+  GoalDTO,
+  GoalContributionDTO,
+  CreateGoalContributionCommand,
+  UpdateGoalContributionCommand,
+} from "../../types";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
@@ -28,9 +33,12 @@ const contributionFormSchema = z.object({
     .refine((val) => !isNaN(Date.parse(val)), "Data musi być prawidłową datą")
     .refine((val) => {
       const today = new Date();
-      const todayString = today.getFullYear() + '-' +
-                        String(today.getMonth() + 1).padStart(2, '0') + '-' +
-                        String(today.getDate()).padStart(2, '0');
+      const todayString =
+        today.getFullYear() +
+        "-" +
+        String(today.getMonth() + 1).padStart(2, "0") +
+        "-" +
+        String(today.getDate()).padStart(2, "0");
       return val <= todayString;
     }, "Data nie może być w przyszłości"),
   description: z.string().max(500, "Opis może mieć maksymalnie 500 znaków").optional(),
@@ -135,7 +143,9 @@ export const ContributionFormModal: React.FC<ContributionFormModalProps> = ({
                 onValueChange={(value) => setValue("goalId", value)}
                 disabled={loading || isSubmitting || mode === "edit"}
               >
-                <SelectTrigger className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.goalId ? "border-red-500" : ""}`}>
+                <SelectTrigger
+                  className={`bg-white/90 dark:bg-gray-800/90 border-2 border-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-400 shadow-sm ${errors.goalId ? "border-red-500" : ""}`}
+                >
                   <SelectValue placeholder="Wybierz cel oszczędnościowy" />
                 </SelectTrigger>
                 <SelectContent>
@@ -153,20 +163,29 @@ export const ContributionFormModal: React.FC<ContributionFormModalProps> = ({
           {/* Informacja o wybranym celu */}
           {selectedGoalId && mode === "add" && (
             <div>
-              <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Cel oszczędnościowy
-              </Label>
+              <Label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Cel oszczędnościowy</Label>
               <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 mt-1">
                 <div className="flex items-center">
-                  <svg className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  <svg
+                    className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
                   </svg>
                   <div>
                     <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
-                      {goals.find(g => g.id === selectedGoalId)?.name}
+                      {goals.find((g) => g.id === selectedGoalId)?.name}
                     </p>
                     <p className="text-xs text-blue-600 dark:text-blue-400">
-                      Zebrane: {goals.find(g => g.id === selectedGoalId)?.current_amount} / {goals.find(g => g.id === selectedGoalId)?.target_amount} PLN
+                      Zebrane: {goals.find((g) => g.id === selectedGoalId)?.current_amount} /{" "}
+                      {goals.find((g) => g.id === selectedGoalId)?.target_amount} PLN
                     </p>
                   </div>
                 </div>

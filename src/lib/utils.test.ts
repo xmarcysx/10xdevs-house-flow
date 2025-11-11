@@ -40,11 +40,8 @@ describe("cn", () => {
   });
 
   it("handles complex Tailwind combinations", () => {
-    expect(cn(
-      "flex items-center justify-between",
-      "px-4 py-2",
-      "bg-blue-500 hover:bg-blue-600"
-    )).toBe("flex items-center justify-between px-4 py-2 bg-blue-500 hover:bg-blue-600");
+    expect(cn("flex items-center justify-between", "px-4 py-2", "bg-blue-500 hover:bg-blue-600")).toBe(
+      "flex items-center justify-between px-4 py-2 bg-blue-500 hover:bg-blue-600"
+    );
   });
 });
-

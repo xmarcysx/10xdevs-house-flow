@@ -75,4 +75,3 @@ describe("Input", () => {
     expect(input).toHaveValue(123);
   });
 });
-

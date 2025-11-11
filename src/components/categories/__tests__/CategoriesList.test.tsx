@@ -246,7 +246,6 @@ describe("CategoriesList", () => {
       expect(mockOnPageChange).toHaveBeenCalledWith(2);
     });
 
-
     describe("Przyciski paginacji mobilnej", () => {
       it("powinien wyświetlić przyciski poprzednia/następna na mobile", () => {
         render(<CategoriesList {...defaultProps} />);

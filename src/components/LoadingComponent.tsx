@@ -10,20 +10,20 @@ interface LoadingComponentProps {
 export const LoadingComponent: React.FC<LoadingComponentProps> = ({
   message = "Ładowanie danych...",
   size = "md",
-  className = ""
+  className = "",
 }) => {
   // Rozmiary spinnera
   const spinnerSizes = {
     sm: "h-8 w-8",
     md: "h-16 w-16",
-    lg: "h-20 w-20"
+    lg: "h-20 w-20",
   };
 
   // Rozmiary tekstu
   const textSizes = {
     sm: "text-lg",
     md: "text-2xl",
-    lg: "text-3xl"
+    lg: "text-3xl",
   };
 
   // Dodaj style animacji przy montowaniu komponentu
@@ -59,10 +59,16 @@ export const LoadingComponent: React.FC<LoadingComponentProps> = ({
     <div className={`col-span-full flex items-center justify-center py-20 ${className}`}>
       <div className="flex flex-col items-center justify-center">
         <div className="relative mb-8">
-          <div className={`animate-spin rounded-full ${spinnerSizes[size]} border-4 border-blue-200 dark:border-blue-800`}></div>
-          <div className={`animate-spin rounded-full ${spinnerSizes[size]} border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 absolute top-0`}></div>
+          <div
+            className={`animate-spin rounded-full ${spinnerSizes[size]} border-4 border-blue-200 dark:border-blue-800`}
+          ></div>
+          <div
+            className={`animate-spin rounded-full ${spinnerSizes[size]} border-4 border-transparent border-t-blue-600 dark:border-t-blue-400 absolute top-0`}
+          ></div>
         </div>
-        <h3 className={`font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4 ${textSizes[size]}`}>
+        <h3
+          className={`font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4 ${textSizes[size]}`}
+        >
           {message}
         </h3>
         <p className="text-gray-600 dark:text-gray-400 text-lg">Przygotowujemy Twoje dane finansowe</p>

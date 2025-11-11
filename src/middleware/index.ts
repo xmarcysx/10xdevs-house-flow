@@ -34,7 +34,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // For API routes, check authentication
-  if (context.url.pathname.startsWith('/api/')) {
+  if (context.url.pathname.startsWith("/api/")) {
     try {
       const {
         data: { session },
@@ -48,16 +48,16 @@ export const onRequest = defineMiddleware(async (context, next) => {
         };
       } else {
         // Return 401 for API routes without authentication
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        return new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         });
       }
     } catch (error) {
-      console.error('Auth error in middleware:', error);
-      return new Response(JSON.stringify({ error: 'Authentication error' }), {
+      console.error("Auth error in middleware:", error);
+      return new Response(JSON.stringify({ error: "Authentication error" }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       });
     }
   } else {

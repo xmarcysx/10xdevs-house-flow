@@ -30,9 +30,9 @@ e2e/
 ### Korzystanie z POM
 
 ```typescript
-import { PageFactory } from './page-objects';
+import { PageFactory } from "./page-objects";
 
-test('Przykład testu', async ({ page }) => {
+test("Przykład testu", async ({ page }) => {
   const pageFactory = new PageFactory(page);
 
   // Inicjalizacja scenariusza
@@ -40,30 +40,36 @@ test('Przykład testu', async ({ page }) => {
 
   // Korzystanie z POM
   const modal = await pageFactory.categoriesPage.clickAddCategoryButton();
-  await modal.addNewCategory('Testowa kategoria');
+  await modal.addNewCategory("Testowa kategoria");
 
   // Asercje
-  await expect(pageFactory.categoriesPage.categoryExists('Testowa kategoria')).toBeTruthy();
+  await expect(pageFactory.categoriesPage.categoryExists("Testowa kategoria")).toBeTruthy();
 });
 ```
 
 ## Dostępne Page Object Models
 
 ### BasePage
+
 Klasa bazowa zawierająca wspólne metody:
+
 - `waitForPageLoad()` - czeka na załadowanie strony
 - `waitForElement(testId)` - czeka na element
 - `getByTestId(testId)` - pobiera element po data-test-id
 - `isElementVisible(testId)` - sprawdza widoczność elementu
 
 ### NavbarPageObject
+
 Metody nawigacji:
+
 - `goToDashboard()`, `goToCategories()`, `goToExpenses()`, itp.
 - `logout()` - wylogowanie użytkownika
 - `isUserLoggedIn()` - sprawdzenie statusu logowania
 
 ### CategoriesPageObject
+
 Metody strony kategorii:
+
 - `clickAddCategoryButton()` - kliknięcie przycisku dodaj kategorię
 - `categoryExists(name)` - sprawdzenie czy kategoria istnieje
 - `clickEditCategory(name)` - edycja kategorii
@@ -71,7 +77,9 @@ Metody strony kategorii:
 - `waitForCategoryToDisappear(name)` - czekanie na zniknięcie kategorii
 
 ### CategoryFormModalPageObject
+
 Metody modala formularza:
+
 - `fillCategoryName(name)` - wypełnienie pola nazwy
 - `clickAddCategory()` - kliknięcie "Dodaj kategorię"
 - `clickSaveChanges()` - kliknięcie "Zapisz zmiany"
@@ -80,14 +88,18 @@ Metody modala formularza:
 - `addNewCategory(name)` - skrócona metoda dodania kategorii
 
 ### CategoryItemPageObject
+
 Metody pojedynczego elementu kategorii:
+
 - `isVisible()` - sprawdzenie widoczności
 - `getCategoryName()` - pobranie nazwy
 - `clickEdit()`, `clickDelete()` - akcje na kategorii
 - `isDefaultCategory()`, `isCustomCategory()` - sprawdzenie typu kategorii
 
 ### LoginPageObject
+
 Metody strony logowania:
+
 - `isLoginPageVisible()` - sprawdzenie widoczności strony logowania
 - `fillEmail(email)`, `fillPassword(password)` - wypełnienie pól formularza
 - `clickLoginButton()` - kliknięcie przycisku logowania
@@ -99,7 +111,9 @@ Metody strony logowania:
 - `clickRegisterLink()`, `clickForgotPasswordLink()` - nawigacja do innych stron
 
 ### PageFactory
+
 Centralny punkt zarządzania POM:
+
 - `navbar` - instancja nawigacji
 - `categoriesPage` - instancja strony kategorii
 - `loginPage` - instancja strony logowania
@@ -139,11 +153,13 @@ npm run test:e2e:report
 ## Konwencje nazewnictwa
 
 ### Selektory data-test-id
+
 - `kebab-case` dla identyfikatorów
 - Opisowe nazwy: `add-category-button`, `category-name-input`
 - Dynamiczne dla elementów: `category-row-{nazwa}`, `edit-category-{nazwa}`
 
 ### Metody POM
+
 - `isSomething()` - sprawdzenie stanu (boolean)
 - `getSomething()` - pobranie wartości
 - `clickSomething()` - kliknięcie elementu
@@ -161,11 +177,11 @@ npm run test:e2e:report
 ## Przykład pełnego scenariusza testowego
 
 ```typescript
-test('Zarządzanie kategoriami - pełny przepływ', async ({ page }) => {
+test("Zarządzanie kategoriami - pełny przepływ", async ({ page }) => {
   const pageFactory = new PageFactory(page);
   await pageFactory.initializeForCategoriesScenario();
 
-  const testCategory = 'kategoria testowa';
+  const testCategory = "kategoria testowa";
 
   // Dodanie kategorii
   const modal = await pageFactory.categoriesPage.clickAddCategoryButton();

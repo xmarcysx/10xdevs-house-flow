@@ -42,7 +42,7 @@ export const GoalContributionsView: React.FC<GoalContributionsViewProps> = ({ go
     isLoading: goalLoading,
     error: goalError,
     fetchGoalWithContributions,
-    clearError: clearGoalError
+    clearError: clearGoalError,
   } = useGoalWithContributions();
 
   const {

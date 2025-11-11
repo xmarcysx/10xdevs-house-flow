@@ -15,8 +15,8 @@ Endpoint umożliwia uwierzytelnionym użytkownikom pobranie listy swoich wydatk�
     - `limit`: integer (domyślnie 10) - liczba elementów na stronie (1-100)
     - `year`: number - filtr po roku (2025-2030)
 - `month`: number - filtr po miesiącu (1-12)
-    - `category_id`: uuid - filtr po identyfikatorze kategorii
-    - `sort`: string (domyślnie "date DESC") - pole sortowania i kierunek (dozwolone: date, amount, created_at)
+  - `category_id`: uuid - filtr po identyfikatorze kategorii
+  - `sort`: string (domyślnie "date DESC") - pole sortowania i kierunek (dozwolone: date, amount, created_at)
 - **Request Body**: Brak
 
 ## 3. Wykorzystywane typy

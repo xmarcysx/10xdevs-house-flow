@@ -1,19 +1,19 @@
-import { expect, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
+import { expect, Locator } from "@playwright/test";
+import { BasePage } from "./BasePage";
 
 /**
  * Page Object Model dla strony logowania
  */
 export class LoginPageObject extends BasePage {
   // Selektory dla elementów formularza logowania
-  private readonly emailInput = () => this.getByTestId('login-email-input');
-  private readonly passwordInput = () => this.getByTestId('login-password-input');
-  private readonly submitButton = () => this.getByTestId('login-submit-button');
+  private readonly emailInput = () => this.getByTestId("login-email-input");
+  private readonly passwordInput = () => this.getByTestId("login-password-input");
+  private readonly submitButton = () => this.getByTestId("login-submit-button");
 
   // Selektory dla błędów walidacji
-  private readonly emailError = () => this.getByTestId('login-email-error');
-  private readonly passwordError = () => this.getByTestId('login-password-error');
-  private readonly apiError = () => this.getByTestId('login-api-error');
+  private readonly emailError = () => this.getByTestId("login-email-error");
+  private readonly passwordError = () => this.getByTestId("login-password-error");
+  private readonly apiError = () => this.getByTestId("login-api-error");
 
   // Linki nawigacyjne
   private readonly registerLink = () => this.page.locator('a[href="/register"]');
@@ -26,13 +26,13 @@ export class LoginPageObject extends BasePage {
     try {
       // Sprawdź czy jesteśmy na stronie logowania
       const currentUrl = this.page.url();
-      if (!currentUrl.includes('/login')) {
+      if (!currentUrl.includes("/login")) {
         return false;
       }
 
       // Sprawdź czy element formularza istnieje i jest widoczny
-      const emailInput = this.getByTestId('login-email-input');
-      await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+      const emailInput = this.getByTestId("login-email-input");
+      await emailInput.waitFor({ state: "visible", timeout: 10000 });
 
       return true;
     } catch {
@@ -68,21 +68,21 @@ export class LoginPageObject extends BasePage {
    * Sprawdza czy błąd walidacji email jest widoczny
    */
   async isEmailValidationErrorVisible(): Promise<boolean> {
-    return await this.isElementVisible('login-email-error');
+    return await this.isElementVisible("login-email-error");
   }
 
   /**
    * Sprawdza czy błąd walidacji hasła jest widoczny
    */
   async isPasswordValidationErrorVisible(): Promise<boolean> {
-    return await this.isElementVisible('login-password-error');
+    return await this.isElementVisible("login-password-error");
   }
 
   /**
    * Sprawdza czy błąd API jest widoczny
    */
   async isApiErrorVisible(): Promise<boolean> {
-    return await this.isElementVisible('login-api-error');
+    return await this.isElementVisible("login-api-error");
   }
 
   /**
@@ -113,7 +113,7 @@ export class LoginPageObject extends BasePage {
     const testPassword = process.env.E2E_PASSWORD;
 
     if (!testEmail || !testPassword) {
-      throw new Error('Brak danych testowych w zmiennych środowiskowych E2E_USERNAME lub E2E_PASSWORD');
+      throw new Error("Brak danych testowych w zmiennych środowiskowych E2E_USERNAME lub E2E_PASSWORD");
     }
 
     await this.login(testEmail, testPassword);
@@ -154,7 +154,7 @@ export class LoginPageObject extends BasePage {
   async isLoginButtonLoading(): Promise<boolean> {
     const button = this.submitButton();
     const buttonText = await button.textContent();
-    return buttonText?.includes('Logowanie...') ?? false;
+    return buttonText?.includes("Logowanie...") ?? false;
   }
 
   /**
@@ -169,7 +169,7 @@ export class LoginPageObject extends BasePage {
    * Przechodzi do strony logowania
    */
   async goto(): Promise<void> {
-    await this.page.goto('/login');
+    await this.page.goto("/login");
     await this.waitForPageLoad();
   }
 }

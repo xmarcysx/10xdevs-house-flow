@@ -24,14 +24,12 @@ const GoalItem: React.FC<{ goal: GoalDTO }> = ({ goal }) => {
       onClick={handleClick}
     >
       <div className="flex items-center justify-between mb-3">
-        <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors">{goal.name}</h4>
+        <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors">
+          {goal.name}
+        </h4>
         <div className="text-right">
-          <span className="text-sm font-bold text-gray-900 dark:text-white">
-            {goal.current_amount.toFixed(2)} zł
-          </span>
-          <span className="text-xs text-gray-500 dark:text-gray-400 block">
-            z {goal.target_amount.toFixed(2)} zł
-          </span>
+          <span className="text-sm font-bold text-gray-900 dark:text-white">{goal.current_amount.toFixed(2)} zł</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 block">z {goal.target_amount.toFixed(2)} zł</span>
         </div>
       </div>
 
@@ -64,7 +62,11 @@ const GoalItem: React.FC<{ goal: GoalDTO }> = ({ goal }) => {
         {isCompleted && (
           <span className="text-green-600 dark:text-green-400 font-bold bg-green-50 dark:bg-green-900/20 px-3 py-1 rounded-lg flex items-center gap-1">
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd"
+              ></path>
             </svg>
             Ukończone!
           </span>
@@ -83,7 +85,12 @@ const GoalsSummary: React.FC<GoalsSummaryProps> = ({ goals }) => {
         <div className="relative">
           <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
             </svg>
           </div>
         </div>
@@ -96,7 +103,12 @@ const GoalsSummary: React.FC<GoalsSummaryProps> = ({ goals }) => {
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <div className="w-16 h-16 bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
             </div>
             Brak celów do wyświetlenia

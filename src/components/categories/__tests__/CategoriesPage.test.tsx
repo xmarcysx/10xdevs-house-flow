@@ -15,7 +15,10 @@ vi.mock("../CategoriesList", () => ({
       <button data-testid="add-category-btn" onClick={onAdd}>
         Dodaj kategorię
       </button>
-      <button data-testid="edit-category-btn" onClick={() => onEdit({ id: "1", name: "Test Category", is_default: false, created_at: "2023-01-01" })}>
+      <button
+        data-testid="edit-category-btn"
+        onClick={() => onEdit({ id: "1", name: "Test Category", is_default: false, created_at: "2023-01-01" })}
+      >
         Edytuj kategorię
       </button>
       <button data-testid="delete-category-btn" onClick={() => onDelete("1")}>
@@ -88,9 +91,7 @@ describe("CategoriesPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockUseCategories.mockReturnValue(defaultMockHookReturn);
-    mockCategoriesLayout.mockImplementation(({ children }) => (
-      <div data-testid="categories-layout">{children}</div>
-    ));
+    mockCategoriesLayout.mockImplementation(({ children }) => <div data-testid="categories-layout">{children}</div>);
   });
 
   afterEach(() => {
@@ -259,10 +260,10 @@ describe("CategoriesPage", () => {
 
       await waitFor(() => {
         expect(mockCategoryFormModal).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          serverError: "Kategoria o tej nazwie już istnieje",
-        }),
-        undefined
+          expect.objectContaining({
+            serverError: "Kategoria o tej nazwie już istnieje",
+          }),
+          undefined
         );
       });
     });

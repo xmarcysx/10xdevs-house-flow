@@ -45,7 +45,6 @@ const ReportsPage: React.FC = () => {
 
         {/* Reports Content */}
         <div className="max-w-6xl mx-auto">
-
           {/* Karty raportów */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Raport miesięczny */}
@@ -56,12 +55,7 @@ const ReportsPage: React.FC = () => {
               <div className="p-8">
                 <div className="flex items-center mb-6">
                   <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -90,7 +84,11 @@ const ReportsPage: React.FC = () => {
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                      ></path>
                     </svg>
                     <span>CSV Export</span>
                   </div>
@@ -106,19 +104,15 @@ const ReportsPage: React.FC = () => {
               <div className="p-8">
                 <div className="flex items-center mb-6">
                   <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
+                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                      </svg>
-                    </div>
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      ></path>
+                    </svg>
+                  </div>
                   <div className="ml-4">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
                       Raport celów
@@ -127,8 +121,8 @@ const ReportsPage: React.FC = () => {
                   </div>
                 </div>
                 <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                  Zobacz postęp wszystkich swoich celów oszczędnościowych. Sprawdź, ile jeszcze musisz zaoszczędzić i kiedy
-                  możesz osiągnąć swoje cele.
+                  Zobacz postęp wszystkich swoich celów oszczędnościowych. Sprawdź, ile jeszcze musisz zaoszczędzić i
+                  kiedy możesz osiągnąć swoje cele.
                 </p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center text-green-600 dark:text-green-400 font-semibold group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors">
@@ -139,7 +133,11 @@ const ReportsPage: React.FC = () => {
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      <path
+                        fill-rule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clip-rule="evenodd"
+                      ></path>
                     </svg>
                     <span>Postęp w czasie</span>
                   </div>

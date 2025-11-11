@@ -34,7 +34,7 @@ export class IncomesService {
 
       if (year && month) {
         // Filtruj po konkretnym miesiącu roku
-        startDate = `${year}-${month.toString().padStart(2, '0')}-01`;
+        startDate = `${year}-${month.toString().padStart(2, "0")}-01`;
         endDate = new Date(year, month, 0).toISOString().split("T")[0]; // Ostatni dzień miesiąca
       } else if (year) {
         // Filtruj po całym roku
@@ -43,7 +43,7 @@ export class IncomesService {
       } else {
         // Tylko miesiąc - użyj bieżącego roku (fallback, choć nie powinno się zdarzyć)
         const currentYear = new Date().getFullYear();
-        startDate = `${currentYear}-${month!.toString().padStart(2, '0')}-01`;
+        startDate = `${currentYear}-${month!.toString().padStart(2, "0")}-01`;
         endDate = new Date(currentYear, month!, 0).toISOString().split("T")[0];
       }
 
@@ -69,7 +69,7 @@ export class IncomesService {
 
       if (year && month) {
         // Filtruj po konkretnym miesiącu roku
-        startDate = `${year}-${month.toString().padStart(2, '0')}-01`;
+        startDate = `${year}-${month.toString().padStart(2, "0")}-01`;
         endDate = new Date(year, month, 0).toISOString().split("T")[0]; // Ostatni dzień miesiąca
       } else if (year) {
         // Filtruj po całym roku
@@ -78,7 +78,7 @@ export class IncomesService {
       } else {
         // Tylko miesiąc - użyj bieżącego roku (fallback, choć nie powinno się zdarzyć)
         const currentYear = new Date().getFullYear();
-        startDate = `${currentYear}-${month!.toString().padStart(2, '0')}-01`;
+        startDate = `${currentYear}-${month!.toString().padStart(2, "0")}-01`;
         endDate = new Date(currentYear, month!, 0).toISOString().split("T")[0];
       }
 

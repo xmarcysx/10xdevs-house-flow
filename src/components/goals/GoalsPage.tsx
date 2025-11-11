@@ -254,81 +254,81 @@ export const GoalsPage: React.FC = () => {
     <GoalsLayout>
       <div className="space-y-6">
         {/* Komunikaty błędów */}
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
-            </div>
-            <div className="ml-auto pl-3">
-              <button
-                onClick={handleClearError}
-                className="inline-flex rounded-md bg-red-50 dark:bg-red-900/20 p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
-              >
-                <span className="sr-only">Zamknij</span>
-                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        {error && (
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
                   <path
                     fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
                     clipRule="evenodd"
                   />
                 </svg>
-              </button>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+              </div>
+              <div className="ml-auto pl-3">
+                <button
+                  onClick={handleClearError}
+                  className="inline-flex rounded-md bg-red-50 dark:bg-red-900/20 p-1.5 text-red-500 hover:bg-red-100 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+                >
+                  <span className="sr-only">Zamknij</span>
+                  <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Lista celów */}
-      <GoalsList
-        goals={goals}
-        pagination={pagination}
-        loading={loading}
-        onAdd={handleAddGoal}
-        onAddContribution={handleAddContribution}
-        onEdit={handleEditGoal}
-        onDelete={handleDeleteGoal}
-        onPageChange={handlePageChange}
-      />
+        {/* Lista celów */}
+        <GoalsList
+          goals={goals}
+          pagination={pagination}
+          loading={loading}
+          onAdd={handleAddGoal}
+          onAddContribution={handleAddContribution}
+          onEdit={handleEditGoal}
+          onDelete={handleDeleteGoal}
+          onPageChange={handlePageChange}
+        />
 
-      {/* Modal formularza */}
-      <GoalForm
-        isOpen={modalState.isOpen}
-        mode={modalState.mode}
-        goal={modalState.goal}
-        onSave={handleSubmitForm}
-        onCancel={handleCloseModal}
-        loading={submitting}
-      />
+        {/* Modal formularza */}
+        <GoalForm
+          isOpen={modalState.isOpen}
+          mode={modalState.mode}
+          goal={modalState.goal}
+          onSave={handleSubmitForm}
+          onCancel={handleCloseModal}
+          loading={submitting}
+        />
 
-      {/* Modal formularza wpłaty */}
-      <ContributionFormModal
-        isOpen={contributionModalState.isOpen}
-        mode="add"
-        goals={goals}
-        selectedGoalId={contributionModalState.selectedGoalId}
-        onSave={(data) => handleSubmitContributionForm(data, contributionModalState.selectedGoalId)}
-        onCancel={handleCloseContributionModal}
-        loading={contributionSubmitting}
-        serverError={contributionModalState.serverError}
-      />
+        {/* Modal formularza wpłaty */}
+        <ContributionFormModal
+          isOpen={contributionModalState.isOpen}
+          mode="add"
+          goals={goals}
+          selectedGoalId={contributionModalState.selectedGoalId}
+          onSave={(data) => handleSubmitContributionForm(data, contributionModalState.selectedGoalId)}
+          onCancel={handleCloseContributionModal}
+          loading={contributionSubmitting}
+          serverError={contributionModalState.serverError}
+        />
 
-      {/* Dialog potwierdzenia usunięcia */}
-      <DeleteConfirmationDialog
-        isOpen={deleteDialogState.isOpen}
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        loading={submitting}
-      />
+        {/* Dialog potwierdzenia usunięcia */}
+        <DeleteConfirmationDialog
+          isOpen={deleteDialogState.isOpen}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          loading={submitting}
+        />
       </div>
     </GoalsLayout>
   );

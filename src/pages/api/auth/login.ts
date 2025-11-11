@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (!validationResult.success) {
       return new Response(
         JSON.stringify({
-          error: validationResult.error.issues[0].message
+          error: validationResult.error.issues[0].message,
         }),
         {
           status: 400,
@@ -46,30 +46,33 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (data.user) {
       try {
         const { error: updateError } = await supabase
-          .from('users')
+          .from("users")
           .update({
-            last_login: new Date().toISOString()
+            last_login: new Date().toISOString(),
           })
-          .eq('id', data.user.id);
+          .eq("id", data.user.id);
 
         if (updateError) {
-          console.error('Error updating last_login:', updateError);
+          console.error("Error updating last_login:", updateError);
           // Nie przerywamy logowania jeśli aktualizacja się nie powiedzie
           // Kolumna może jeszcze nie istnieć
         }
       } catch (updateError) {
-        console.error('Error updating last_login:', updateError);
+        console.error("Error updating last_login:", updateError);
         // Kontynuujemy - użytkownik jest zalogowany
       }
     }
 
-    return new Response(JSON.stringify({
-      user: data.user,
-      session: data.session
-    }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({
+        user: data.user,
+        session: data.session,
+      }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
     console.error("Login error:", error);
     return new Response(JSON.stringify({ error: "Wystąpił błąd podczas logowania" }), {

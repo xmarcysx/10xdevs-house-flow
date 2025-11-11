@@ -1,7 +1,14 @@
 import type { Database } from "../db/database.types";
 import type { SupabaseClient } from "../db/supabase.client";
 import type { GetGoalsQuery } from "../lib/validation/goals.validation";
-import type { CreateGoalCommand, GoalDTO, GoalWithContributionsDTO, PaginationDTO, UpdateGoalCommand, UpdateGoalDTO } from "../types";
+import type {
+  CreateGoalCommand,
+  GoalDTO,
+  GoalWithContributionsDTO,
+  PaginationDTO,
+  UpdateGoalCommand,
+  UpdateGoalDTO,
+} from "../types";
 
 export class GoalsService {
   constructor(private supabase: SupabaseClient<Database>) {}

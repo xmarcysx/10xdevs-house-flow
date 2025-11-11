@@ -26,9 +26,7 @@ const SettingsLayout: React.FC<SettingsLayoutProps> = ({ children }) => {
         </div>
 
         {/* Settings Content */}
-        <div className="max-w-2xl mx-auto">
-          {children}
-        </div>
+        <div className="max-w-2xl mx-auto">{children}</div>
       </div>
 
       <style>{`

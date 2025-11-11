@@ -103,9 +103,7 @@ const SettingsForm: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             {/* Sekcja awatara */}
             <div className="space-y-4">
-              <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                Zdjęcie profilowe
-              </Label>
+              <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Zdjęcie profilowe</Label>
               <div className="flex items-center space-x-6">
                 <Avatar className="w-20 h-20 ring-4 ring-blue-500/20">
                   <AvatarImage src={avatarPreview || undefined} alt="Avatar" />
@@ -129,7 +127,11 @@ const SettingsForm: React.FC = () => {
               {errors.avatar && (
                 <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    ></path>
                   </svg>
                   {errors.avatar.message}
                 </p>
@@ -138,9 +140,17 @@ const SettingsForm: React.FC = () => {
 
             {/* Pole Imię */}
             <div className="space-y-3">
-              <Label htmlFor="firstName" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <Label
+                htmlFor="firstName"
+                className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+              >
                 <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  ></path>
                 </svg>
                 Imię *
               </Label>
@@ -160,7 +170,11 @@ const SettingsForm: React.FC = () => {
               {errors.firstName && (
                 <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    ></path>
                   </svg>
                   {errors.firstName.message}
                 </p>
@@ -169,9 +183,17 @@ const SettingsForm: React.FC = () => {
 
             {/* Pole Nazwisko */}
             <div className="space-y-3">
-              <Label htmlFor="lastName" className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <Label
+                htmlFor="lastName"
+                className="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2"
+              >
                 <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  ></path>
                 </svg>
                 Nazwisko *
               </Label>
@@ -191,7 +213,11 @@ const SettingsForm: React.FC = () => {
               {errors.lastName && (
                 <p className="text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    ></path>
                   </svg>
                   {errors.lastName.message}
                 </p>
@@ -203,7 +229,11 @@ const SettingsForm: React.FC = () => {
               <div className="rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4">
                 <p className="text-sm text-red-800 dark:text-red-200 flex items-center gap-2">
                   <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                      clip-rule="evenodd"
+                    ></path>
                   </svg>
                   {error}
                 </p>

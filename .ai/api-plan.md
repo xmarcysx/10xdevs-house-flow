@@ -42,7 +42,6 @@
   - Kody powodzenia: 200 OK.
   - Kody błędów: 400 Bad Request (nazwa zajęta), 401 Unauthorized, 404 Not Found, 422 Unprocessable Entity.
 
-
 ### Incomes
 
 - **GET /api/incomes**

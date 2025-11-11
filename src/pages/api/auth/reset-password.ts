@@ -13,7 +13,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (!validationResult.success) {
       return new Response(
         JSON.stringify({
-          error: validationResult.error.issues[0].message
+          error: validationResult.error.issues[0].message,
         }),
         {
           status: 400,
@@ -27,12 +27,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       headers: request.headers,
     });
 
-    const { error } = await supabase.auth.resetPasswordForEmail(
-      validationResult.data.email,
-      {
-        redirectTo: `${new URL(request.url).origin}/reset-password`,
-      }
-    );
+    const { error } = await supabase.auth.resetPasswordForEmail(validationResult.data.email, {
+      redirectTo: `${new URL(request.url).origin}/reset-password`,
+    });
 
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {
@@ -44,7 +41,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Link do resetowania hasła został wysłany na Twój adres email"
+        message: "Link do resetowania hasła został wysłany na Twój adres email",
       }),
       {
         status: 200,

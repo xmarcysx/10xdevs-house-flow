@@ -16,7 +16,14 @@ interface IncomesTableProps {
   onPageChange?: (page: number) => void;
 }
 
-export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDelete, onAdd, isLoading, onPageChange }) => {
+export const IncomesTable: React.FC<IncomesTableProps> = ({
+  data,
+  onEdit,
+  onDelete,
+  onAdd,
+  isLoading,
+  onPageChange,
+}) => {
   // Stan ładowania
   if (isLoading) {
     return <LoadingComponent message="Ładowanie wpływów..." size="sm" className="col-span-full" />;
@@ -65,30 +72,30 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
       <div className="overflow-x-auto">
         <div className="mx-6">
           <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Data
-              </TableHead>
-              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Kwota
-              </TableHead>
-              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Opis
-              </TableHead>
-              <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Źródło
-              </TableHead>
-              <TableHead className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Akcje
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 divide-y divide-gray-200 dark:divide-gray-700">
-            {data.incomes.map((income) => (
-              <IncomeRow key={income.id} income={income} onEdit={onEdit} onDelete={onDelete} />
-            ))}
-          </TableBody>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Data
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Kwota
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Opis
+                </TableHead>
+                <TableHead className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Źródło
+                </TableHead>
+                <TableHead className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                  Akcje
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="bg-gradient-to-br from-white/90 via-white/80 to-white/70 dark:from-gray-800/90 dark:via-gray-800/80 dark:to-gray-800/70 divide-y divide-gray-200 dark:divide-gray-700">
+              {data.incomes.map((income) => (
+                <IncomeRow key={income.id} income={income} onEdit={onEdit} onDelete={onDelete} />
+              ))}
+            </TableBody>
           </Table>
         </div>
       </div>
@@ -116,8 +123,11 @@ export const IncomesTable: React.FC<IncomesTableProps> = ({ data, onEdit, onDele
             <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
               <div>
                 <p className="text-sm text-gray-700 dark:text-gray-300">
-                  Wyświetlanie <span className="font-medium">{(data.pagination.page - 1) * data.pagination.limit + 1}</span> do{" "}
-                  <span className="font-medium">{Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)}</span>{" "}
+                  Wyświetlanie{" "}
+                  <span className="font-medium">{(data.pagination.page - 1) * data.pagination.limit + 1}</span> do{" "}
+                  <span className="font-medium">
+                    {Math.min(data.pagination.page * data.pagination.limit, data.pagination.total)}
+                  </span>{" "}
                   z <span className="font-medium">{data.pagination.total}</span> wyników
                 </p>
               </div>

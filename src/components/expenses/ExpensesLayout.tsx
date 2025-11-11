@@ -26,9 +26,7 @@ const ExpensesLayout: React.FC<ExpensesLayoutProps> = ({ children }) => {
         </div>
 
         {/* Expenses Content */}
-        <div className="max-w-6xl mx-auto">
-          {children}
-        </div>
+        <div className="max-w-6xl mx-auto">{children}</div>
       </div>
 
       <style>{`

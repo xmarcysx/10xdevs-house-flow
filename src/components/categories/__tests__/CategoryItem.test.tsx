@@ -166,7 +166,6 @@ describe("CategoryItem", () => {
     });
   });
 
-
   describe("Stylowanie", () => {
     it("powinien mieć odpowiednie klasy CSS dla wiersza tabeli", () => {
       const { container } = render(<CategoryItem {...defaultProps} />);
@@ -185,8 +184,23 @@ describe("CategoryItem", () => {
       const { container } = render(<CategoryItem {...defaultProps} />);
 
       const cells = container.querySelectorAll("td");
-      expect(cells[0]).toHaveClass("px-6", "py-4", "whitespace-nowrap", "text-sm", "font-medium", "text-gray-900", "dark:text-white");
-      expect(cells[1]).toHaveClass("px-6", "py-4", "whitespace-nowrap", "text-sm", "text-gray-500", "dark:text-gray-400");
+      expect(cells[0]).toHaveClass(
+        "px-6",
+        "py-4",
+        "whitespace-nowrap",
+        "text-sm",
+        "font-medium",
+        "text-gray-900",
+        "dark:text-white"
+      );
+      expect(cells[1]).toHaveClass(
+        "px-6",
+        "py-4",
+        "whitespace-nowrap",
+        "text-sm",
+        "text-gray-500",
+        "dark:text-gray-400"
+      );
       expect(cells[2]).toHaveClass("px-6", "py-4", "whitespace-nowrap", "text-right", "text-sm", "font-medium");
     });
 
@@ -196,8 +210,18 @@ describe("CategoryItem", () => {
       const editButton = screen.getByTitle("Edytuj kategorię");
       const deleteButton = screen.getByTitle("Usuń kategorię");
 
-      expect(editButton).toHaveClass("text-blue-600", "hover:text-blue-900", "dark:text-blue-400", "dark:hover:text-blue-300");
-      expect(deleteButton).toHaveClass("text-red-600", "hover:text-red-900", "dark:text-red-400", "dark:hover:text-red-300");
+      expect(editButton).toHaveClass(
+        "text-blue-600",
+        "hover:text-blue-900",
+        "dark:text-blue-400",
+        "dark:hover:text-blue-300"
+      );
+      expect(deleteButton).toHaveClass(
+        "text-red-600",
+        "hover:text-red-900",
+        "dark:text-red-400",
+        "dark:hover:text-red-300"
+      );
     });
   });
 

@@ -75,7 +75,11 @@ describe("Button", () => {
   });
 
   it("forwards other props to button element", () => {
-    render(<Button type="submit" data-testid="submit-button">Submit</Button>);
+    render(
+      <Button type="submit" data-testid="submit-button">
+        Submit
+      </Button>
+    );
 
     const button = screen.getByTestId("submit-button");
     expect(button).toHaveAttribute("type", "submit");
@@ -93,4 +97,3 @@ describe("Button", () => {
     expect(link).toHaveClass("bg-primary", "text-primary-foreground");
   });
 });
-

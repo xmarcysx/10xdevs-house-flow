@@ -7,7 +7,7 @@ import { supabaseClient } from "../../db/supabase.client";
 const errorTranslations: Record<string, string> = {
   "Invalid request": "Nieprawidłowe żądanie",
   "User not found": "Użytkownik nie został znaleziony",
-  "Unauthorized": "Brak uprawnień",
+  Unauthorized: "Brak uprawnień",
   "File too large": "Plik jest zbyt duży",
   "Invalid file type": "Nieprawidłowy typ pliku",
   "Upload failed": "Przesyłanie pliku nie powiodło się",
@@ -132,8 +132,8 @@ export const useSettings = (): UseSettingsReturn => {
         await supabaseClient.auth.refreshSession();
 
         // Wyślij event do Navbar, żeby odświeżył dane profilu
-        window.localStorage.setItem('profileUpdated', Date.now().toString());
-        window.dispatchEvent(new Event('profileUpdated'));
+        window.localStorage.setItem("profileUpdated", Date.now().toString());
+        window.dispatchEvent(new Event("profileUpdated"));
 
         toast.success("Profil został zaktualizowany pomyślnie!");
 

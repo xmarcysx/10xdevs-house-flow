@@ -45,7 +45,11 @@ const Navbar: React.FC = () => {
   const firstName = user?.user_metadata?.first_name || "";
   const lastName = user?.user_metadata?.last_name || "";
   const displayName = firstName && lastName ? `${firstName} ${lastName}` : userEmail;
-  const userInitials = firstName ? firstName.charAt(0).toUpperCase() : userEmail ? userEmail.charAt(0).toUpperCase() : "?";
+  const userInitials = firstName
+    ? firstName.charAt(0).toUpperCase()
+    : userEmail
+      ? userEmail.charAt(0).toUpperCase()
+      : "?";
 
   // Pobierz dane profilu przy zmianie ścieżki lub autoryzacji
   useEffect(() => {
@@ -61,10 +65,10 @@ const Navbar: React.FC = () => {
     };
 
     // Nasłuchuj zmian historii przeglądarki
-    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener("popstate", handleLocationChange);
 
     // Sprawdź czy jesteśmy w kontekście React Router
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       // Próba aktualizacji przy każdej zmianie (dla React Router)
       const interval = setInterval(() => {
         if (window.location.pathname !== currentPath) {
@@ -73,13 +77,13 @@ const Navbar: React.FC = () => {
       }, 100);
 
       return () => {
-        window.removeEventListener('popstate', handleLocationChange);
+        window.removeEventListener("popstate", handleLocationChange);
         clearInterval(interval);
       };
     }
 
     return () => {
-      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener("popstate", handleLocationChange);
     };
   }, [currentPath]);
 
@@ -116,9 +120,8 @@ const Navbar: React.FC = () => {
           {/* Navigation Menu */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
-              const isActive = item.href === "/reports"
-                ? currentPath.startsWith("/reports")
-                : currentPath === item.href;
+              const isActive =
+                item.href === "/reports" ? currentPath.startsWith("/reports") : currentPath === item.href;
               return (
                 <Link
                   key={item.label}

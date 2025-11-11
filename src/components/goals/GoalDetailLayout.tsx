@@ -26,9 +26,7 @@ const GoalDetailLayout: React.FC<GoalDetailLayoutProps> = ({ children }) => {
         </div>
 
         {/* Goal Detail Content */}
-        <div className="max-w-6xl mx-auto">
-          {children}
-        </div>
+        <div className="max-w-6xl mx-auto">{children}</div>
       </div>
 
       <style>{`

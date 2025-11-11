@@ -20,9 +20,17 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ category, onEdit, on
   };
 
   return (
-    <tr data-test-id={`category-row-${category.name.toLowerCase().replace(/\s+/g, '-')}`} className="hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-indigo-50/30 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20 transition-all duration-200">
+    <tr
+      data-test-id={`category-row-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+      className="hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-indigo-50/30 dark:hover:from-blue-900/20 dark:hover:to-indigo-900/20 transition-all duration-200"
+    >
       {/* Nazwa kategorii */}
-      <td data-test-id={`category-name-${category.name.toLowerCase().replace(/\s+/g, '-')}`} className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">{category.name}</td>
+      <td
+        data-test-id={`category-name-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+        className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white"
+      >
+        {category.name}
+      </td>
 
       {/* Typ kategorii */}
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
@@ -37,7 +45,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ category, onEdit, on
           <button
             type="button"
             onClick={() => onEdit(category)}
-            data-test-id={`edit-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+            data-test-id={`edit-category-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
             className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300 disabled:opacity-50 disabled:cursor-not-allowed"
             title={category.is_default ? "Kategorie domyślne można tylko edytować" : "Edytuj kategorię"}
           >
@@ -53,7 +61,7 @@ export const CategoryItem: React.FC<CategoryItemProps> = ({ category, onEdit, on
           <button
             type="button"
             onClick={() => onDelete(category.id)}
-            data-test-id={`delete-category-${category.name.toLowerCase().replace(/\s+/g, '-')}`}
+            data-test-id={`delete-category-${category.name.toLowerCase().replace(/\s+/g, "-")}`}
             className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed"
             title={category.is_default ? "Nie można usunąć domyślnej kategorii" : "Usuń kategorię"}
             disabled={category.is_default}
