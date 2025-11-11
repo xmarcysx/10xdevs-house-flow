@@ -11,6 +11,14 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      global: "globalThis",
+    },
   },
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    platformProxy: {
+      // Enable platform proxy to access Node.js globals
+      persist: true,
+    },
+  }),
 });

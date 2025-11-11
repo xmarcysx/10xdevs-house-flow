@@ -1,2 +1,10 @@
 name = "10xdevs-house-flow"
 pages_build_output_dir = "dist"
+
+[vars]
+PUBLIC_SUPABASE_URL = "your-supabase-url"
+PUBLIC_SUPABASE_KEY = "your-supabase-key"
+
+[[kv_namespaces]]
+binding = "SESSION"
+id = "your-session-kv-id"
