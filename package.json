@@ -8,6 +8,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "dev:e2e": "powershell -Command \"try { Stop-Process -Id (Get-NetTCPConnection -LocalPort 4321 -ErrorAction Stop).OwningProcess -Force -ErrorAction Stop } catch {}; astro dev --mode test\"",
+    "dev:e2e:ci": "astro dev --mode test",
     "test": "vitest",
     "test:run": "vitest run",
     "test:watch": "vitest --watch",
