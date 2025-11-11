@@ -1,0 +1,60 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - generic [ref=e4]:
+      - heading "Zaloguj się" [level=2] [ref=e5]
+      - paragraph [ref=e6]:
+        - text: Lub
+        - link "utwórz nowe konto" [ref=e7] [cursor=pointer]:
+          - /url: /register
+    - generic [ref=e10]:
+      - generic [ref=e11]:
+        - generic [ref=e12]: Logowanie
+        - generic [ref=e13]: Wprowadź swoje dane aby się zalogować
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]:
+            - generic [ref=e17]:
+              - img [ref=e18]
+              - text: Adres email *
+            - textbox "Adres email *" [ref=e20]:
+              - /placeholder: twoj@email.com
+          - generic [ref=e21]:
+            - generic [ref=e22]:
+              - img [ref=e23]
+              - text: Hasło *
+            - textbox "Hasło *" [ref=e25]:
+              - /placeholder: Wprowadź hasło
+          - button "Zaloguj się" [ref=e26]:
+            - generic [ref=e27]:
+              - img
+              - text: Zaloguj się
+        - generic [ref=e28]:
+          - button "Zapomniałeś hasła?" [ref=e30]:
+            - img [ref=e31]
+            - text: Zapomniałeś hasła?
+          - paragraph [ref=e34]:
+            - text: Nie masz konta?
+            - button "Zarejestruj się" [ref=e35]:
+              - text: Zarejestruj się
+              - img [ref=e36]
+  - generic:
+    - region "Notifications alt+T"
+  - generic [ref=e40]:
+    - button "Menu" [ref=e41]:
+      - img [ref=e43]
+      - generic: Menu
+    - button "Inspect" [ref=e47]:
+      - img [ref=e49]
+      - generic: Inspect
+    - button "Audit" [ref=e51]:
+      - generic [ref=e52]:
+        - img [ref=e53]
+        - img [ref=e56]
+      - generic: Audit
+    - button "Settings" [ref=e59]:
+      - img [ref=e61]
+      - generic: Settings
+```

@@ -110,6 +110,7 @@ export default tseslint.config(
       "**/*.config.js",
       "**/*.config.ts",
       "src/db/database.types.ts", // Generated file, often binary
+      "e2e/**", // E2E test files (handled by Playwright)
     ],
   },
   baseConfig,

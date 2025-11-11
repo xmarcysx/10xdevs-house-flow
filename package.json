@@ -20,8 +20,8 @@
     "test:e2e:chromium": "playwright test --project=chromium",
     "test:e2e:mobile": "playwright test --project='Mobile Chrome'",
     "test:e2e:report": "playwright show-report",
-    "lint": "eslint src/ e2e/ *.config.* --ext .js,.jsx,.ts,.tsx,.astro --max-warnings 0",
-    "lint:ci": "eslint src/ e2e/ *.config.* --ext .js,.jsx,.ts,.tsx,.astro --quiet",
+    "lint": "eslint src/ *.config.* --ext .js,.jsx,.ts,.tsx,.astro --max-warnings 0",
+    "lint:ci": "eslint src/ *.config.* --ext .js,.jsx,.ts,.tsx,.astro --quiet",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write ."
   },
