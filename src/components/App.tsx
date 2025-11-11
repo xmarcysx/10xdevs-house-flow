@@ -1,19 +1,19 @@
 import React from "react";
-import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, HashRouter as Router, Routes } from "react-router-dom";
 import AuthGuard from "./AuthGuard";
 import Navbar from "./Navbar";
 
 // Import page components
+import { CategoriesPage } from "./categories/CategoriesPage";
 import Dashboard from "./Dashboard";
 import { ExpensesPage } from "./expenses/ExpensesPage";
-import { IncomesPage } from "./incomes/IncomesPage";
 import { GoalsPage } from "./goals/GoalsPage";
-import ReportsPage from "./reports/ReportsPage";
-import { CategoriesPage } from "./categories/CategoriesPage";
-import SettingsPage from "./settings/SettingsPage";
+import { IncomesPage } from "./incomes/IncomesPage";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import ReportsPage from "./reports/ReportsPage";
 import ResetPasswordForm from "./ResetPasswordForm";
+import SettingsPage from "./settings/SettingsPage";
 
 const AuthLayout: React.FC<{ children: React.ReactNode; title: string }> = ({ children, title }) => (
   <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
