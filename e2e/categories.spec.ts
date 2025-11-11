@@ -27,7 +27,7 @@ test.describe("Zarządzanie kategoriami", () => {
     await page.waitForURL((url) => !url.pathname.includes("/login"), { timeout: 10000 });
 
     // 2. Przejdź do strony kategorii
-    await page.goto("/categories");
+    await page.goto("/#/categories");
 
     // Sprawdź czy jesteśmy na stronie kategorii
     await expect(page).toHaveURL(/.*categories/);

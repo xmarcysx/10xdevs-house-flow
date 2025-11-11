@@ -27,14 +27,14 @@ test.describe("Zarządzanie wpływami", () => {
     await page.waitForURL((url) => !url.pathname.includes("/login"), { timeout: 10000 });
 
     // 2. Przejdź do strony wpływów
-    await page.goto("/incomes");
+    await page.goto("/#/incomes");
 
     // Sprawdź czy jesteśmy na stronie wpływów
     await expect(page).toHaveURL(/.*incomes/);
 
     // 3. Dodaj nowy wpływ
-    // Kliknij przycisk "Dodaj wpływ"
-    await page.locator('button:has-text("Dodaj wpływ")').click();
+    // Kliknij przycisk "Dodaj pierwszy wpływ"
+    await page.locator('button:has-text("Dodaj pierwszy wpływ")').click();
 
     // Wypełnij formularz danymi testowymi
     await page.locator("#amount").fill("1000");

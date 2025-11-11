@@ -8,6 +8,7 @@ import {
 } from "../../../../lib/validation/goal-contributions.validation";
 import { GoalContributionsService } from "../../../../services/goal-contributions.service";
 import type { MessageDTO } from "../../../../types";
+import { requireAuth } from "../../../../lib/api-helpers";
 
 /**
  * GET /api/goals/{goal_id}/contributions
@@ -15,6 +16,11 @@ import type { MessageDTO } from "../../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz goal_id z parametrów ścieżki
     const { goal_id } = context.params;
 
@@ -54,8 +60,8 @@ export const GET: APIRoute = async (context) => {
     // Utwórz instancję GoalContributionsService
     const goalContributionsService = new GoalContributionsService(context.locals.supabase);
 
-    // Pobierz wpłaty używając domyślnego ID użytkownika
-    const result = await goalContributionsService.getGoalContributions(goal_id, context.locals.user.id, query);
+    // Pobierz wpłaty używając ID aktualnie zalogowanego użytkownika
+    const result = await goalContributionsService.getGoalContributions(goal_id, user.id, query);
 
     // Zwróć wpłaty z informacjami o paginacji
     return new Response(JSON.stringify(result), {
@@ -79,6 +85,11 @@ export const GET: APIRoute = async (context) => {
  */
 export const POST: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz goal_id z parametrów ścieżki
     const { goal_id } = context.params;
 
@@ -131,8 +142,8 @@ export const POST: APIRoute = async (context) => {
     // Utwórz instancję GoalContributionsService
     const goalContributionsService = new GoalContributionsService(context.locals.supabase);
 
-    // Utwórz wpłatę używając domyślnego ID użytkownika
-    const contribution = await goalContributionsService.create(goal_id, command, context.locals.user.id);
+    // Utwórz wpłatę używając ID aktualnie zalogowanego użytkownika
+    const contribution = await goalContributionsService.create(goal_id, command, user.id);
 
     // Zwróć utworzoną wpłatę z kodem 201
     return new Response(JSON.stringify(contribution), {

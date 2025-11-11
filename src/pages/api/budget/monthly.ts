@@ -5,6 +5,7 @@ import {
 } from "../../../lib/validation/budget.validation";
 import { BudgetService } from "../../../services/budget.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * GET /api/budget/monthly
@@ -12,6 +13,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz parametry query z URL
     const url = new URL(context.request.url);
     const queryParams = url.searchParams;
@@ -32,7 +38,7 @@ export const GET: APIRoute = async (context) => {
     const budgetService = new BudgetService(context.locals.supabase);
 
     // Pobierz miesięczne podsumowanie budżetu używając ID aktualnie zalogowanego użytkownika
-    const monthlyBudget = await budgetService.getMonthlyBudget(context.locals.user.id, query.month);
+    const monthlyBudget = await budgetService.getMonthlyBudget(user.id, query.month);
 
     // Zwróć podsumowanie budżetu
     return new Response(JSON.stringify(monthlyBudget), {

@@ -15,7 +15,7 @@ interface NavItem {
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [currentPath, setCurrentPath] = useState(window.location.hash.replace('#', '') || '/');
   const { user, isLoading, isAuthenticated } = useAuthState();
   const { logout } = useAuth();
 
@@ -61,29 +61,34 @@ const Navbar: React.FC = () => {
   // Aktualizuj currentPath przy zmianach URL (dla kompatybilności z React Router)
   useEffect(() => {
     const handleLocationChange = () => {
-      setCurrentPath(window.location.pathname);
+      const newPath = window.location.hash.replace('#', '') || '/';
+      setCurrentPath(newPath);
     };
 
     // Nasłuchuj zmian historii przeglądarki
     window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
 
     // Sprawdź czy jesteśmy w kontekście React Router
     if (typeof window !== "undefined") {
       // Próba aktualizacji przy każdej zmianie (dla React Router)
       const interval = setInterval(() => {
-        if (window.location.pathname !== currentPath) {
-          setCurrentPath(window.location.pathname);
+        const newPath = window.location.hash.replace('#', '') || '/';
+        if (newPath !== currentPath) {
+          setCurrentPath(newPath);
         }
       }, 100);
 
       return () => {
         window.removeEventListener("popstate", handleLocationChange);
+        window.removeEventListener("hashchange", handleLocationChange);
         clearInterval(interval);
       };
     }
 
     return () => {
       window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
     };
   }, [currentPath]);
 

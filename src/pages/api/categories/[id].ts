@@ -6,6 +6,7 @@ import {
 } from "../../../lib/validation/categories.validation";
 import { CategoriesService } from "../../../services/categories.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * PUT /api/categories/{id}
@@ -13,6 +14,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const PUT: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID kategorii z parametrów ścieżki
     const { id } = context.params;
 
@@ -65,8 +71,8 @@ export const PUT: APIRoute = async (context) => {
     // Utwórz instancję CategoriesService
     const categoriesService = new CategoriesService(context.locals.supabase);
 
-    // Aktualizuj kategorię używając domyślnego ID użytkownika
-    const updatedCategory = await categoriesService.update(id, command, context.locals.user.id);
+    // Aktualizuj kategorię używając ID aktualnie zalogowanego użytkownika
+    const updatedCategory = await categoriesService.update(id, command, user.id);
 
     // Zwróć zaktualizowaną kategorię z kodem 200
     return new Response(JSON.stringify(updatedCategory), {
@@ -110,6 +116,11 @@ export const PUT: APIRoute = async (context) => {
  */
 export const DELETE: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID kategorii z parametrów ścieżki
     const { id } = context.params;
 
@@ -133,8 +144,8 @@ export const DELETE: APIRoute = async (context) => {
     // Utwórz instancję CategoriesService
     const categoriesService = new CategoriesService(context.locals.supabase);
 
-    // Usuń kategorię używając domyślnego ID użytkownika
-    await categoriesService.delete(id, context.locals.user.id);
+    // Usuń kategorię używając ID aktualnie zalogowanego użytkownika
+    await categoriesService.delete(id, user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Kategoria została usunięta" } as MessageDTO), {

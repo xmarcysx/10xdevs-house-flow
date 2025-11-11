@@ -6,6 +6,7 @@ import {
 } from "../../../lib/validation/expenses.validation";
 import { ExpensesService } from "../../../services/expenses.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * PUT /api/expenses/{id}
@@ -13,6 +14,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const PUT: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID wydatku z parametrów ścieżki
     const { id } = context.params;
 
@@ -65,8 +71,8 @@ export const PUT: APIRoute = async (context) => {
     // Utwórz instancję ExpensesService
     const expensesService = new ExpensesService(context.locals.supabase);
 
-    // Aktualizuj wydatek używając domyślnego ID użytkownika
-    const updatedExpense = await expensesService.update(id, command, context.locals.user.id);
+    // Aktualizuj wydatek używając ID aktualnie zalogowanego użytkownika
+    const updatedExpense = await expensesService.update(id, command, user.id);
 
     // Zwróć zaktualizowany wydatek z kodem 200
     return new Response(JSON.stringify(updatedExpense), {
@@ -135,6 +141,11 @@ export const PUT: APIRoute = async (context) => {
  */
 export const DELETE: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID wydatku z parametrów ścieżki
     const { id } = context.params;
 
@@ -158,8 +169,8 @@ export const DELETE: APIRoute = async (context) => {
     // Utwórz instancję ExpensesService
     const expensesService = new ExpensesService(context.locals.supabase);
 
-    // Usuń wydatek używając domyślnego ID użytkownika
-    await expensesService.delete(id, context.locals.user.id);
+    // Usuń wydatek używając ID aktualnie zalogowanego użytkownika
+    await expensesService.delete(id, user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Wydatek został usunięty" } as MessageDTO), {

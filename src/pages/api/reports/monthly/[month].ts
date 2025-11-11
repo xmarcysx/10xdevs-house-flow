@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { sanitizeMonthParameter, validateMonthParameter } from "../../../../lib/validation/reports.validation";
 import { ReportsService } from "../../../../services/reports.service";
 import type { MessageDTO } from "../../../../types";
+import { requireAuth } from "../../../../lib/api-helpers";
 
 /**
  * GET /api/reports/monthly/[month]
@@ -9,6 +10,11 @@ import type { MessageDTO } from "../../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz parametr month z URL
     const { month } = context.params;
 
@@ -41,7 +47,7 @@ export const GET: APIRoute = async (context) => {
     const reportsService = new ReportsService(context.locals.supabase);
 
     // Pobierz miesięczny raport używając ID aktualnie zalogowanego użytkownika
-    const report = await reportsService.getMonthlyReport(context.locals.user.id, sanitizedMonth);
+    const report = await reportsService.getMonthlyReport(user.id, sanitizedMonth);
 
     // Zwróć raport z kodem 200
     return new Response(JSON.stringify(report), {

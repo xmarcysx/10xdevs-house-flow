@@ -6,6 +6,7 @@ import {
 } from "../../../lib/validation/incomes.validation";
 import { IncomesService } from "../../../services/incomes.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * PUT /api/incomes/{id}
@@ -13,6 +14,11 @@ import type { MessageDTO } from "../../../types";
  */
 export const PUT: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID wpływu z parametrów ścieżki
     const { id } = context.params;
 
@@ -65,8 +71,8 @@ export const PUT: APIRoute = async (context) => {
     // Utwórz instancję IncomesService
     const incomesService = new IncomesService(context.locals.supabase);
 
-    // Aktualizuj wpływ używając domyślnego ID użytkownika
-    const updatedIncome = await incomesService.update(id, command, context.locals.user.id);
+    // Aktualizuj wpływ używając ID aktualnie zalogowanego użytkownika
+    const updatedIncome = await incomesService.update(id, command, user.id);
 
     // Zwróć zaktualizowany wpływ z kodem 200
     return new Response(JSON.stringify(updatedIncome), {
@@ -103,6 +109,11 @@ export const PUT: APIRoute = async (context) => {
  */
 export const DELETE: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID wpływu z parametrów ścieżki
     const { id } = context.params;
 
@@ -126,8 +137,8 @@ export const DELETE: APIRoute = async (context) => {
     // Utwórz instancję IncomesService
     const incomesService = new IncomesService(context.locals.supabase);
 
-    // Usuń wpływ używając domyślnego ID użytkownika
-    await incomesService.delete(id, context.locals.user.id);
+    // Usuń wpływ używając ID aktualnie zalogowanego użytkownika
+    await incomesService.delete(id, user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Wydatek usunięty" } as MessageDTO), {

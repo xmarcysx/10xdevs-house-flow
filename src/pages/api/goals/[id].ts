@@ -6,6 +6,7 @@ import {
 } from "../../../lib/validation/goals.validation";
 import { GoalsService } from "../../../services/goals.service";
 import type { GoalWithContributionsDTO, MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * GET /api/goals/{id}
@@ -13,6 +14,11 @@ import type { GoalWithContributionsDTO, MessageDTO } from "../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID celu z parametrów ścieżki
     const { id } = context.params;
 
@@ -37,7 +43,7 @@ export const GET: APIRoute = async (context) => {
     const goalsService = new GoalsService(context.locals.supabase);
 
     // Pobierz cel wraz z historią wpłat używając ID aktualnie zalogowanego użytkownika
-    const goal = await goalsService.getGoalWithContributionsById(id, context.locals.user.id);
+    const goal = await goalsService.getGoalWithContributionsById(id, user.id);
 
     // Zwróć cel z kodem 200
     return new Response(JSON.stringify(goal), {
@@ -71,6 +77,11 @@ export const GET: APIRoute = async (context) => {
  */
 export const PUT: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID celu z parametrów ścieżki
     const { id } = context.params;
 
@@ -123,8 +134,8 @@ export const PUT: APIRoute = async (context) => {
     // Utwórz instancję GoalsService
     const goalsService = new GoalsService(context.locals.supabase);
 
-    // Aktualizuj cel używając domyślnego ID użytkownika
-    const updatedGoal = await goalsService.update(id, command, context.locals.user.id);
+    // Aktualizuj cel używając ID aktualnie zalogowanego użytkownika
+    const updatedGoal = await goalsService.update(id, command, user.id);
 
     // Zwróć zaktualizowany cel z kodem 200
     return new Response(JSON.stringify(updatedGoal), {
@@ -172,6 +183,11 @@ export const PUT: APIRoute = async (context) => {
  */
 export const DELETE: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Pobierz ID celu z parametrów ścieżki
     const { id } = context.params;
 
@@ -195,8 +211,8 @@ export const DELETE: APIRoute = async (context) => {
     // Utwórz instancję GoalsService
     const goalsService = new GoalsService(context.locals.supabase);
 
-    // Usuń cel używając domyślnego ID użytkownika
-    await goalsService.delete(id, context.locals.user.id);
+    // Usuń cel używając ID aktualnie zalogowanego użytkownika
+    await goalsService.delete(id, user.id);
 
     // Zwróć komunikat potwierdzający usunięcie z kodem 200
     return new Response(JSON.stringify({ message: "Cel został usunięty" } as MessageDTO), {

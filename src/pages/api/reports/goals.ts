@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { ReportsService } from "../../../services/reports.service";
 import type { MessageDTO } from "../../../types";
+import { requireAuth } from "../../../lib/api-helpers";
 
 /**
  * GET /api/reports/goals
@@ -8,11 +9,16 @@ import type { MessageDTO } from "../../../types";
  */
 export const GET: APIRoute = async (context) => {
   try {
+    // Sprawdź autoryzację
+    const authResult = await requireAuth(context);
+    if (authResult instanceof Response) return authResult;
+    const { user } = authResult;
+
     // Utwórz instancję ReportsService
     const reportsService = new ReportsService(context.locals.supabase);
 
     // Pobierz raport celów używając ID aktualnie zalogowanego użytkownika
-    const report = await reportsService.getGoalsReport(context.locals.user.id);
+    const report = await reportsService.getGoalsReport(user.id);
 
     // Zwróć raport z kodem 200
     return new Response(JSON.stringify(report), {
