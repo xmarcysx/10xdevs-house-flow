@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { b as validateGetCategoriesQuery, c as sanitizeGetCategoriesQuery, C as CategoriesService, d as validateCreateCategoryCommand, e as sanitizeCreateCategoryCommand } from '../../chunks/categories.service_n7QOnMaA.mjs';
 import { r as requireAuth } from '../../chunks/api-helpers_gexHC0qf.mjs';
-export { r as renderers } from '../../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const GET = async (context) => {
   try {

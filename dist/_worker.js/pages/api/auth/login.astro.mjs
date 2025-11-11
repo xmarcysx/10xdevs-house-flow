@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { c as createSupabaseServerInstance } from '../../../chunks/supabase.client_Bi6fAPfN.mjs';
-import { l as loginSchema } from '../../../chunks/auth.validation_CrA6CCPv.mjs';
-export { r as renderers } from '../../../chunks/_@astro-renderers_B70jUmW-.mjs';
+import { createSupabaseServerInstance } from '../../../chunks/supabase.client_ledu3tKm.mjs';
+import { l as loginSchema } from '../../../chunks/auth.validation_NRu4F7pH.mjs';
+export { r as renderers } from '../../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const prerender = false;
 const POST = async ({ request, cookies }) => {

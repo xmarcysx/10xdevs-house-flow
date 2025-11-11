@@ -1,7 +1,8 @@
 # generated types
 .astro/
 
-/dist
+dist/
+wrangler/
 
 # dependencies
 node_modules/

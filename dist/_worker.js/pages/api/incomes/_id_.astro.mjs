@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { v as validateIncomeId, a as validateUpdateIncomeCommand, s as sanitizeUpdateIncomeCommand, I as IncomesService } from '../../../chunks/incomes.service_D1Qr8tjl.mjs';
 import { r as requireAuth } from '../../../chunks/api-helpers_gexHC0qf.mjs';
-export { r as renderers } from '../../../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const PUT = async (context) => {
   try {

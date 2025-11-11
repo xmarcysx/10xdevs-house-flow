@@ -1,6 +1,6 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { c as createSupabaseServerInstance } from '../../../chunks/supabase.client_Bi6fAPfN.mjs';
-export { r as renderers } from '../../../chunks/_@astro-renderers_B70jUmW-.mjs';
+import { createSupabaseServerInstance } from '../../../chunks/supabase.client_ledu3tKm.mjs';
+export { r as renderers } from '../../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const prerender = false;
 const GET = async ({ cookies, request }) => {

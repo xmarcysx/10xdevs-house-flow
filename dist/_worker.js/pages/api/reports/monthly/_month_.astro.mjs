@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { R as ReportsService } from '../../../../chunks/reports.service_B1ycDDhS.mjs';
 import { r as requireAuth } from '../../../../chunks/api-helpers_gexHC0qf.mjs';
-export { r as renderers } from '../../../../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../../../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 function validateMonthParameter(month) {
   const errors = [];

@@ -1,8 +1,8 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { d as defineMiddleware, s as sequence } from './chunks/index_BCrbiGE-.mjs';
-import { c as createSupabaseServerInstance } from './chunks/supabase.client_Bi6fAPfN.mjs';
-import './chunks/astro-designed-error-pages_D6U8NPN3.mjs';
-import './chunks/astro/server_1erLSVHf.mjs';
+import { d as defineMiddleware, s as sequence } from './chunks/index_D35fT-Gv.mjs';
+import { createSupabaseServerInstance } from './chunks/supabase.client_ledu3tKm.mjs';
+import './chunks/astro-designed-error-pages_xkw8gMu4.mjs';
+import './chunks/astro/server_ae_hJQlB.mjs';
 import './chunks/index_B7Oa2Wn_.mjs';
 
 const PUBLIC_PATHS = [

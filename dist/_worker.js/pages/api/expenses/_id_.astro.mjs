@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { v as validateExpenseId, a as validateUpdateExpenseCommand, s as sanitizeUpdateExpenseCommand, E as ExpensesService } from '../../../chunks/expenses.service_P9B9d-Bs.mjs';
 import { r as requireAuth } from '../../../chunks/api-helpers_gexHC0qf.mjs';
-export { r as renderers } from '../../../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const PUT = async (context) => {
   try {

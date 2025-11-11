@@ -1,8 +1,8 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_1erLSVHf.mjs';
-import { $ as $$AuthLayout } from '../chunks/AuthLayout_DxKr9_gI.mjs';
+import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_ae_hJQlB.mjs';
+import { $ as $$AuthLayout } from '../chunks/AuthLayout_BUiXCAfI.mjs';
 /* empty css                                          */
-export { r as renderers } from '../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const $$ResetPassword = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${renderComponent($$result, "AuthLayout", $$AuthLayout, { "title": "Resetowanie has\u0142a - HouseFlow", "data-astro-cid-oiuorpsm": true }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="max-w-md w-full space-y-8" data-astro-cid-oiuorpsm> <div class="text-center" data-astro-cid-oiuorpsm> <h2 class="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-gray-900 via-orange-800 to-red-800 dark:from-white dark:via-orange-200 dark:to-red-200 bg-clip-text text-transparent" data-astro-cid-oiuorpsm>

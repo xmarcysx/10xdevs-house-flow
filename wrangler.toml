@@ -1,7 +1,6 @@
 name = "10xdevs-house-flow"
 pages_build_output_dir = "dist"
 compatibility_date = '2025-10-01'
-compatibility_flags = ["nodejs_compat"]
 
 [[kv_namespaces]]
 binding = "SESSION"

@@ -1,7 +1,7 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
 import { v as validateGoalId, G as GoalsService, a as validateUpdateGoalCommand, s as sanitizeUpdateGoalCommand } from '../../../chunks/goals.service_BlhTZ2g9.mjs';
 import { r as requireAuth } from '../../../chunks/api-helpers_gexHC0qf.mjs';
-export { r as renderers } from '../../../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const GET = async (context) => {
   try {

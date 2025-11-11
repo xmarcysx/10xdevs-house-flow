@@ -1,11 +1,12 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { e as createComponent, k as renderComponent, r as renderTemplate } from '../../chunks/astro/server_1erLSVHf.mjs';
-import { j as jsxRuntimeExports, C as Card, a as CardHeader, b as CardTitle, c as CardContent } from '../../chunks/index_BqwsLh0s.mjs';
-import { a as reactExports } from '../../chunks/_@astro-renderers_B70jUmW-.mjs';
-export { r as renderers } from '../../chunks/_@astro-renderers_B70jUmW-.mjs';
-import { B as Button } from '../../chunks/button_ChXeZEX7.mjs';
-import { L as LoadingComponent } from '../../chunks/LoadingComponent_B259caXu.mjs';
-import { $ as $$Layout } from '../../chunks/Layout_Ruqev_Kq.mjs';
+import { e as createComponent, k as renderComponent, r as renderTemplate } from '../../chunks/astro/server_ae_hJQlB.mjs';
+import { j as jsxRuntimeExports, C as Card, a as CardHeader, b as CardTitle, c as CardContent } from '../../chunks/index_CKL9oF96.mjs';
+import { a as reactExports } from '../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
+export { r as renderers } from '../../chunks/_@astro-renderers_JyCnA0Wd.mjs';
+import { B as Button } from '../../chunks/button_Cc_fGBQS.mjs';
+import { P as ProgressBar } from '../../chunks/ProgressBar_5NUKnLB6.mjs';
+import { L as LoadingComponent } from '../../chunks/LoadingComponent_DRdnDuY2.mjs';
+import { $ as $$Layout } from '../../chunks/Layout_CW-7BzHS.mjs';
 
 function useGoalsReport() {
   const [isLoading, setIsLoading] = reactExports.useState(true);
@@ -80,17 +81,6 @@ const ErrorState = ({ error, onRetry }) => {
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-sm text-gray-500 dark:text-gray-400 max-w-md", children: error }),
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: onRetry, variant: "outline", children: "Spróbuj ponownie" }) })
   ] }) });
-};
-
-const ProgressBar = ({ progress, className = "" }) => {
-  const clampedProgress = Math.min(Math.max(progress, 0), 100);
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 ${className}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-    "div",
-    {
-      className: "bg-blue-600 h-2 rounded-full transition-all duration-300 ease-out",
-      style: { width: `${clampedProgress}%` }
-    }
-  ) });
 };
 
 const GoalCard = ({ goal }) => {

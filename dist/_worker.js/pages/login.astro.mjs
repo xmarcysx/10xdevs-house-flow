@@ -1,8 +1,8 @@
 globalThis.process ??= {}; globalThis.process.env ??= {};
-import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_1erLSVHf.mjs';
-import { $ as $$AuthLayout } from '../chunks/AuthLayout_DxKr9_gI.mjs';
+import { e as createComponent, k as renderComponent, r as renderTemplate, m as maybeRenderHead } from '../chunks/astro/server_ae_hJQlB.mjs';
+import { $ as $$AuthLayout } from '../chunks/AuthLayout_BUiXCAfI.mjs';
 /* empty css                                 */
-export { r as renderers } from '../chunks/_@astro-renderers_B70jUmW-.mjs';
+export { r as renderers } from '../chunks/_@astro-renderers_JyCnA0Wd.mjs';
 
 const $$Login = createComponent(($$result, $$props, $$slots) => {
   return renderTemplate`${renderComponent($$result, "AuthLayout", $$AuthLayout, { "title": "Logowanie - HouseFlow", "data-astro-cid-sgpqyurt": true }, { "default": ($$result2) => renderTemplate` ${maybeRenderHead()}<div class="max-w-md w-full space-y-8" data-astro-cid-sgpqyurt> <div data-astro-cid-sgpqyurt> <h2 class="mt-6 text-center text-3xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent" data-astro-cid-sgpqyurt>
