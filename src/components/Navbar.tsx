@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../lib/hooks/useAuth";
 import { useAuthState } from "../lib/hooks/useAuthState";
@@ -6,6 +6,39 @@ import ThemeToggle from "./ThemeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
+
+// Astro-compatible link component
+const NavLink: React.FC<{
+  to: string;
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+  "data-test-id"?: string;
+}> = ({ to, children, className, onClick, "data-test-id": testId }) => {
+  // Check if we're in a React Router context by checking the current pathname
+  // If we're on a page that's not the root (/) and doesn't start with /api/,
+  // we're likely on an Astro page that doesn't have React Router
+  const isAstroPage =
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/" &&
+    !window.location.pathname.startsWith("/api/") &&
+    !window.location.hash;
+
+  if (!isAstroPage) {
+    return (
+      <Link to={to} className={className} onClick={onClick} data-test-id={testId}>
+        {children}
+      </Link>
+    );
+  }
+
+  // For Astro pages, use regular anchor tags
+  return (
+    <a href={to} className={className} onClick={onClick} data-test-id={testId}>
+      {children}
+    </a>
+  );
+};
 
 interface NavItem {
   label: string;
@@ -16,12 +49,28 @@ const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [currentPath, setCurrentPath] = useState(window.location.hash.replace("#", "") || "/");
-  const { user, isLoading, isAuthenticated } = useAuthState();
+  // Determine if we're on an Astro page (not in React Router context)
+  const isAstroPage =
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/" &&
+    !window.location.pathname.startsWith("/api/") &&
+    !window.location.hash;
+
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== "undefined") {
+      if (isAstroPage) {
+        return window.location.pathname;
+      } else {
+        return window.location.hash.replace("#", "") || "/";
+      }
+    }
+    return "/";
+  });
+  const { user, isAuthenticated } = useAuthState();
   const { logout } = useAuth();
 
   // Pobierz dane profilu (w tym URL awatara)
-  const fetchProfileData = async () => {
+  const fetchProfileData = useCallback(async () => {
     if (user && isAuthenticated) {
       try {
         const response = await fetch("/api/auth/profile", {
@@ -39,7 +88,7 @@ const Navbar: React.FC = () => {
         console.error("Error fetching profile data:", error);
       }
     }
-  };
+  }, [user, isAuthenticated]);
 
   // Przygotuj dane użytkownika dla wyświetlania
   const userEmail = user?.email || "";
@@ -67,7 +116,7 @@ const Navbar: React.FC = () => {
   // Aktualizuj currentPath przy zmianach URL (dla kompatybilności z React Router)
   useEffect(() => {
     const handleLocationChange = () => {
-      const newPath = window.location.hash.replace("#", "") || "/";
+      const newPath = isAstroPage ? window.location.pathname : window.location.hash.replace("#", "") || "/";
       setCurrentPath(newPath);
     };
 
@@ -77,9 +126,9 @@ const Navbar: React.FC = () => {
 
     // Sprawdź czy jesteśmy w kontekście React Router
     if (typeof window !== "undefined") {
-      // Próba aktualizacji przy każdej zmianie (dla React Router)
+      // Próba aktualizacji przy każdej zmianie (dla React Router lub Astro)
       const interval = setInterval(() => {
-        const newPath = window.location.hash.replace("#", "") || "/";
+        const newPath = isAstroPage ? window.location.pathname : window.location.hash.replace("#", "") || "/";
         if (newPath !== currentPath) {
           setCurrentPath(newPath);
         }
@@ -96,7 +145,7 @@ const Navbar: React.FC = () => {
       window.removeEventListener("popstate", handleLocationChange);
       window.removeEventListener("hashchange", handleLocationChange);
     };
-  }, [currentPath]);
+  }, [currentPath, isAstroPage]);
 
   const navItems: NavItem[] = [
     { label: "Dashboard", href: "/" },
@@ -134,7 +183,7 @@ const Navbar: React.FC = () => {
               const isActive =
                 item.href === "/reports" ? currentPath.startsWith("/reports") : currentPath === item.href;
               return (
-                <Link
+                <NavLink
                   key={item.label}
                   to={item.href}
                   data-test-id={`nav-${item.label.toLowerCase()}`}
@@ -145,7 +194,7 @@ const Navbar: React.FC = () => {
                   }`}
                 >
                   {item.label}
-                </Link>
+                </NavLink>
               );
             })}
           </div>
@@ -188,12 +237,12 @@ const Navbar: React.FC = () => {
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Zalogowany</div>
                     </div>
                     <div className="py-2">
-                      <Link
+                      <NavLink
                         to="/settings"
                         className="block w-full text-left px-5 py-3 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium"
                       >
                         Ustawienia
-                      </Link>
+                      </NavLink>
                       <button
                         onClick={() => logout()}
                         className="block w-full text-left px-5 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 font-medium rounded-b-2xl"
@@ -241,7 +290,7 @@ const Navbar: React.FC = () => {
                 const isActive =
                   item.href === "/reports" ? currentPath.startsWith("/reports") : currentPath === item.href;
                 return (
-                  <Link
+                  <NavLink
                     key={item.label}
                     to={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -253,7 +302,7 @@ const Navbar: React.FC = () => {
                     }`}
                   >
                     {item.label}
-                  </Link>
+                  </NavLink>
                 );
               })}
             </div>
