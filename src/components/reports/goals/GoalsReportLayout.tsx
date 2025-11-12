@@ -14,7 +14,7 @@ const GoalsReportLayout: React.FC<GoalsReportLayoutProps> = ({ children }) => {
       <div className="absolute top-20 left-10 w-20 h-20 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-full opacity-20 animate-pulse"></div>
       <div className="absolute top-40 right-20 w-16 h-16 bg-gradient-to-br from-purple-200 to-pink-200 rounded-full opacity-20 animate-pulse animation-delay-1000"></div>
 
-      <div className="relative z-10 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
+      <div className="relative z-10 p-4 md:p-6 lg:p-8 max-w-7xl mx-auto mt-[80px]">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 dark:from-white dark:via-blue-200 dark:to-purple-200 bg-clip-text text-transparent mb-4">

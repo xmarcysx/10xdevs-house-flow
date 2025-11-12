@@ -14,6 +14,7 @@ interface NavItem {
 
 const Navbar: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [currentPath, setCurrentPath] = useState(window.location.hash.replace("#", "") || "/");
   const { user, isLoading, isAuthenticated } = useAuthState();
@@ -57,6 +58,11 @@ const Navbar: React.FC = () => {
       fetchProfileData();
     }
   }, [currentPath, isAuthenticated, user]);
+
+  // Zamknij mobile menu przy zmianie ścieżki
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [currentPath]);
 
   // Aktualizuj currentPath przy zmianach URL (dla kompatybilności z React Router)
   useEffect(() => {
@@ -200,21 +206,60 @@ const Navbar: React.FC = () => {
               </div>
             )}
 
-            {/* Mobile menu button - będziemy mogli dodać później */}
+            {/* Mobile menu button */}
             <div className="md:hidden">
               <Button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 variant="ghost"
                 size="sm"
                 className="rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-300 transform hover:scale-105"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                <svg
+                  className={`w-5 h-5 transition-transform duration-300 ${isMobileMenuOpen ? "rotate-90" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  {isMobileMenuOpen ? (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  ) : (
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  )}
                 </svg>
               </Button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+          <div className="container mx-auto px-6 py-4">
+            <div className="flex flex-col space-y-2">
+              {navItems.map((item) => {
+                const isActive =
+                  item.href === "/reports" ? currentPath.startsWith("/reports") : currentPath === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    data-test-id={`mobile-nav-${item.label.toLowerCase()}`}
+                    className={`px-4 py-3 rounded-xl text-base font-semibold transition-all duration-300 ${
+                      isActive
+                        ? "text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg"
+                        : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

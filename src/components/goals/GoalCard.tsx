@@ -40,29 +40,31 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onAd
   };
 
   return (
-    <Card className="h-full flex flex-col group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-blue-50/50 dark:from-gray-800 dark:to-blue-900/20">
+    <Card className="h-full flex flex-col group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border-0 bg-gradient-to-br from-white to-blue-50/50 dark:from-gray-800 dark:to-blue-900/20 touch-manipulation">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg font-semibold text-gray-900 dark:text-white line-clamp-2">{goal.name}</CardTitle>
+        <CardTitle className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white line-clamp-2">
+          {goal.name}
+        </CardTitle>
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col">
         {/* Kwoty */}
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Zaoszczędzone</span>
-            <span className="text-sm font-medium text-gray-900 dark:text-white">
+        <div className="mb-4 space-y-2 sm:space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Zaoszczędzone</span>
+            <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               {formatCurrency(goal.current_amount)}
             </span>
           </div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Cel</span>
-            <span className="text-sm font-medium text-gray-900 dark:text-white">
+          <div className="flex justify-between items-center">
+            <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Cel</span>
+            <span className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               {formatCurrency(goal.target_amount)}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Pozostało</span>
-            <span className="text-sm font-medium text-green-600 dark:text-green-400">
+            <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Pozostało</span>
+            <span className="text-sm sm:text-base font-medium text-green-600 dark:text-green-400">
               {formatCurrency(goal.remaining_amount)}
             </span>
           </div>
@@ -72,8 +74,10 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onAd
         <div className="mb-4">
           <ProgressBar progress={goal.progress_percentage} />
           <div className="flex justify-between items-center mt-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">Postęp</span>
-            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">{goal.progress_percentage}%</span>
+            <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Postęp</span>
+            <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+              {goal.progress_percentage}%
+            </span>
           </div>
         </div>
 
@@ -85,14 +89,14 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onAd
         )}
 
         {/* Przyciski akcji */}
-        <div className="flex gap-3 mt-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 mt-auto">
           <Button
             onClick={handleAddContribution}
-            className="flex-1 justify-start bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group"
+            className="justify-center sm:justify-start bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group min-h-[44px] touch-manipulation"
           >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
               </div>
@@ -101,11 +105,11 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onAd
           </Button>
           <Button
             onClick={() => (window.location.href = `/goals/${goal.id}`)}
-            className="flex-1 justify-start bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group"
+            className="justify-center sm:justify-start bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group min-h-[44px] touch-manipulation"
           >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -119,11 +123,11 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onAd
           </Button>
           <Button
             onClick={handleEdit}
-            className="flex-1 justify-start bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group"
+            className="justify-center sm:justify-start bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group min-h-[44px] touch-manipulation"
           >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -137,11 +141,11 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onAd
           </Button>
           <Button
             onClick={handleDelete}
-            className="flex-1 justify-start bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group"
+            className="justify-center sm:justify-start bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-2 px-3 sm:py-3 sm:px-4 rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group min-h-[44px] touch-manipulation"
           >
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center transition-colors flex-shrink-0">
+                <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

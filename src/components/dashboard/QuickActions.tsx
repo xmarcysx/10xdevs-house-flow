@@ -36,7 +36,7 @@ const QuickActions: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-4 space-y-4">
+        <div className="flex flex-col md:flex-row gap-4">
           <Button
             onClick={handleAddExpense}
             className="flex-grow justify-start bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border-0 group"
